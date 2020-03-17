@@ -1,0 +1,14 @@
+.DS_Store
+*.iml
+*.bat
+.classpath
+.project
+.settings/
+target/*.iml
+.idea/
+target/
+bin/
+*.versionsBackup
+*/.factorypath
+device-service/disconf/
+device-rest/disconf/download/
