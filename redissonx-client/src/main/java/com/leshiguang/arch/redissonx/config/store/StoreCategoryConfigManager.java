@@ -2,6 +2,8 @@ package com.leshiguang.arch.redissonx.config.store;
 
 import com.leshiguang.arch.redissonx.config.zookeeper.StoreConfigClient;
 import com.leshiguang.arch.redissonx.config.zookeeper.ZkStoreConfigClient;
+import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
+import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

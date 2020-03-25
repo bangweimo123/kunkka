@@ -1,4 +1,4 @@
-package com.leshiguang.arch.redissonx.config.zookeeper;
+package com.leshiguang.redissonx.common.zookeeper;
 
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;

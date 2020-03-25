@@ -2,7 +2,7 @@ package org.redission.config;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.leshiguang.arch.redissonx.client.RedissonxConstants;
+import com.leshiguang.redissonx.common.constants.RedissonxConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.config.SingleServerConfig;
 import org.slf4j.Logger;
@@ -45,8 +45,6 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
         singleServerConfig.setRetryAttempts(retryInterval);
         String password = config.getProperty(buildPropertyKey(clusterName, RedissonxConstants.REDIS_PASSWORD), null);
         singleServerConfig.setPassword(password);
-
-
         int connectionMinimumIdleSize = config.getIntProperty(buildPropertyKey(clusterName, RedissonxConstants.REDIS_CONNECT_MINIDLESIZE), 32);
         singleServerConfig.setConnectionPoolSize(connectionMinimumIdleSize);
 

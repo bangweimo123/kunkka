@@ -18,25 +18,30 @@ public class RedissonxSpringHandler {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/appcontext-core.xml");
         RedissonxClient redissonxClient = applicationContext.getBean("redissonxClient", RedissonxClient.class);
-        initZkData();
-        StoreKey storeKey = new StoreKey("redissonx-test2", 1, 2);
-        RBucket<String> bucket = redissonxClient.getBucket(storeKey);
-        bucket.set("bangwei.mo");
-        System.out.println(bucket.get());
-        RBucket<String> bucket2 = redissonxClient.getBucket(storeKey);
-        bucket.set("jiahuan.wu");
-        System.out.println(bucket2.get());
+//        initZkData();
+        for (int i = 2; i < 10; i++) {
+            for (int j = 2; j < 20; j++) {
+                StoreKey storeKey = new StoreKey("testredissonx5", i, j);
+                RBucket<String> bucket = redissonxClient.getBucket(storeKey);
+                bucket.set("bangwei.mo");
+                System.out.println(bucket.get());
+                RBucket<String> bucket2 = redissonxClient.getBucket(storeKey);
+                bucket.set("jiahuan.wu");
+                System.out.println(bucket2.get());
+            }
+        }
+
     }
 
 
-    public static void initZkData() {
-        StoreConfigClient storeConfigClient = new ZkStoreConfigClient();
-        StoreCategoryConfig storeCategoryConfig = new StoreCategoryConfig();
-        storeCategoryConfig.setCategory("redissonx-test2");
-        storeCategoryConfig.setDuration("3h");
-        storeCategoryConfig.setHot(false);
-        storeCategoryConfig.setIndexTemplate("a{0}d{1}");
-        storeConfigClient.setStoreCategoryConfig("test_01", storeCategoryConfig);
-    }
+//    public static void initZkData() {
+//        StoreConfigClient storeConfigClient = new ZkStoreConfigClient();
+//        StoreCategoryConfig storeCategoryConfig = new StoreCategoryConfig();
+//        storeCategoryConfig.setCategory("testredissonx4");
+//        storeCategoryConfig.setDuration("3h");
+//        storeCategoryConfig.setHot(false);
+//        storeCategoryConfig.setIndexTemplate("a{0}d{1}");
+//        storeConfigClient.setStoreCategoryConfig("test_01", storeCategoryConfig);
+//    }
 
 }

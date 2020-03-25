@@ -2,6 +2,7 @@ package com.leshiguang.arch.redissonx.config.zookeeper;
 
 import com.leshiguang.arch.redissonx.config.store.HotKeyConfig;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
+import com.leshiguang.redissonx.common.zookeeper.ConfigListenable;
 
 import java.util.List;
 import java.util.Map;
@@ -45,12 +46,4 @@ public interface StoreConfigClient extends ConfigListenable {
      * @return
      */
     StoreCategoryConfig getStoreCategoryConfig(String clusterName, String category);
-
-    /**
-     * 设置config
-     *
-     * @param config
-     * @return
-     */
-    void setStoreCategoryConfig(String clusterName, StoreCategoryConfig config);
 }

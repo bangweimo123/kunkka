@@ -1,0 +1,84 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+proxy:
+  prefix: http://beta.static-redissonx.lexin.com
+  codex:
+    servlet_url: /redissonx/*
+    target_url: /redissonx
+    logging_enabled: false
+  sockjs:
+    servlet_url: /sockjs-node/info
+    target_url: /sockjs-node/info
+    logging_enabled: false
+app:
+  name: redissonx
+spring:
+  datasource:
+    username: redissonx
+    password: redissonx@qwert12345
+    url: jdbc:mysql://10.10.109.83:3306/redissonx?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=GMT
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    database: 1
+    # 10.10.8.82
+    host: 10.9.142.180
+    port: 6379
+    password:
+    timeout: 2000
+    session:
+      store-type: redis
+    jedis:
+      pool:
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+mybatis:
+  mapper-locations: classpath*:config/sqlmap/*/*.xml
+  type-aliases-package: com.leshiguang.arch.redissonx.core.entity.gen
+#auth:
+#  cas:
+#    casServerUrlPrefix: https://sso.lifesense.com
+#    casServerLoginUrl: https://sso.lifesense.com/login
+#    casServiceName: http://localhost:8080
+threadpool:
+  core-pool-size: 10
+  max-pool-size: 20
+  queue-capacity: 1000
+  keep-alive-seconds: 300
+
+#gitlab:
+#  url: https://gitlab.lifesense.com
+#  token: MZ29QGxsz3KEDsqnqYw-
+#jenkins:
+#  url: https://build.lifesense.com
+#  user: jiahuan.wu
+#  token: 11db070f1e91a2fac98568f671be9924e2
+#ldap:
+#  url: ldap://10.10.37.181:389
+#  base:
+#    dc: dc=lifesense,dc=com
+#    dn: ou=lxyd,dc=lifesense,dc=com
+#  manager:
+#    dn: cn=admin,dc=lifesense,dc=com
+#    passwd: L5s7hGBBdagq5hY2GQD7Y8gBnapS8dLB
+#  group:
+#    dn: ou=ops
+#    object: inetorgperson
+#    member: uniqueMember
+#  user:
+#    dn: ou=ops
+#    id: cn
+#    object: inetorgperson
+#kong:
+#  beta:
+#    adminUrl: http://beta.kongadmin.lexin.com
+#    defaultHosts: sports-beta.lifesense.com,sports-qa.lifesense.com,sports-qa2.lifesense.com,health-qa.lifesense.com,health-qa2.lifesense.com
+#  alpha:
+#    adminUrl: http://alpha.kongadmin.lexin.com
+#  prod:
+#    adminUrl: http://kongadmin.lexin.com
+#    defaultHosts: sports.lifesense.com,sports-prod.lifesense.com,health.lifesense.com,hongkong.lifesense.com,open.lifesense.com,doctor-api.lifesense.com,sp.lifesense.com
+
+

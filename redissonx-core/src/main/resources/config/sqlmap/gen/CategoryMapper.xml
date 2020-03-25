@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.redissonx.core.mapper.gen.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.redissonx.core.entity.gen.Category">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="duration" jdbcType="VARCHAR" property="duration" />
+    <result column="index_template" jdbcType="VARCHAR" property="indexTemplate" />
+    <result column="isHot" jdbcType="OTHER" property="ishot" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="c_status" jdbcType="OTHER" property="cStatus" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" />
+    <result column="delete_time" jdbcType="OTHER" property="deleteTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cluster_name, category, duration, index_template, isHot, version, c_status, creator, 
+    operator, create_time, update_time, delete_time
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from category
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from category
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from category
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition">
+    delete from category
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Category">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into category (cluster_name, category, duration, 
+      index_template, isHot, version, 
+      c_status, creator, operator, 
+      create_time, update_time, delete_time
+      )
+    values (#{clusterName,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
+      #{indexTemplate,jdbcType=VARCHAR}, #{ishot,jdbcType=OTHER}, #{version,jdbcType=VARCHAR}, 
+      #{cStatus,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{deleteTime,jdbcType=OTHER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Category">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        cluster_name,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="indexTemplate != null">
+        index_template,
+      </if>
+      <if test="ishot != null">
+        isHot,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="cStatus != null">
+        c_status,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="indexTemplate != null">
+        #{indexTemplate,jdbcType=VARCHAR},
+      </if>
+      <if test="ishot != null">
+        #{ishot,jdbcType=OTHER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="cStatus != null">
+        #{cStatus,jdbcType=OTHER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition" resultType="java.lang.Long">
+    select count(*) from category
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update category
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.clusterName != null">
+        cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category != null">
+        category = #{record.category,jdbcType=VARCHAR},
+      </if>
+      <if test="record.duration != null">
+        duration = #{record.duration,jdbcType=VARCHAR},
+      </if>
+      <if test="record.indexTemplate != null">
+        index_template = #{record.indexTemplate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ishot != null">
+        isHot = #{record.ishot,jdbcType=OTHER},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cStatus != null">
+        c_status = #{record.cStatus,jdbcType=OTHER},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null">
+        operator = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=OTHER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=OTHER},
+      </if>
+      <if test="record.deleteTime != null">
+        delete_time = #{record.deleteTime,jdbcType=OTHER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update category
+    set id = #{record.id,jdbcType=INTEGER},
+      cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      category = #{record.category,jdbcType=VARCHAR},
+      duration = #{record.duration,jdbcType=VARCHAR},
+      index_template = #{record.indexTemplate,jdbcType=VARCHAR},
+      isHot = #{record.ishot,jdbcType=OTHER},
+      version = #{record.version,jdbcType=VARCHAR},
+      c_status = #{record.cStatus,jdbcType=OTHER},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=OTHER},
+      update_time = #{record.updateTime,jdbcType=OTHER},
+      delete_time = #{record.deleteTime,jdbcType=OTHER}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Category">
+    update category
+    <set>
+      <if test="clusterName != null">
+        cluster_name = #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null">
+        duration = #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="indexTemplate != null">
+        index_template = #{indexTemplate,jdbcType=VARCHAR},
+      </if>
+      <if test="ishot != null">
+        isHot = #{ishot,jdbcType=OTHER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="cStatus != null">
+        c_status = #{cStatus,jdbcType=OTHER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=OTHER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Category">
+    update category
+    set cluster_name = #{clusterName,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=VARCHAR},
+      index_template = #{indexTemplate,jdbcType=VARCHAR},
+      isHot = #{ishot,jdbcType=OTHER},
+      version = #{version,jdbcType=VARCHAR},
+      c_status = #{cStatus,jdbcType=OTHER},
+      creator = #{creator,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=OTHER},
+      update_time = #{updateTime,jdbcType=OTHER},
+      delete_time = #{deleteTime,jdbcType=OTHER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into category (cluster_name, category, duration, 
+      index_template, isHot, version, 
+      c_status, creator, operator, 
+      create_time, update_time, delete_time
+      ) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.category,jdbcType=VARCHAR}, #{record.duration,jdbcType=VARCHAR}, 
+        #{record.indexTemplate,jdbcType=VARCHAR}, #{record.ishot,jdbcType=OTHER}, #{record.version,jdbcType=VARCHAR}, 
+        #{record.cStatus,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR}, #{record.operator,jdbcType=VARCHAR}, 
+        #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.deleteTime,jdbcType=OTHER}
+        )
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from category
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

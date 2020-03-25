@@ -1,4 +1,4 @@
-package com.leshiguang.arch.redissonx.client;
+package com.leshiguang.redissonx.common.constants;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]

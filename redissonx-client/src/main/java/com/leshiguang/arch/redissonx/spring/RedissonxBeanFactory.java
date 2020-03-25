@@ -2,6 +2,7 @@ package com.leshiguang.arch.redissonx.spring;
 
 import org.redission.config.ApolloRedissonxConfigLoader;
 import org.redission.config.RedissonxConfigLoader;
+import org.redission.config.ZookeeperRedissonxConfigLoader;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
 import org.redisson.config.Config;
@@ -45,7 +46,7 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
     @Override
     public void afterPropertiesSet() throws Exception {
         if (null == configLoader) {
-            configLoader = new ApolloRedissonxConfigLoader();
+            configLoader = new ZookeeperRedissonxConfigLoader();
         }
         Config config = configLoader.getByCluster(clusterName);
         if (null == config) {
