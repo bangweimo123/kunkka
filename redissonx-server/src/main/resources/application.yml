@@ -9,7 +9,7 @@ spring:
     username: redissonx
     password: redissonx@qwert12345
     url: jdbc:mysql://10.10.109.83:3306/redissonx?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=GMT
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     database: 1
     # 10.10.8.82
