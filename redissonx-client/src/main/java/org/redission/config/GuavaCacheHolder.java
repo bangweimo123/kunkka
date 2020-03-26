@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class GuavaCacheHolder<V> {
     private LoadingCache<String, V> cache;
     private ThreadLocal<RBucket<V>> currentBucketThreadLocal = new ThreadLocal<>();
-    private Map<String, Integer> indexMap = new ConcurrentHashMap<>();
 
     public GuavaCacheHolder(StoreCategoryConfig categoryConfig) {
         cache = CacheBuilder.newBuilder()
@@ -27,8 +26,6 @@ public class GuavaCacheHolder<V> {
                 .build(new CacheLoader<String, V>() {
                     @Override
                     public V load(String data) throws Exception {
-                        indexMap.put(data, indexMap.get(data) == null ? 0 : indexMap.get(data) + 1);
-                        System.out.println("从bucket读取:[" + data + "],index:" + indexMap.get(data));
                         return getBucket().get();
                     }
                 });

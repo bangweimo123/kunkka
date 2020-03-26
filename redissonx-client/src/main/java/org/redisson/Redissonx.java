@@ -7,7 +7,8 @@ import com.leshiguang.arch.redissonx.exception.StoreException;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
-import org.redisson.spring.cache.RedissonSpringCacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @Modify 修改redisson的key为Storekey
  */
 public class Redissonx extends Redisson implements RedissonxClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Redissonx.class);
     private StoreCategoryConfigManager storeCategoryConfigManager;
 
     public void setStoreCategoryConfigManager(StoreCategoryConfigManager storeCategoryConfigManager) {
@@ -63,7 +65,10 @@ public class Redissonx extends Redisson implements RedissonxClient {
             T result = ri.build(redissonx, finalName, codec);
             if (result instanceof RedissonExpirable) {
                 RedissonExpirable expirable = (RedissonExpirable) result;
-                expirable.expire(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                boolean expireResult = expirable.expire(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                if (!expireResult) {
+                    LOGGER.warn("set expire info error");
+                }
             }
             //热key逻辑
             if (categoryConfig.getHot() && result instanceof RBucket) {

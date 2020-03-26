@@ -9,6 +9,7 @@ import org.redisson.api.RBucket;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,14 +22,21 @@ import java.util.concurrent.Executors;
 public class RedissonxSpringHandler {
     private static ExecutorService es = Executors.newCachedThreadPool();
 
+    @Resource
+    private RedissonxClient redissonxClient;
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/appcontext-core.xml");
         RedissonxClient redissonxClient = applicationContext.getBean("redissonxClient", RedissonxClient.class);
-        testSet(redissonxClient);
-        testHotKey(redissonxClient);
+        testSimpleKey(redissonxClient);
 
     }
 
+    public static void testSimpleKey(RedissonxClient redissonxClient) {
+        StoreKey storeKey = new StoreKey("testredissonx4", 2, 3);
+        RBucket<String> bucket = redissonxClient.getBucket(storeKey);
+        long a = bucket.remainTimeToLive();
+        System.out.println(a);
+    }
 
     public static void testSet(RedissonxClient redissonxClient) {
         for (int i = 1; i < 10; i++) {
