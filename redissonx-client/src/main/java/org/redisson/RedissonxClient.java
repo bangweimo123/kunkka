@@ -285,31 +285,6 @@ public interface RedissonxClient extends RedissonClient {
     <K, V> RListMultimapCache<K, V> getListMultimapCache(StoreKey name, Codec codec);
 
     /**
-     * Returns local cached map instance by name.
-     * Configured by parameters of options-object.
-     *
-     * @param <K>     type of key
-     * @param <V>     type of value
-     * @param name    - name of object
-     * @param options - local map options
-     * @return LocalCachedMap object
-     */
-    <K, V> RLocalCachedMap<K, V> getLocalCachedMap(StoreKey name, LocalCachedMapOptions<K, V> options);
-
-    /**
-     * Returns local cached map instance by name
-     * using provided codec. Configured by parameters of options-object.
-     *
-     * @param <K>     type of key
-     * @param <V>     type of value
-     * @param name    - name of object
-     * @param codec   - codec for keys and values
-     * @param options - local map options
-     * @return LocalCachedMap object
-     */
-    <K, V> RLocalCachedMap<K, V> getLocalCachedMap(StoreKey name, Codec codec, LocalCachedMapOptions<K, V> options);
-
-    /**
      * Returns map instance by name.
      *
      * @param <K>  type of key

@@ -29,6 +29,9 @@ public class MValueBO implements Serializable {
             case "long":
                 result = Long.valueOf(data);
                 break;
+            case "int":
+                result = Integer.valueOf(data);
+                break;
             case "double":
                 result = Double.valueOf(data);
                 break;

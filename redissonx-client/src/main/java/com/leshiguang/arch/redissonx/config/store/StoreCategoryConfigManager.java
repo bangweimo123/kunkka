@@ -5,6 +5,7 @@ import com.leshiguang.arch.redissonx.config.zookeeper.ZkStoreConfigClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.I0Itec.zkclient.IZkDataListener;
+import org.redission.config.GuavaCacheHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ public class StoreCategoryConfigManager {
                         @Override
                         public void handleDataChange(String s, Object o) throws Exception {
                             StoreCategoryConfig data = (StoreCategoryConfig) o;
+                            prepareStoreCategoryConfig(data);
                             localStoreCategoryConfigMap.put(data.getCategory(), data);
                         }
 
@@ -51,8 +53,17 @@ public class StoreCategoryConfigManager {
                         LOGGER.error("can't find category config for configserver!");
                     }
                 }
+                prepareStoreCategoryConfig(_exist);
             }
         }
         return _exist;
+    }
+
+    private void prepareStoreCategoryConfig(StoreCategoryConfig config) {
+        //热key逻辑
+        if (config.getHot()) {
+            config.setHotHolder(new GuavaCacheHolder(config));
+        }
+
     }
 }

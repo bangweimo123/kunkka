@@ -34,10 +34,6 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
         this.clusterName = clusterName;
     }
 
-    public RedissonxConfigLoader getConfigLoader() {
-        return configLoader;
-    }
-
     public void setConfigLoader(RedissonxConfigLoader configLoader) {
         this.configLoader = configLoader;
     }

@@ -26,6 +26,10 @@ public class StoreKey implements Serializable {
      * Parameters
      */
     protected Object[] params;
+    /**
+     * code type,default use fstCodec
+     */
+    private String codec;
 
     /**
      * Constructor
@@ -37,6 +41,14 @@ public class StoreKey implements Serializable {
 
     public static StoreKey valueOf(String category, Object... params) {
         return new StoreKey(category, params);
+    }
+
+    public String getCodec() {
+        return codec;
+    }
+
+    public void setCodec(String codec) {
+        this.codec = codec;
     }
 
     public String getCategory() {

@@ -8,43 +8,43 @@ import java.io.Serializable;
  * @Modify 热点key 处理1:流控，处理2：使用本地缓存
  */
 public class HotKeyConfig implements Serializable {
-    private String hotKey;
+    private Boolean useLocalCache;
 
-    private String clusterName;
+    private Integer maximumSize = 1000;
 
-    private String category;
+    private Integer maximumWeight = 1000;
 
-    private HotKeyHandleConfig handleConfig;
+    private String expireAfterWrite = "10m";
 
-    public String getHotKey() {
-        return hotKey;
+    public Boolean getUseLocalCache() {
+        return useLocalCache;
     }
 
-    public void setHotKey(String hotKey) {
-        this.hotKey = hotKey;
+    public void setUseLocalCache(Boolean useLocalCache) {
+        this.useLocalCache = useLocalCache;
     }
 
-    public String getClusterName() {
-        return clusterName;
+    public Integer getMaximumSize() {
+        return maximumSize;
     }
 
-    public void setClusterName(String clusterName) {
-        this.clusterName = clusterName;
+    public void setMaximumSize(Integer maximumSize) {
+        this.maximumSize = maximumSize;
     }
 
-    public String getCategory() {
-        return category;
+    public Integer getMaximumWeight() {
+        return maximumWeight;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setMaximumWeight(Integer maximumWeight) {
+        this.maximumWeight = maximumWeight;
     }
 
-    public HotKeyHandleConfig getHandleConfig() {
-        return handleConfig;
+    public String getExpireAfterWrite() {
+        return expireAfterWrite;
     }
 
-    public void setHandleConfig(HotKeyHandleConfig handleConfig) {
-        this.handleConfig = handleConfig;
+    public void setExpireAfterWrite(String expireAfterWrite) {
+        this.expireAfterWrite = expireAfterWrite;
     }
 }

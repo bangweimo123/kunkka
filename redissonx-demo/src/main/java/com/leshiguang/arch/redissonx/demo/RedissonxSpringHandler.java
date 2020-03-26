@@ -9,39 +9,75 @@ import org.redisson.api.RBucket;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
  * @Date 2020-03-17 19:55
  * @Modify
  */
 public class RedissonxSpringHandler {
+    private static ExecutorService es = Executors.newCachedThreadPool();
+
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/appcontext-core.xml");
         RedissonxClient redissonxClient = applicationContext.getBean("redissonxClient", RedissonxClient.class);
-//        initZkData();
-        for (int i = 2; i < 10; i++) {
-            for (int j = 2; j < 20; j++) {
-                StoreKey storeKey = new StoreKey("testredissonx5", i, j);
-                RBucket<String> bucket = redissonxClient.getBucket(storeKey);
-                bucket.set("bangwei.mo");
-                System.out.println(bucket.get());
-                RBucket<String> bucket2 = redissonxClient.getBucket(storeKey);
-                bucket.set("jiahuan.wu");
-                System.out.println(bucket2.get());
-            }
-        }
+        testSet(redissonxClient);
+        testHotKey(redissonxClient);
 
     }
 
 
-//    public static void initZkData() {
-//        StoreConfigClient storeConfigClient = new ZkStoreConfigClient();
-//        StoreCategoryConfig storeCategoryConfig = new StoreCategoryConfig();
-//        storeCategoryConfig.setCategory("testredissonx4");
-//        storeCategoryConfig.setDuration("3h");
-//        storeCategoryConfig.setHot(false);
-//        storeCategoryConfig.setIndexTemplate("a{0}d{1}");
-//        storeConfigClient.setStoreCategoryConfig("test_01", storeCategoryConfig);
-//    }
+    public static void testSet(RedissonxClient redissonxClient) {
+        for (int i = 1; i < 10; i++) {
+            for (int j = 1; j < 10; j++) {
+                StoreKey storeKey = new StoreKey("testredissonx4", i, j);
+                RBucket<String> bucket = redissonxClient.getBucket(storeKey);
+                bucket.set("jiahuan.wu:[i]:" + i + ",[j]:" + j);
+                System.out.println(bucket.get());
+            }
+        }
+    }
+
+    public static void testHotKey(RedissonxClient redissonxClient) {
+        for (int i = 1; i < 3; i++) {
+            for (int j = 1; j < 4; j++) {
+
+                es.submit(new MThread(redissonxClient, i, j));
+            }
+        }
+        while (!es.isShutdown() && !es.isTerminated()) {
+            try {
+                Thread.sleep(500l);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static class MThread extends Thread {
+        private int i;
+
+        private int j;
+
+        private RedissonxClient redissonxClient;
+
+        public MThread(RedissonxClient redissonxClient, int i, int j) {
+            this.redissonxClient = redissonxClient;
+            this.i = i;
+            this.j = j;
+        }
+
+        @Override
+        public void run() {
+            StoreKey storeKey = new StoreKey("testredissonx4", i, j);
+            RBucket<String> bucket = redissonxClient.getBucket(storeKey);
+            for (int i = 0; i < 10; i++) {
+                System.out.println(bucket.get());
+            }
+        }
+    }
 
 }

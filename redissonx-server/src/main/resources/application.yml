@@ -2,16 +2,6 @@ server:
   port: 8080
   servlet:
     context-path: /
-proxy:
-  prefix: http://beta.static-redissonx.lexin.com
-  codex:
-    servlet_url: /redissonx/*
-    target_url: /redissonx
-    logging_enabled: false
-  sockjs:
-    servlet_url: /sockjs-node/info
-    target_url: /sockjs-node/info
-    logging_enabled: false
 app:
   name: redissonx
 spring:

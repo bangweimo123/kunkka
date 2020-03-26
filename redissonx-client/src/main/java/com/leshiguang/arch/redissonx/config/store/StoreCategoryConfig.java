@@ -6,10 +6,12 @@ import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.arch.redissonx.exception.StoreException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.redission.config.GuavaCacheHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -49,12 +51,39 @@ public class StoreCategoryConfig implements Serializable {
     /**
      * is hot key,store in ehcache or guava
      */
-    private boolean isHot;
-
+    private Boolean isHot = false;
+    /**
+     * 编码方式 默认为fstCodec
+     */
+    private String codec;
 
     private int durationInSeconds = -1;
 
     private int hash = -1;
+    /**
+     * rekey配置项目
+     */
+    private HotKeyConfig hotKeyConfig;
+    /**
+     * 定义的hotHolder
+     */
+    private GuavaCacheHolder hotHolder;
+
+    public GuavaCacheHolder getHotHolder() {
+        return hotHolder;
+    }
+
+    public void setHotHolder(GuavaCacheHolder hotHolder) {
+        this.hotHolder = hotHolder;
+    }
+
+    public HotKeyConfig getHotKeyConfig() {
+        return hotKeyConfig;
+    }
+
+    public void setHotKeyConfig(HotKeyConfig hotKeyConfig) {
+        this.hotKeyConfig = hotKeyConfig;
+    }
 
     public String getCategory() {
         return category;
@@ -80,11 +109,11 @@ public class StoreCategoryConfig implements Serializable {
         this.indexTemplate = indexTemplate;
     }
 
-    public boolean isHot() {
+    public Boolean getHot() {
         return isHot;
     }
 
-    public void setHot(boolean hot) {
+    public void setHot(Boolean hot) {
         isHot = hot;
     }
 
@@ -192,12 +221,21 @@ public class StoreCategoryConfig implements Serializable {
         }
     }
 
+    public String getCodec() {
+        return codec;
+    }
+
+    public void setCodec(String codec) {
+        this.codec = codec;
+    }
+
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("category", category)
                 .append("duration", duration)
                 .append("template", indexTemplate)
                 .append("isHot", isHot)
+                .append("codec", codec)
                 .toString();
     }
 

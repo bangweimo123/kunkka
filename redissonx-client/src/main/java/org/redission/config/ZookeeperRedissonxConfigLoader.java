@@ -1,5 +1,6 @@
 package org.redission.config;
 
+import com.leshiguang.arch.redissonx.exception.StoreException;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterInnerSingleBO;
@@ -24,10 +25,11 @@ public class ZookeeperRedissonxConfigLoader implements RedissonxConfigLoader {
             switch (clusterMode) {
                 case "single":
                     return buildSingleConfig(clusterBO);
+                    //TODO other mode
 
             }
         }
-        return null;
+        throw new StoreException("can't find config form cluster:[" + clusterName + "],please check in https://redissonx.lexin.com");
     }
 
     private org.redisson.config.Config buildSingleConfig(ClusterBO clusterBO) {
