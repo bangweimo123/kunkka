@@ -39,4 +39,16 @@ public class RedissonxLocalBucket<V> extends RedissonBucket<V> {
         }
         return value;
     }
+
+    @Override
+    public void set(V value) {
+        cache.refresh(getName());
+        super.set(value);
+    }
+
+    @Override
+    public boolean compareAndSet(V expect, V update) {
+        cache.refresh(getName());
+        return super.compareAndSet(expect, update);
+    }
 }
