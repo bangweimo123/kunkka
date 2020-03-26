@@ -37,8 +37,7 @@ public class StoreCategoryConfigManager {
                     storeConfigClient.addCategoryConfigListener(cluterName, category, new IZkDataListener() {
                         @Override
                         public void handleDataChange(String s, Object o) throws Exception {
-                            StoreCategoryConfig data = (StoreCategoryConfig) o;
-                            prepareStoreCategoryConfig(data);
+                            StoreCategoryConfig data = storeConfigClient.getStoreCategoryConfig(cluterName, category);
                             localStoreCategoryConfigMap.put(data.getCategory(), data);
                         }
 
