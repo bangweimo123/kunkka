@@ -1,11 +1,9 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
-import com.leshiguang.arch.redissonx.config.store.HotKeyConfig;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.redissonx.common.zookeeper.ConfigListenable;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -28,16 +26,6 @@ public interface StoreConfigClient extends ConfigListenable {
      * @return
      */
     List<String> loadAuthApps(String clusterName);
-
-    /**
-     * 获取一个cluster对应的热key
-     * <p>
-     * key:finalKey value:hotKeyConfig
-     *
-     * @param clusterName
-     * @return
-     */
-    Map<String, HotKeyConfig> loadHotKeyConfigs(String clusterName);
 
     /**
      * 获取一个category的配置

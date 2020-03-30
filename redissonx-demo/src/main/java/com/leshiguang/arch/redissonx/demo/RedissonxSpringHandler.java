@@ -1,6 +1,7 @@
 package com.leshiguang.arch.redissonx.demo;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
+import com.leshiguang.arch.redissonx.client.TenantStoreKey;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.arch.redissonx.config.zookeeper.StoreConfigClient;
 import com.leshiguang.arch.redissonx.config.zookeeper.ZkStoreConfigClient;
@@ -24,10 +25,11 @@ public class RedissonxSpringHandler {
 
     @Resource
     private RedissonxClient redissonxClient;
+
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/appcontext-core.xml");
         RedissonxClient redissonxClient = applicationContext.getBean("redissonxClient", RedissonxClient.class);
-        testSimpleKey(redissonxClient);
+        testTenantKey(redissonxClient);
 
     }
 
@@ -36,6 +38,14 @@ public class RedissonxSpringHandler {
         RBucket<String> bucket = redissonxClient.getBucket(storeKey);
         long a = bucket.remainTimeToLive();
         System.out.println(a);
+    }
+
+    public static void testTenantKey(RedissonxClient redissonxClient) {
+        StoreKey storeKey = new TenantStoreKey("testredissonx4", 2, 2, 3);
+        RBucket<String> bucket = redissonxClient.getBucket(storeKey);
+        bucket.set("bangwei.mo");
+        System.out.println(bucket.get());
+
     }
 
     public static void testSet(RedissonxClient redissonxClient) {

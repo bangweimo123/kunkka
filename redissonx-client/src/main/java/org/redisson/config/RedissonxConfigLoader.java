@@ -1,4 +1,4 @@
-package org.redission.config;
+package org.redisson.config;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]

@@ -10,14 +10,14 @@ import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
+import com.leshiguang.redissonx.common.entity.category.HotKeyStrategyBO;
 import com.leshiguang.redissonx.common.entity.request.CategoryQueryRequest;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.redission.config.ApolloRedissonxConfigLoader;
-import org.redission.config.RedissonxConfigLoader;
-import org.redission.config.ZookeeperRedissonxConfigLoader;
+import org.redisson.config.RedissonxConfigLoader;
+import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
 import org.redisson.api.RKeys;
@@ -256,7 +256,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, String operator) {
+    public RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, Integer tenantId, String operator) {
         List<String> result = new ArrayList<>();
         if (StringUtils.isBlank(category)) {
             result = zookeeperClient.queryCategorys(clusterName);
@@ -271,6 +271,10 @@ public class CategoryServiceImpl implements CategoryService {
                     pattern.append(paramFormat);
                 }
                 pattern.append("*");
+                if (null != tenantId && tenantId > 0) {
+                    pattern.append("@t");
+                    pattern.append(tenantId);
+                }
                 Iterable<String> keys = rKeys.getKeysByPattern(pattern.toString());
                 Iterator<String> iterator = keys.iterator();
                 while (iterator.hasNext()) {

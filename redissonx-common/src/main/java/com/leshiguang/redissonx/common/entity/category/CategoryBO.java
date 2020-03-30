@@ -1,8 +1,11 @@
 package com.leshiguang.redissonx.common.entity.category;
 
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -43,4 +46,22 @@ public class CategoryBO implements Serializable {
      * 版本号,通过版本号来删除相应的category
      */
     private String version;
+    /**
+     * 序列化方式,用于数据存储的序列化
+     */
+    private String codec;
+    /**
+     * 热key对应的策略
+     */
+    private List<HotKeyStrategyBO> hotKeyStrategyList = new ArrayList<>();
+
+    public CategoryBO() {
+        if (CollectionUtils.isEmpty(hotKeyStrategyList)) {
+            HotKeyStrategyBO defaultStrategy = new HotKeyStrategyBO();
+            defaultStrategy.setStrategy("local");
+            defaultStrategy.getStrategyParams().put("maximumSize", 1000);
+            defaultStrategy.getStrategyParams().put("maximumWeight", 1000);
+            defaultStrategy.getStrategyParams().put("duration", "5m");
+        }
+    }
 }

@@ -1,29 +1,20 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
-import com.ctrip.framework.apollo.Config;
-import com.ctrip.framework.apollo.ConfigChangeListener;
-import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.model.ConfigChangeEvent;
-import com.leshiguang.arch.redissonx.config.store.HotKeyConfig;
-import com.leshiguang.arch.redissonx.exception.StoreConfigException;
-import com.leshiguang.redissonx.common.constants.RedissonxConstants;
+import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
+import com.leshiguang.arch.redissonx.config.hotkey.LocalCacheHotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
+import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
-import com.leshiguang.redissonx.common.path.PathProvider;
+import com.leshiguang.redissonx.common.entity.category.HotKeyStrategyBO;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
-import org.I0Itec.zkclient.IZkStateListener;
-import org.I0Itec.zkclient.ZkClient;
-import org.I0Itec.zkclient.serialize.SerializableSerializer;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.zookeeper.Watcher;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -45,11 +36,6 @@ public class ZkStoreConfigClient implements StoreConfigClient {
     }
 
     @Override
-    public Map<String, HotKeyConfig> loadHotKeyConfigs(String clusterName) {
-        return null;
-    }
-
-    @Override
     public StoreCategoryConfig getStoreCategoryConfig(String clusterName, String category) {
         CategoryBO categoryBO = zookeeperClient.getCategory(clusterName, category);
         if (null == categoryBO) {
@@ -60,6 +46,34 @@ public class ZkStoreConfigClient implements StoreConfigClient {
         storeCategoryConfig.setIndexTemplate(categoryBO.getIndexTemplate());
         storeCategoryConfig.setHot(categoryBO.isHot());
         storeCategoryConfig.setDuration(categoryBO.getDuration());
+        if (categoryBO.isHot()) {
+            if (CollectionUtils.isNotEmpty(categoryBO.getHotKeyStrategyList())) {
+                for (HotKeyStrategyBO hotKeyStrategyBO : categoryBO.getHotKeyStrategyList()) {
+                    switch (hotKeyStrategyBO.getStrategy()) {
+                        case HotKeyStrategy.LOCAL:
+                            LocalCacheHotKeyStrategy localCacheHotKeyStrategy = new LocalCacheHotKeyStrategy();
+                            Object duration = hotKeyStrategyBO.getStrategyParams().get("duration");
+                            if (null != duration) {
+                                localCacheHotKeyStrategy.setDuration((String) duration);
+                            }
+                            Object maximumSize = hotKeyStrategyBO.getStrategyParams().get("maximumSize");
+                            if (null != maximumSize) {
+                                localCacheHotKeyStrategy.setMaximumSize((Integer) maximumSize);
+                            }
+                            Object maximumWeight = hotKeyStrategyBO.getStrategyParams().get("maximumWeight");
+                            if (null != maximumWeight) {
+                                localCacheHotKeyStrategy.setMaximumWeight((Integer) maximumWeight);
+                            }
+                            localCacheHotKeyStrategy.process();
+                            storeCategoryConfig.addHotKeyStrategy(localCacheHotKeyStrategy);
+                            break;
+                        case HotKeyStrategy.FLOW_CONTROL:
+                            //TODO
+                            break;
+                    }
+                }
+            }
+        }
         return storeCategoryConfig;
     }
 

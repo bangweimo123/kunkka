@@ -1,9 +1,8 @@
-package org.redission.config;
+package org.redisson.config;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.config.SingleServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

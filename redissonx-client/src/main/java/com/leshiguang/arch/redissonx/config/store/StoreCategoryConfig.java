@@ -2,15 +2,16 @@ package com.leshiguang.arch.redissonx.config.store;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
 import com.leshiguang.arch.redissonx.client.TenantStoreKey;
+import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
 import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.arch.redissonx.exception.StoreException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.redission.config.GuavaCacheHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,28 +62,16 @@ public class StoreCategoryConfig implements Serializable {
 
     private int hash = -1;
     /**
-     * rekey配置项目
+     * 热key策略列表
      */
-    private HotKeyConfig hotKeyConfig;
-    /**
-     * 定义的hotHolder
-     */
-    private GuavaCacheHolder hotHolder;
+    private Map<String, HotKeyStrategy> hotKeyStrategys = new HashMap<>();
 
-    public GuavaCacheHolder getHotHolder() {
-        return hotHolder;
+    public HotKeyStrategy getHotKeyStrategy(String strategy) {
+        return this.hotKeyStrategys.get(strategy);
     }
 
-    public void setHotHolder(GuavaCacheHolder hotHolder) {
-        this.hotHolder = hotHolder;
-    }
-
-    public HotKeyConfig getHotKeyConfig() {
-        return hotKeyConfig;
-    }
-
-    public void setHotKeyConfig(HotKeyConfig hotKeyConfig) {
-        this.hotKeyConfig = hotKeyConfig;
+    public void addHotKeyStrategy(HotKeyStrategy hotKeyStrategy) {
+        this.hotKeyStrategys.put(hotKeyStrategy.getName(), hotKeyStrategy);
     }
 
     public String getCategory() {
@@ -160,7 +149,7 @@ public class StoreCategoryConfig implements Serializable {
 
     private String getFinalKey1(StringBuilder buf, String tenantId, Object... params) {
         buf = buildFinalKey(buf, params);
-        buf.append("_").append(tenantId);
+        buf.append("@t").append(tenantId);
         return buf.toString();
     }
 
@@ -215,7 +204,8 @@ public class StoreCategoryConfig implements Serializable {
     public String getFinalKey(StoreKey storeKey) {
         StringBuilder buf = threadLocalStringBuilderHelper.get().getStringBuilder();
         if (storeKey instanceof TenantStoreKey) {
-            return getFinalKey1(buf, ((TenantStoreKey) storeKey).getTenantId(), storeKey.getParams());
+            String tenant = Integer.toString(((TenantStoreKey) storeKey).getTenantId());
+            return getFinalKey1(buf, tenant, storeKey.getParams());
         } else {
             return getFinalKey0(buf, storeKey.getParams());
         }

@@ -1,9 +1,9 @@
 package org.redisson;
 
 import com.google.common.cache.LoadingCache;
-import org.redission.config.GuavaCacheHolder;
 import org.redisson.client.codec.Codec;
 import org.redisson.command.CommandAsyncExecutor;
+import org.redisson.config.GuavaCacheHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +15,6 @@ import org.slf4j.LoggerFactory;
 public class RedissonxLocalBucket<V> extends RedissonBucket<V> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedissonxLocalBucket.class);
     private LoadingCache<String, V> cache;
-
-    public RedissonxLocalBucket(CommandAsyncExecutor connectionManager, String name, GuavaCacheHolder cacheHolder) {
-        super(connectionManager, name);
-        this.cache = cacheHolder.getCache(this);
-    }
 
     public RedissonxLocalBucket(Codec codec, CommandAsyncExecutor connectionManager, String name, GuavaCacheHolder cacheHolder) {
         super(codec, connectionManager, name);
@@ -42,13 +37,28 @@ public class RedissonxLocalBucket<V> extends RedissonBucket<V> {
 
     @Override
     public void set(V value) {
-        cache.refresh(getName());
         super.set(value);
+        cache.invalidate(getName());
     }
+
 
     @Override
     public boolean compareAndSet(V expect, V update) {
-        cache.refresh(getName());
-        return super.compareAndSet(expect, update);
+        boolean result = super.compareAndSet(expect, update);
+        cache.invalidate(getName());
+        return result;
+    }
+
+    @Override
+    public V getAndSet(V newValue) {
+        V result = super.getAndSet(newValue);
+        cache.invalidate(getName());
+        return result;
+    }
+
+    public V getAndDelete() {
+        V result = this.get(this.getAndDeleteAsync());
+        cache.invalidate(getName());
+        return result;
     }
 }

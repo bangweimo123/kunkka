@@ -9,6 +9,7 @@ import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.entity.request.ClusterQueryRequest;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 

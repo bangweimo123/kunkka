@@ -1,4 +1,4 @@
-package org.redission.config;
+package org.redisson.config;
 
 import com.leshiguang.arch.redissonx.exception.StoreException;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
@@ -7,7 +7,6 @@ import com.leshiguang.redissonx.common.entity.cluster.ClusterInnerSingleBO;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.config.SingleServerConfig;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -25,11 +24,19 @@ public class ZookeeperRedissonxConfigLoader implements RedissonxConfigLoader {
             switch (clusterMode) {
                 case "single":
                     return buildSingleConfig(clusterBO);
-                    //TODO other mode
+                case "masterslave":
+                    return buildMaterSlaveConfig(clusterBO);
+                //TODO other mode
 
             }
         }
         throw new StoreException("can't find config form cluster:[" + clusterName + "],please check in https://redissonx.lexin.com");
+    }
+
+    private org.redisson.config.Config buildMaterSlaveConfig(ClusterBO clusterBO) {
+        org.redisson.config.Config redissonConfig = new org.redisson.config.Config();
+        MasterSlaveServersConfig serversConfig = redissonConfig.useMasterSlaveServers();
+        return redissonConfig;
     }
 
     private org.redisson.config.Config buildSingleConfig(ClusterBO clusterBO) {

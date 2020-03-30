@@ -1,6 +1,8 @@
 package org.redisson;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
+import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
+import com.leshiguang.arch.redissonx.config.hotkey.LocalCacheHotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfigManager;
 import com.leshiguang.arch.redissonx.exception.StoreException;
@@ -72,7 +74,11 @@ public class Redissonx extends Redisson implements RedissonxClient {
             }
             //热key逻辑
             if (categoryConfig.getHot() && result instanceof RBucket) {
-                result = (T) new RedissonxLocalBucket(codec, redissonx.connectionManager.getCommandExecutor(), finalName, categoryConfig.getHotHolder());
+                HotKeyStrategy hotKeyStrategy = categoryConfig.getHotKeyStrategy(HotKeyStrategy.LOCAL);
+                if (null != hotKeyStrategy) {
+                    LocalCacheHotKeyStrategy localCacheHotKeyStrategy = (LocalCacheHotKeyStrategy) hotKeyStrategy;
+                    result = (T) new RedissonxLocalBucket(codec, redissonx.connectionManager.getCommandExecutor(), finalName, localCacheHotKeyStrategy.getHotHolder());
+                }
             }
 
             data = result;

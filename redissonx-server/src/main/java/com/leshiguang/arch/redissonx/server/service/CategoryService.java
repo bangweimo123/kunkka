@@ -78,8 +78,10 @@ public interface CategoryService {
      *
      * @param clusterName
      * @param category
+     * @param paramFormat
+     * @param tenantId
      * @param operator
      * @return
      */
-    RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, String operator);
+    RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, Integer tenantId, String operator);
 }

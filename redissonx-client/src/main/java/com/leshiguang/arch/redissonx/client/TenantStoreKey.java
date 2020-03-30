@@ -11,18 +11,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @Modify
  */
 public class TenantStoreKey extends StoreKey {
-    private String tenantId;
+    private static final Integer DEFAULT_TENANT = 1;
+    private Integer tenantId;
 
     private TenantStoreKey(String category, Object... params) {
-        this("1", category, params);
+        this(category, DEFAULT_TENANT, category, params);
     }
 
-    public TenantStoreKey(String category, String tenantId, Object... params) {
+    public TenantStoreKey(String category, Integer tenantId, Object... params) {
         super(category, params);
         this.tenantId = tenantId;
     }
 
-    public String getTenantId() {
+    public Integer getTenantId() {
         return tenantId;
     }
 
