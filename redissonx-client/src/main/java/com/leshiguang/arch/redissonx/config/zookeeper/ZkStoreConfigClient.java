@@ -1,6 +1,7 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
+import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategyAnalyzer;
 import com.leshiguang.arch.redissonx.config.hotkey.LocalCacheHotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.arch.redissonx.exception.StoreConfigException;
@@ -47,32 +48,8 @@ public class ZkStoreConfigClient implements StoreConfigClient {
         storeCategoryConfig.setHot(categoryBO.isHot());
         storeCategoryConfig.setDuration(categoryBO.getDuration());
         if (categoryBO.isHot()) {
-            if (CollectionUtils.isNotEmpty(categoryBO.getHotKeyStrategyList())) {
-                for (HotKeyStrategyBO hotKeyStrategyBO : categoryBO.getHotKeyStrategyList()) {
-                    switch (hotKeyStrategyBO.getStrategy()) {
-                        case HotKeyStrategy.LOCAL:
-                            LocalCacheHotKeyStrategy localCacheHotKeyStrategy = new LocalCacheHotKeyStrategy();
-                            Object duration = hotKeyStrategyBO.getStrategyParams().get("duration");
-                            if (null != duration) {
-                                localCacheHotKeyStrategy.setDuration((String) duration);
-                            }
-                            Object maximumSize = hotKeyStrategyBO.getStrategyParams().get("maximumSize");
-                            if (null != maximumSize) {
-                                localCacheHotKeyStrategy.setMaximumSize((Integer) maximumSize);
-                            }
-                            Object maximumWeight = hotKeyStrategyBO.getStrategyParams().get("maximumWeight");
-                            if (null != maximumWeight) {
-                                localCacheHotKeyStrategy.setMaximumWeight((Integer) maximumWeight);
-                            }
-                            localCacheHotKeyStrategy.process();
-                            storeCategoryConfig.addHotKeyStrategy(localCacheHotKeyStrategy);
-                            break;
-                        case HotKeyStrategy.FLOW_CONTROL:
-                            //TODO
-                            break;
-                    }
-                }
-            }
+            //设置默认值
+            HotKeyStrategyAnalyzer.analyze(storeCategoryConfig, categoryBO);
         }
         return storeCategoryConfig;
     }

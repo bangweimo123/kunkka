@@ -21,7 +21,6 @@ public class GuavaCacheHolder<V> {
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(strategy.getDurationInSeconds(), TimeUnit.MINUTES)
                 .maximumSize(strategy.getMaximumSize())
-                .maximumWeight(strategy.getMaximumWeight())
                 .build(new CacheLoader<String, V>() {
                     @Override
                     public V load(String data) throws Exception {

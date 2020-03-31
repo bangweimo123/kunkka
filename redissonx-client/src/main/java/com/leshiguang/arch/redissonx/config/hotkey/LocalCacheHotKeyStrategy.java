@@ -1,5 +1,6 @@
 package com.leshiguang.arch.redissonx.config.hotkey;
 
+import com.leshiguang.redissonx.common.entity.category.HotKeyStrategyBO;
 import org.redisson.config.GuavaCacheHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +12,9 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalCacheHotKeyStrategy implements HotKeyStrategy {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalCacheHotKeyStrategy.class);
-    private Integer maximumSize = 1000;
+    private Long maximumSize = 1000L;
 
-    private Integer maximumWeight = 1000;
+    private Long maximumWeight = -1L;
 
     private String duration = "10m";
 
@@ -58,19 +59,19 @@ public class LocalCacheHotKeyStrategy implements HotKeyStrategy {
         return hotHolder;
     }
 
-    public Integer getMaximumSize() {
+    public Long getMaximumSize() {
         return maximumSize;
     }
 
-    public void setMaximumSize(Integer maximumSize) {
+    public void setMaximumSize(Long maximumSize) {
         this.maximumSize = maximumSize;
     }
 
-    public Integer getMaximumWeight() {
+    public Long getMaximumWeight() {
         return maximumWeight;
     }
 
-    public void setMaximumWeight(Integer maximumWeight) {
+    public void setMaximumWeight(Long maximumWeight) {
         this.maximumWeight = maximumWeight;
     }
 
@@ -83,13 +84,31 @@ public class LocalCacheHotKeyStrategy implements HotKeyStrategy {
     }
 
     @Override
+    public HotKeyStrategy parse(HotKeyStrategyBO strategyBO) {
+        LocalCacheHotKeyStrategy localCacheHotKeyStrategy = new LocalCacheHotKeyStrategy();
+        Object duration = strategyBO.getStrategyParams().get("duration");
+        if (null != duration) {
+            localCacheHotKeyStrategy.setDuration((String) duration);
+        }
+        Object maximumSize = strategyBO.getStrategyParams().get("maximumSize");
+        if (null != maximumSize) {
+            localCacheHotKeyStrategy.setMaximumSize((Long) maximumSize);
+        }
+        Object maximumWeight = strategyBO.getStrategyParams().get("maximumWeight");
+        if (null != maximumWeight) {
+            localCacheHotKeyStrategy.setMaximumWeight((Long) maximumWeight);
+        }
+        return localCacheHotKeyStrategy;
+    }
+
+    @Override
     public String getName() {
         return "local";
     }
 
     @Override
     public void process() {
-        this.hotHolder = new GuavaCacheHolder(this);
         this.durationInSeconds = parseDurationInSeconds(this.duration);
+        this.hotHolder = new GuavaCacheHolder(this);
     }
 }

@@ -54,14 +54,4 @@ public class CategoryBO implements Serializable {
      * 热key对应的策略
      */
     private List<HotKeyStrategyBO> hotKeyStrategyList = new ArrayList<>();
-
-    public CategoryBO() {
-        if (CollectionUtils.isEmpty(hotKeyStrategyList)) {
-            HotKeyStrategyBO defaultStrategy = new HotKeyStrategyBO();
-            defaultStrategy.setStrategy("local");
-            defaultStrategy.getStrategyParams().put("maximumSize", 1000);
-            defaultStrategy.getStrategyParams().put("maximumWeight", 1000);
-            defaultStrategy.getStrategyParams().put("duration", "5m");
-        }
-    }
 }
