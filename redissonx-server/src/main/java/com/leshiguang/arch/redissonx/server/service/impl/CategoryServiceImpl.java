@@ -255,11 +255,24 @@ public class CategoryServiceImpl implements CategoryService {
         return RedissonxResponseBuilder.success(result);
     }
 
+    private List<String> loadOnlineCategorys(String clusterName) {
+        CategoryCondition condition = new CategoryCondition();
+        condition.createCriteria().andClusterNameEqualTo(clusterName).andCStatusEqualTo(2);
+        List<Category> onlineCategoryList = categoryMapper.selectByCondition(condition);
+        List<String> onlineCategorys = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(onlineCategoryList)) {
+            onlineCategoryList.forEach(categoryItem -> {
+                onlineCategorys.add(categoryItem.getCategory());
+            });
+        }
+        return onlineCategorys;
+    }
+
     @Override
     public RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, Integer tenantId, String operator) {
         List<String> result = new ArrayList<>();
         if (StringUtils.isBlank(category)) {
-            result = zookeeperClient.queryCategorys(clusterName);
+            result = loadOnlineCategorys(clusterName);
         } else {
             RedissonxClient redissonxClient = getClientByClusterName(clusterName);
             if (null != redissonxClient) {
