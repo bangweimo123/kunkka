@@ -1,10 +1,10 @@
 package com.leshiguang.arch.redissonx.server.domain.cluster;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
-import com.leshiguang.redissonx.common.entity.cluster.ClusterInnerSingleBO;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -13,15 +13,15 @@ import lombok.Data;
  */
 @Data
 public class ClusterVO extends ClusterBO {
-    private JSONObject innerData;
+    private List<String> ownerList;
 
-    public void convert() {
-        switch (this.getMode()) {
-            case "single":
-                this.setInner(JSON.toJavaObject(innerData, ClusterInnerSingleBO.class));
-                break;
-            default:
-                this.setInner(JSON.toJavaObject(innerData, ClusterInnerSingleBO.class));
-        }
-    }
+    private List<String> memberList;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private Integer status;
+
+    private String connectName;
 }

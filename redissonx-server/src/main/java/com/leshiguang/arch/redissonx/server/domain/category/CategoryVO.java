@@ -4,6 +4,7 @@ import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -12,9 +13,9 @@ import java.util.Date;
  */
 @Data
 public class CategoryVO extends CategoryBO {
-    private String operator;
+    private List<String> ownerList;
 
-    private String creator;
+    private List<String> memberList;
 
     private Date createTime;
 

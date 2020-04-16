@@ -1,6 +1,7 @@
 package com.leshiguang.arch.redissonx.spring;
 
 import org.redisson.config.RedissonxConfigLoader;
+import org.redisson.config.RedissonxConnectConfig;
 import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
@@ -18,8 +19,14 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class RedissonxBeanFactory implements FactoryBean, DisposableBean, InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedissonxBeanFactory.class);
-
+    /**
+     * 集群名
+     */
     private String clusterName;
+    /**
+     * 连接配置
+     */
+    private RedissonxConnectConfig connectConfig;
 
     private RedissonxConfigLoader configLoader;
 
@@ -33,6 +40,14 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
         this.clusterName = clusterName;
     }
 
+    public RedissonxConnectConfig getConnectConfig() {
+        return connectConfig;
+    }
+
+    public void setConnectConfig(RedissonxConnectConfig connectConfig) {
+        this.connectConfig = connectConfig;
+    }
+
     public void setConfigLoader(RedissonxConfigLoader configLoader) {
         this.configLoader = configLoader;
     }
@@ -43,7 +58,7 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
         if (null == configLoader) {
             configLoader = new ZookeeperRedissonxConfigLoader();
         }
-        Config config = configLoader.getByCluster(clusterName);
+        Config config = configLoader.getByCluster(clusterName, connectConfig);
         if (null == config) {
             LOGGER.error("can't find config from apollo for redissonx cluster:[" + clusterName + "]");
         }

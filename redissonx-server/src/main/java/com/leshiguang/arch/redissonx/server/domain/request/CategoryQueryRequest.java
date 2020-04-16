@@ -1,4 +1,4 @@
-package com.leshiguang.redissonx.common.entity.request;
+package com.leshiguang.arch.redissonx.server.domain.request;
 
 import lombok.Data;
 

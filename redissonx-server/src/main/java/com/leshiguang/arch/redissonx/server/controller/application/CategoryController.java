@@ -2,13 +2,14 @@ package com.leshiguang.arch.redissonx.server.controller.application;
 
 import com.leshiguang.arch.cas.support.service.UserInfoService;
 import com.leshiguang.arch.redissonx.server.domain.category.CategoryQueryReq;
+import com.leshiguang.arch.redissonx.server.domain.category.CategoryVO;
 import com.leshiguang.arch.redissonx.server.domain.rediskey.MValueBO;
 import com.leshiguang.arch.redissonx.server.domain.rediskey.RedisKeyValueSaveRequest;
 import com.leshiguang.arch.redissonx.server.service.CategoryService;
 import com.leshiguang.arch.redissonx.server.service.RedisKeyService;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
-import com.leshiguang.redissonx.common.entity.request.CategoryQueryRequest;
+import com.leshiguang.arch.redissonx.server.domain.request.CategoryQueryRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class CategoryController {
     private RedisKeyService redisKeyService;
 
     @PostMapping("/api/category/save/{clusterName}")
-    public RedissonxResponse save(@PathVariable String clusterName, @RequestBody CategoryBO category) {
+    public RedissonxResponse save(@PathVariable String clusterName, @RequestBody CategoryVO category) {
         return categoryService.save(clusterName, category, userInfoService.fetchLoginUser().getUserId());
     }
 

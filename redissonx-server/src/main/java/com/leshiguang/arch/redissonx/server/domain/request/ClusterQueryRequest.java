@@ -1,19 +1,17 @@
-package com.leshiguang.arch.redissonx.server.domain.cluster;
+package com.leshiguang.arch.redissonx.server.domain.request;
 
-import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
- * @Date 2020-03-20 15:27
+ * @Date 2020-03-20 14:12
  * @Modify
  */
 @Data
-public class ClusterQueryReq implements Serializable {
-    private RedissonxPaging paging;
-
+public class ClusterQueryRequest implements Serializable {
     private String userId;
 
     private String keyword;

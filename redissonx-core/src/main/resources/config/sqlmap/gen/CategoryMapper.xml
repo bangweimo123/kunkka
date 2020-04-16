@@ -10,15 +10,15 @@
     <result column="isHot" jdbcType="OTHER" property="ishot" />
     <result column="version" jdbcType="VARCHAR" property="version" />
     <result column="c_status" jdbcType="OTHER" property="cStatus" />
-    <result column="creator" jdbcType="VARCHAR" property="creator" />
-    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="member" jdbcType="VARCHAR" property="member" />
     <result column="create_time" jdbcType="OTHER" property="createTime" />
     <result column="update_time" jdbcType="OTHER" property="updateTime" />
     <result column="delete_time" jdbcType="OTHER" property="deleteTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cluster_name, category, duration, index_template, isHot, version, c_status, creator, 
-    operator, create_time, update_time, delete_time
+    id, cluster_name, category, duration, index_template, isHot, version, c_status, owner, 
+    member, create_time, update_time, delete_time
   </sql>
   <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition" resultMap="BaseResultMap">
     select
@@ -57,12 +57,12 @@
     </selectKey>
     insert into category (cluster_name, category, duration, 
       index_template, isHot, version, 
-      c_status, creator, operator, 
+      c_status, owner, member, 
       create_time, update_time, delete_time
       )
     values (#{clusterName,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
       #{indexTemplate,jdbcType=VARCHAR}, #{ishot,jdbcType=OTHER}, #{version,jdbcType=VARCHAR}, 
-      #{cStatus,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{cStatus,jdbcType=OTHER}, #{owner,jdbcType=VARCHAR}, #{member,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{deleteTime,jdbcType=OTHER}
       )
   </insert>
@@ -93,11 +93,11 @@
       <if test="cStatus != null">
         c_status,
       </if>
-      <if test="creator != null">
-        creator,
+      <if test="owner != null">
+        owner,
       </if>
-      <if test="operator != null">
-        operator,
+      <if test="member != null">
+        member,
       </if>
       <if test="createTime != null">
         create_time,
@@ -131,11 +131,11 @@
       <if test="cStatus != null">
         #{cStatus,jdbcType=OTHER},
       </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
       </if>
-      <if test="operator != null">
-        #{operator,jdbcType=VARCHAR},
+      <if test="member != null">
+        #{member,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=OTHER},
@@ -181,11 +181,11 @@
       <if test="record.cStatus != null">
         c_status = #{record.cStatus,jdbcType=OTHER},
       </if>
-      <if test="record.creator != null">
-        creator = #{record.creator,jdbcType=VARCHAR},
+      <if test="record.owner != null">
+        owner = #{record.owner,jdbcType=VARCHAR},
       </if>
-      <if test="record.operator != null">
-        operator = #{record.operator,jdbcType=VARCHAR},
+      <if test="record.member != null">
+        member = #{record.member,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=OTHER},
@@ -211,8 +211,8 @@
       isHot = #{record.ishot,jdbcType=OTHER},
       version = #{record.version,jdbcType=VARCHAR},
       c_status = #{record.cStatus,jdbcType=OTHER},
-      creator = #{record.creator,jdbcType=VARCHAR},
-      operator = #{record.operator,jdbcType=VARCHAR},
+      owner = #{record.owner,jdbcType=VARCHAR},
+      member = #{record.member,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=OTHER},
       update_time = #{record.updateTime,jdbcType=OTHER},
       delete_time = #{record.deleteTime,jdbcType=OTHER}
@@ -244,11 +244,11 @@
       <if test="cStatus != null">
         c_status = #{cStatus,jdbcType=OTHER},
       </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
+      <if test="owner != null">
+        owner = #{owner,jdbcType=VARCHAR},
       </if>
-      <if test="operator != null">
-        operator = #{operator,jdbcType=VARCHAR},
+      <if test="member != null">
+        member = #{member,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=OTHER},
@@ -271,8 +271,8 @@
       isHot = #{ishot,jdbcType=OTHER},
       version = #{version,jdbcType=VARCHAR},
       c_status = #{cStatus,jdbcType=OTHER},
-      creator = #{creator,jdbcType=VARCHAR},
-      operator = #{operator,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      member = #{member,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=OTHER},
       update_time = #{updateTime,jdbcType=OTHER},
       delete_time = #{deleteTime,jdbcType=OTHER}
@@ -281,13 +281,13 @@
   <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     insert into category (cluster_name, category, duration, 
       index_template, isHot, version, 
-      c_status, creator, operator, 
+      c_status, owner, member, 
       create_time, update_time, delete_time
       ) values
     <foreach collection="list" item="record" separator=",">
        ( #{record.clusterName,jdbcType=VARCHAR}, #{record.category,jdbcType=VARCHAR}, #{record.duration,jdbcType=VARCHAR}, 
         #{record.indexTemplate,jdbcType=VARCHAR}, #{record.ishot,jdbcType=OTHER}, #{record.version,jdbcType=VARCHAR}, 
-        #{record.cStatus,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR}, #{record.operator,jdbcType=VARCHAR}, 
+        #{record.cStatus,jdbcType=OTHER}, #{record.owner,jdbcType=VARCHAR}, #{record.member,jdbcType=VARCHAR}, 
         #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.deleteTime,jdbcType=OTHER}
         )
     </foreach>

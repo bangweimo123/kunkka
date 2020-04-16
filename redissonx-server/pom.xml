@@ -109,7 +109,7 @@
                 <configuration>
                     <fork>true</fork>
                     <executable>true</executable>
-                    <mainClass>com.lifesense.arch.redissonx.server.RedissonxSpringBootApplication</mainClass>
+                    <mainClass>com.leshiguang.arch.redissonx.server.RedissonxSpringBootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

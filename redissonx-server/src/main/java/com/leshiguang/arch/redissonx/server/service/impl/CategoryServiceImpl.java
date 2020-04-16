@@ -4,24 +4,23 @@ import com.leshiguang.arch.redissonx.core.entity.gen.Category;
 import com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition;
 import com.leshiguang.arch.redissonx.core.mapper.gen.CategoryMapper;
 import com.leshiguang.arch.redissonx.server.domain.category.CategoryVO;
+import com.leshiguang.arch.redissonx.server.domain.request.CategoryQueryRequest;
 import com.leshiguang.arch.redissonx.server.service.CategoryService;
 import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
-import com.leshiguang.redissonx.common.entity.category.HotKeyStrategyBO;
-import com.leshiguang.redissonx.common.entity.request.CategoryQueryRequest;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.config.RedissonxConfigLoader;
-import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
 import org.redisson.api.RKeys;
 import org.redisson.config.Config;
+import org.redisson.config.RedissonxConfigLoader;
+import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -79,7 +78,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void buildCriteria(CategoryCondition.Criteria criteria, CategoryQueryRequest request) {
         if (StringUtils.isNotEmpty(request.getUserId())) {
-            criteria.andCreatorEqualTo(request.getUserId());
+            criteria.andOwnerLike("%" + request.getUserId() + "%");
+            criteria.andMemberLike("%" + request.getUserId() + "%");
         }
         if (StringUtils.isNotEmpty(request.getKeyword())) {
             criteria.andCategoryLikeInsensitive("%" + request.getKeyword() + "%");
@@ -95,63 +95,71 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    private CategoryVO toVO(Category category) {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setClusterName(category.getClusterName());
-        categoryVO.setCategory(category.getCategory());
-        categoryVO.setVersion(category.getVersion());
-        categoryVO.setDuration(category.getDuration());
-        categoryVO.setHot(category.getIshot() > 0);
-        categoryVO.setIndexTemplate(category.getIndexTemplate());
-        categoryVO.setCreator(category.getCreator());
-        categoryVO.setOperator(category.getOperator());
-        categoryVO.setCreateTime(category.getCreateTime());
-        categoryVO.setUpdateTime(category.getUpdateTime());
-        categoryVO.setStatus(category.getcStatus());
-        return categoryVO;
+    private CategoryVO toVO(Category source) {
+        CategoryVO target = new CategoryVO();
+        target.setClusterName(source.getClusterName());
+        target.setCategory(source.getCategory());
+        target.setVersion(source.getVersion());
+        target.setDuration(source.getDuration());
+        target.setHot(source.getIshot() > 0);
+        target.setIndexTemplate(source.getIndexTemplate());
+        if (StringUtils.isNotEmpty(source.getMember())) {
+            target.setMemberList(Arrays.asList(StringUtils.split(source.getMember(), ",")));
+        }
+        if (StringUtils.isNotEmpty(source.getOwner())) {
+            target.setOwnerList(Arrays.asList(StringUtils.split(source.getOwner(), ",")));
+        }
+        target.setCreateTime(source.getCreateTime());
+        target.setUpdateTime(source.getUpdateTime());
+        target.setStatus(source.getcStatus());
+        return target;
     }
 
-    private CategoryBO toBO(Category category) {
-        CategoryBO categoryBO = new CategoryBO();
-        categoryBO.setClusterName(category.getClusterName());
-        categoryBO.setCategory(category.getCategory());
-        categoryBO.setVersion(category.getVersion());
-        categoryBO.setDuration(category.getDuration());
-        categoryBO.setHot(category.getIshot() > 0);
-        categoryBO.setIndexTemplate(category.getIndexTemplate());
-        return categoryBO;
+    private CategoryBO toBO(Category source) {
+        CategoryBO target = new CategoryBO();
+        target.setClusterName(source.getClusterName());
+        target.setCategory(source.getCategory());
+        target.setVersion(source.getVersion());
+        target.setDuration(source.getDuration());
+        target.setHot(source.getIshot() > 0);
+        target.setIndexTemplate(source.getIndexTemplate());
+        return target;
     }
 
-    private Category toCategory(CategoryBO categoryBO) {
-        Category category = new Category();
-        category.setClusterName(categoryBO.getClusterName());
-        category.setCategory(categoryBO.getCategory());
-        category.setVersion(categoryBO.getVersion());
-        category.setDuration(categoryBO.getDuration());
-        category.setIshot(categoryBO.isHot() ? 1 : 0);
-        category.setIndexTemplate(categoryBO.getIndexTemplate());
-        return category;
+    private Category toDBEntity(CategoryVO source) {
+        Category target = new Category();
+        target.setClusterName(source.getClusterName());
+        target.setCategory(source.getCategory());
+        target.setVersion(source.getVersion());
+        target.setDuration(source.getDuration());
+        target.setIshot(source.isHot() ? 1 : 0);
+        target.setIndexTemplate(source.getIndexTemplate());
+        if (CollectionUtils.isNotEmpty(source.getMemberList())) {
+            target.setMember(StringUtils.join(source.getMemberList(), ","));
+        }
+        if (CollectionUtils.isNotEmpty(source.getOwnerList())) {
+            target.setOwner(StringUtils.join(source.getOwnerList(), ","));
+        }
+        return target;
     }
 
     @Override
-    public RedissonxResponse<Boolean> save(String clusterName, CategoryBO category, String operator) {
+    public RedissonxResponse<Boolean> save(String clusterName, CategoryVO category, String operator) {
         CategoryCondition condition = new CategoryCondition();
         condition.createCriteria().andClusterNameEqualTo(clusterName).andCategoryEqualTo(category.getCategory());
         Category existCategory = categoryMapper.selectOneByCondition(condition);
         Boolean result = false;
-        Category operationCategory = toCategory(category);
+        Category operationCategory = toDBEntity(category);
         if (null == existCategory) {
-            operationCategory.setCreator(operator);
-            operationCategory.setOperator(operator);
+            operationCategory.setOwner(operator);
+            operationCategory.setMember(operator);
             operationCategory.setCreateTime(new Date());
             operationCategory.setUpdateTime(new Date());
             operationCategory.setcStatus(1);
             int insertCount = categoryMapper.insertSelective(operationCategory);
             result = insertCount > 0;
         } else {
-            operationCategory.setOperator(operator);
             operationCategory.setUpdateTime(new Date());
-            operationCategory.setCreator(existCategory.getCreator());
             operationCategory.setCreateTime(existCategory.getCreateTime());
             operationCategory.setId(existCategory.getId());
             int updateCount = categoryMapper.updateByIdSelective(operationCategory);
@@ -180,7 +188,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category statusCategory = new Category();
         statusCategory.setcStatus(4);
         statusCategory.setUpdateTime(new Date());
-        statusCategory.setOperator(operator);
         statusCategory.setDeleteTime(new Date());
         int updateCount = categoryMapper.updateByConditionSelective(statusCategory, condition);
         boolean updateStatus = updateCount > 0;
@@ -198,7 +205,6 @@ public class CategoryServiceImpl implements CategoryService {
             Category statusCategory = new Category();
             statusCategory.setcStatus(2);
             statusCategory.setUpdateTime(new Date());
-            statusCategory.setOperator(operator);
             statusCategory.setVersion(version);
             int updateCount = categoryMapper.updateByConditionSelective(statusCategory, condition);
             boolean updateStatus = updateCount > 0;
@@ -232,7 +238,6 @@ public class CategoryServiceImpl implements CategoryService {
             Category statusCategory = new Category();
             statusCategory.setcStatus(3);
             statusCategory.setUpdateTime(new Date());
-            statusCategory.setOperator(operator);
             statusCategory.setVersion("none");
             int updateCount = categoryMapper.updateByConditionSelective(statusCategory, condition);
             boolean updateStatus = updateCount > 0;
@@ -288,10 +293,12 @@ public class CategoryServiceImpl implements CategoryService {
                     pattern.append("@t");
                     pattern.append(tenantId);
                 }
-                Iterable<String> keys = rKeys.getKeysByPattern(pattern.toString());
+                Iterable<String> keys = rKeys.getKeysByPattern(pattern.toString(),50000);
                 Iterator<String> iterator = keys.iterator();
-                while (iterator.hasNext()) {
-                    result.add(iterator.next());
+                if (iterator != null) {
+                    while (iterator.hasNext()) {
+                        result.add(iterator.next());
+                    }
                 }
             }
         }

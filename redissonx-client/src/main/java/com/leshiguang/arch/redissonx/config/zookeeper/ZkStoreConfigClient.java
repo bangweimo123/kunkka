@@ -1,5 +1,8 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
+import com.leshiguang.arch.redissonx.config.auth.ApplicationAuthStrategy;
+import com.leshiguang.arch.redissonx.config.auth.AuthStrategy;
+import com.leshiguang.arch.redissonx.config.auth.TenantAuthStrategy;
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategyAnalyzer;
 import com.leshiguang.arch.redissonx.config.hotkey.LocalCacheHotKeyStrategy;
@@ -7,6 +10,7 @@ import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import com.leshiguang.redissonx.common.entity.category.HotKeyStrategyBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
 import org.I0Itec.zkclient.IZkChildListener;
@@ -15,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,24 +28,30 @@ import java.util.List;
  * @Modify
  */
 public class ZkStoreConfigClient implements StoreConfigClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ZkStoreConfigClient.class);
     private ZookeeperClient zookeeperClient = new ZookeeperClientImpl();
 
     @Override
-    public Boolean isStrictAuth(String clusterName) {
-        return zookeeperClient.isStrictAuth(clusterName);
-    }
-
-    @Override
-    public List<String> loadAuthApps(String clusterName) {
-        return null;
+    public List<AuthStrategy> loadAuthStategorys(String clusterName) {
+        ClusterBO clusterBO = zookeeperClient.getCluster(clusterName);
+        List<AuthStrategy> authStrategies = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(clusterBO.getTenantList())) {
+            TenantAuthStrategy tenantAuthStrategy = new TenantAuthStrategy();
+            tenantAuthStrategy.setTenantList(clusterBO.getTenantList());
+            authStrategies.add(tenantAuthStrategy);
+        }
+        if (CollectionUtils.isNotEmpty(clusterBO.getApplicationList())) {
+            ApplicationAuthStrategy applicationAuthStrategy = new ApplicationAuthStrategy();
+            applicationAuthStrategy.setApplicationList(clusterBO.getApplicationList());
+            authStrategies.add(applicationAuthStrategy);
+        }
+        return authStrategies;
     }
 
     @Override
     public StoreCategoryConfig getStoreCategoryConfig(String clusterName, String category) {
         CategoryBO categoryBO = zookeeperClient.getCategory(clusterName, category);
         if (null == categoryBO) {
-            throw new StoreConfigException("category not exist");
+            throw new StoreConfigException("category not exist for cluster:" + clusterName + ",category:" + category);
         }
         StoreCategoryConfig storeCategoryConfig = new StoreCategoryConfig();
         storeCategoryConfig.setCategory(categoryBO.getCategory());

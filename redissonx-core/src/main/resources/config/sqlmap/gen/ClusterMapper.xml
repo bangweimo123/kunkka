@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.redissonx.core.mapper.gen.ClusterMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="connect_name" jdbcType="VARCHAR" property="connectName" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="member" jdbcType="VARCHAR" property="member" />
+    <result column="status" jdbcType="OTHER" property="status" />
+    <result column="application_list" jdbcType="VARCHAR" property="applicationList" />
+    <result column="tenant_list" jdbcType="VARCHAR" property="tenantList" />
+    <result column="ds" jdbcType="INTEGER" property="ds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cluster_name, mode, connect_name, create_time, update_time, owner, member, status, 
+    application_list, tenant_list, ds
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cluster
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cluster
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition">
+    delete from cluster
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster (cluster_name, mode, connect_name, 
+      create_time, update_time, owner, 
+      member, status, application_list, 
+      tenant_list, ds)
+    values (#{clusterName,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, #{connectName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{owner,jdbcType=VARCHAR}, 
+      #{member,jdbcType=VARCHAR}, #{status,jdbcType=OTHER}, #{applicationList,jdbcType=VARCHAR}, 
+      #{tenantList,jdbcType=VARCHAR}, #{ds,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        cluster_name,
+      </if>
+      <if test="mode != null">
+        mode,
+      </if>
+      <if test="connectName != null">
+        connect_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="owner != null">
+        owner,
+      </if>
+      <if test="member != null">
+        member,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="applicationList != null">
+        application_list,
+      </if>
+      <if test="tenantList != null">
+        tenant_list,
+      </if>
+      <if test="ds != null">
+        ds,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="connectName != null">
+        #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="member != null">
+        #{member,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=OTHER},
+      </if>
+      <if test="applicationList != null">
+        #{applicationList,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantList != null">
+        #{tenantList,jdbcType=VARCHAR},
+      </if>
+      <if test="ds != null">
+        #{ds,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition" resultType="java.lang.Long">
+    select count(*) from cluster
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update cluster
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.clusterName != null">
+        cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mode != null">
+        mode = #{record.mode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.connectName != null">
+        connect_name = #{record.connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=OTHER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=OTHER},
+      </if>
+      <if test="record.owner != null">
+        owner = #{record.owner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.member != null">
+        member = #{record.member,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=OTHER},
+      </if>
+      <if test="record.applicationList != null">
+        application_list = #{record.applicationList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenantList != null">
+        tenant_list = #{record.tenantList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ds != null">
+        ds = #{record.ds,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update cluster
+    set id = #{record.id,jdbcType=INTEGER},
+      cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      mode = #{record.mode,jdbcType=VARCHAR},
+      connect_name = #{record.connectName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=OTHER},
+      update_time = #{record.updateTime,jdbcType=OTHER},
+      owner = #{record.owner,jdbcType=VARCHAR},
+      member = #{record.member,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=OTHER},
+      application_list = #{record.applicationList,jdbcType=VARCHAR},
+      tenant_list = #{record.tenantList,jdbcType=VARCHAR},
+      ds = #{record.ds,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
+    update cluster
+    <set>
+      <if test="clusterName != null">
+        cluster_name = #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="connectName != null">
+        connect_name = #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="owner != null">
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="member != null">
+        member = #{member,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=OTHER},
+      </if>
+      <if test="applicationList != null">
+        application_list = #{applicationList,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantList != null">
+        tenant_list = #{tenantList,jdbcType=VARCHAR},
+      </if>
+      <if test="ds != null">
+        ds = #{ds,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
+    update cluster
+    set cluster_name = #{clusterName,jdbcType=VARCHAR},
+      mode = #{mode,jdbcType=VARCHAR},
+      connect_name = #{connectName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=OTHER},
+      update_time = #{updateTime,jdbcType=OTHER},
+      owner = #{owner,jdbcType=VARCHAR},
+      member = #{member,jdbcType=VARCHAR},
+      status = #{status,jdbcType=OTHER},
+      application_list = #{applicationList,jdbcType=VARCHAR},
+      tenant_list = #{tenantList,jdbcType=VARCHAR},
+      ds = #{ds,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into cluster (cluster_name, mode, connect_name, 
+      create_time, update_time, owner, 
+      member, status, application_list, 
+      tenant_list, ds) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.mode,jdbcType=VARCHAR}, #{record.connectName,jdbcType=VARCHAR}, 
+        #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.owner,jdbcType=VARCHAR}, 
+        #{record.member,jdbcType=VARCHAR}, #{record.status,jdbcType=OTHER}, #{record.applicationList,jdbcType=VARCHAR}, 
+        #{record.tenantList,jdbcType=VARCHAR}, #{record.ds,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

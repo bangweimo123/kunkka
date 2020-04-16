@@ -13,15 +13,6 @@ import java.util.List;
  * @Modify
  */
 public interface ZookeeperClient extends ConfigListenable {
-    ZkClient getZkClient();
-
-    /**
-     * 加载所有的cluster
-     *
-     * @return
-     */
-    List<ClusterBO> loadAllCluster();
-
     /**
      * 加载cluster
      *
@@ -35,11 +26,17 @@ public interface ZookeeperClient extends ConfigListenable {
      *
      * @param cluster
      */
-    void setCluster(ClusterBO cluster);
+    boolean setCluster(ClusterBO cluster);
+
+    /**
+     * 判断集群是否存在
+     *
+     * @param clusterName
+     * @return
+     */
+    boolean existCluster(String clusterName);
 
     boolean deleteCluster(String clusterName);
-
-    List<String> queryCategorys(String clusterName);
 
     /**
      * 获取一个category的配置
@@ -56,39 +53,6 @@ public interface ZookeeperClient extends ConfigListenable {
      * @return
      */
     boolean setCategory(String clusterName, CategoryBO config);
-
-    /**
-     * 删除category
-     *
-     * @param clusterName
-     * @param category
-     * @return
-     */
-    boolean deleteCategory(String clusterName, String category);
-
-    /**
-     * 加载所有的热key
-     *
-     * @param clusterName
-     * @return
-     */
-    List<HotKeyBO> loadHotKey(String clusterName);
-
-    /**
-     * 是否严格鉴权
-     *
-     * @param clusterName
-     * @return
-     */
-    Boolean isStrictAuth(String clusterName);
-
-    /**
-     * 加载鉴权的应用
-     *
-     * @param clusterName
-     * @return
-     */
-    List<String> authApps(String clusterName);
 
 
 }

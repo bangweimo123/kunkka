@@ -6,11 +6,11 @@ import java.io.Serializable;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
- * @Date 2020-03-20 13:58
+ * @Date 2020-03-20 14:20
  * @Modify
  */
 @Data
-public class ClusterConnectBO implements Serializable {
+public class ClusterModeDataBO implements Serializable {
     /**
      * 空闲超时时间
      */
@@ -20,6 +20,10 @@ public class ClusterConnectBO implements Serializable {
      */
     private Integer connectTimeout;
     /**
+     * ping超时
+     */
+    private Integer pingTimeout;
+    /**
      * 连接重试次数
      */
     private Integer retryAttempts;
@@ -27,4 +31,14 @@ public class ClusterConnectBO implements Serializable {
      * 重试间隔时间
      */
     private Integer retryInterval;
+
+    private Integer pingConnectionInterval;
+
+    private Boolean keepAlive;
+
+    private Boolean tcpNoDelay;
+
+    private Integer timeout;
+
+    private Integer subscriptionsPerConnection;
 }

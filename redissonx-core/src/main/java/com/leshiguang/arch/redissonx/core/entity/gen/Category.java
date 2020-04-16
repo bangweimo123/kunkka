@@ -50,14 +50,14 @@ public class Category implements Serializable {
     private Integer cStatus;
 
     /**
-     * 创建人
+     * owner
      */
-    private String creator;
+    private String owner;
 
     /**
-     * 服务类型
+     * member
      */
-    private String operator;
+    private String member;
 
     /**
      * 创建时间
@@ -203,35 +203,35 @@ public class Category implements Serializable {
     }
 
     /**
-     * 创建人
-     * @return creator 创建人
+     * owner
+     * @return owner owner
      */
-    public String getCreator() {
-        return creator;
+    public String getOwner() {
+        return owner;
     }
 
     /**
-     * 创建人
-     * @param creator 创建人
+     * owner
+     * @param owner owner
      */
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     /**
-     * 服务类型
-     * @return operator 服务类型
+     * member
+     * @return member member
      */
-    public String getOperator() {
-        return operator;
+    public String getMember() {
+        return member;
     }
 
     /**
-     * 服务类型
-     * @param operator 服务类型
+     * member
+     * @param member member
      */
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setMember(String member) {
+        this.member = member;
     }
 
     /**

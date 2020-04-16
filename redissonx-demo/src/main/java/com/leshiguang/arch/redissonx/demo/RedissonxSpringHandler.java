@@ -41,7 +41,7 @@ public class RedissonxSpringHandler {
     }
 
     public static void testTenantKey(RedissonxClient redissonxClient) {
-        StoreKey storeKey = new TenantStoreKey("testredissonx4", 2, 2, 3);
+        StoreKey storeKey = new TenantStoreKey("mysleep", 2, 2);
         RBucket<String> bucket = redissonxClient.getBucket(storeKey);
         bucket.set("bangwei.mo");
         System.out.println(bucket.get());

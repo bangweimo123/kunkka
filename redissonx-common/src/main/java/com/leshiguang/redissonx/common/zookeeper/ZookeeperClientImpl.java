@@ -7,21 +7,16 @@ import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.leshiguang.redissonx.common.constants.RedissonxConstants;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
-import com.leshiguang.redissonx.common.entity.hotkey.HotKeyBO;
 import com.leshiguang.redissonx.common.path.PathProvider;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.IZkStateListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.Watcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -88,9 +83,9 @@ public class ZookeeperClientImpl implements ZookeeperClient {
             @Override
             public void handleStateChanged(Watcher.Event.KeeperState keeperState) throws Exception {
                 try {
-                    if (keeperState == Watcher.Event.KeeperState.Disconnected) {
-                        renewZkClient();
-                    }
+//                    if (keeperState == Watcher.Event.KeeperState.Disconnected) {
+//                        renewZkClient();
+//                    }
                 } catch (Exception e) {
                     LOGGER.error("exception when handler zk state change", e);
                 }
@@ -119,33 +114,9 @@ public class ZookeeperClientImpl implements ZookeeperClient {
                 _old_zkClient.unsubscribeAll();
                 _old_zkClient.close();
             } catch (Exception e) {
-                LOGGER.error("failed to close zkclient: " + e.getMessage());
+                LOGGER.error("failed to close zkclient: " + e.getMessage(), e);
             }
         }
-    }
-
-    @Override
-    public ZkClient getZkClient() {
-        return zkClient;
-    }
-
-    @Override
-    public List<ClusterBO> loadAllCluster() {
-        String path = pathProvider.getPath("clusterList");
-        List<ClusterBO> clusterList = new ArrayList<>();
-        if (zkClient.exists(path)) {
-            List<String> clusterNameList = zkClient.getChildren(path);
-            if (CollectionUtils.isNotEmpty(clusterNameList)) {
-                for (String clusterName : clusterNameList) {
-                    String clusterPath = pathProvider.getPath("cluster", clusterName);
-                    ClusterBO clusterBO = zkClient.readData(clusterPath, true);
-                    if (null != clusterBO) {
-                        clusterList.add(clusterBO);
-                    }
-                }
-            }
-        }
-        return clusterList;
     }
 
     @Override
@@ -159,12 +130,19 @@ public class ZookeeperClientImpl implements ZookeeperClient {
     }
 
     @Override
-    public void setCluster(ClusterBO cluster) {
+    public boolean setCluster(ClusterBO cluster) {
         String clusterPath = pathProvider.getPath("cluster", cluster.getClusterName());
         if (!zkClient.exists(clusterPath)) {
             zkClient.createPersistent(clusterPath, true);
         }
         zkClient.writeData(clusterPath, cluster);
+        return true;
+    }
+
+    @Override
+    public boolean existCluster(String clusterName) {
+        String clusterPath = pathProvider.getPath("cluster", clusterName);
+        return zkClient.exists(clusterPath);
     }
 
     @Override
@@ -177,29 +155,6 @@ public class ZookeeperClientImpl implements ZookeeperClient {
         }
     }
 
-    @Override
-    public List<String> queryCategorys(String clusterName) {
-        String categoryBucketPath = pathProvider.getPath("categoryPage", clusterName);
-        List<String> categoryList = new ArrayList<>();
-        try {
-            if (zkClient.exists(categoryBucketPath)) {
-                List<String> bucketList = zkClient.getChildren(categoryBucketPath);
-                if (!CollectionUtils.isEmpty(bucketList)) {
-                    for (String bucket : bucketList) {
-                        String categoryPath = pathProvider.getPathWithBucket("categoryBucket", Integer.parseInt(bucket), clusterName);
-                        if (zkClient.exists(categoryPath)) {
-                            List<String> bucketCategoryList = zkClient.getChildren(categoryPath);
-                            categoryList.addAll(bucketCategoryList);
-                        }
-                    }
-                }
-                return categoryList;
-            }
-        } catch (Exception e) {
-            LOGGER.warn("exception for setCategory", e);
-        }
-        return null;
-    }
 
     @Override
     public CategoryBO getCategory(String clusterName, String category) {
@@ -227,37 +182,6 @@ public class ZookeeperClientImpl implements ZookeeperClient {
             return false;
         }
 
-    }
-
-    @Override
-    public boolean deleteCategory(String clusterName, String category) {
-        try {
-            CategoryBO categoryBO = getCategory(clusterName, category);
-            if (null != categoryBO) {
-                categoryBO.setVersion("none");
-                return setCategory(clusterName, categoryBO);
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            LOGGER.warn("exception for deleteCategory", e);
-            return false;
-        }
-    }
-
-    @Override
-    public List<HotKeyBO> loadHotKey(String clusterName) {
-        return null;
-    }
-
-    @Override
-    public Boolean isStrictAuth(String clusterName) {
-        return null;
-    }
-
-    @Override
-    public List<String> authApps(String clusterName) {
-        return null;
     }
 
     @Override

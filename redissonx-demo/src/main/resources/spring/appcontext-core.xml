@@ -18,6 +18,6 @@
 
     <context:annotation-config/>
     <bean id="redissonxClient" class="com.leshiguang.arch.redissonx.spring.RedissonxBeanFactory">
-        <property name="clusterName" value="test_01"></property>
+        <property name="clusterName" value="sports-01-beta"></property>
     </bean>
 </beans>

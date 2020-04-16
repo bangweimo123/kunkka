@@ -10,8 +10,7 @@ import java.util.List;
  * @Modify
  */
 @Data
-public class ClusterInnerClusterBO extends ClusterBO {
-    private List<String> addresses;
+public class ClusterModeDataClusterBO extends ClusterModeDataMasterSlaveBO {
 
     private Integer scanInterval;
 }

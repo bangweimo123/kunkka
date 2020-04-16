@@ -1,8 +1,10 @@
 package com.leshiguang.redissonx.common.entity.cluster;
 
+import com.leshiguang.redissonx.common.entity.connect.ConnectBO;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -10,31 +12,30 @@ import java.io.Serializable;
  * @Modify
  */
 @Data
-public class ClusterBO<T extends ClusterInnerBO> implements Serializable {
+public class ClusterBO implements Serializable {
     private static final long serialVersionUID = -7865144088316178836L;
     /**
      * 集群名
      */
     private String clusterName;
     /**
-     * 认证方式 password/ssh
+     * 连接
      */
-    private String authMode;
-
-    private String password;
-
-    private ClusterSSHBO ssh;
-
+    private ConnectBO connect;
+    /**
+     * 数据库
+     */
+    private Integer database;
     /**
      * 模式 single/cluster/sentinel/replicate/masterslave
      */
     private String mode;
     /**
-     * 连接信息
+     * 支持的租户
      */
-    private ClusterConnectBO connect;
+    private List<String> tenantList;
     /**
-     * 特殊信息
+     * 支持的应用
      */
-    private T inner;
+    private List<String> applicationList;
 }

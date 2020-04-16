@@ -1,10 +1,10 @@
 package com.leshiguang.arch.redissonx.server.service;
 
+import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterVO;
+import com.leshiguang.arch.redissonx.server.domain.request.ClusterQueryRequest;
 import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
-import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
-import com.leshiguang.redissonx.common.entity.request.ClusterQueryRequest;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -18,7 +18,7 @@ public interface ClusterService {
      * @param request
      * @return
      */
-    RedissonxResponse<RedissonxTable<ClusterBO>> queryClusterList(ClusterQueryRequest request, RedissonxPaging paging);
+    RedissonxResponse<RedissonxTable<ClusterVO>> query(ClusterQueryRequest request, RedissonxPaging paging);
 
     /**
      * 拉取集群详情
@@ -26,16 +26,16 @@ public interface ClusterService {
      * @param clusterName
      * @return
      */
-    RedissonxResponse<ClusterBO> loadClusterDetail(String clusterName);
+    RedissonxResponse<ClusterVO> load(String clusterName);
 
     /**
-     * 新增集群
+     * 保存集群
      *
      * @param cluster
      * @param operator
      * @return
      */
-    RedissonxResponse<Boolean> saveCluster(ClusterBO cluster, String operator);
+    RedissonxResponse<Boolean> save(ClusterVO cluster, String operator);
 
     /**
      * 删除集群
@@ -44,5 +44,23 @@ public interface ClusterService {
      * @param operator
      * @return
      */
-    RedissonxResponse<Boolean> deleteCluster(String clusterName, String operator);
+    RedissonxResponse<Boolean> delete(String clusterName, String operator);
+
+    /**
+     * 发布集群
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> publish(String clusterName, String operator);
+
+    /**
+     * 下线集群
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> offline(String clusterName, String operator);
 }

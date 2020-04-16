@@ -1,4 +1,4 @@
-package org.redisson;
+package org.redisson.plugin;
 
 import com.google.common.cache.LoadingCache;
 import org.redisson.client.codec.Codec;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2020-03-26 13:34
  * @Modify 使用guava cache实现bucket
  */
-public class RedissonxLocalBucket<V> extends RedissonBucket<V> {
+public class RedissonxLocalBucket<V> extends RedissonxBucket<V> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedissonxLocalBucket.class);
     private LoadingCache<String, V> cache;
 

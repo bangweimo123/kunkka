@@ -6,5 +6,7 @@ package org.redisson.config;
  * @Modify
  */
 public interface RedissonxConfigLoader {
-    public org.redisson.config.Config getByCluster(String clusterName);
+    Config getByCluster(String clusterName);
+
+    Config getByCluster(String clusterName, RedissonxConnectConfig connectConfig);
 }

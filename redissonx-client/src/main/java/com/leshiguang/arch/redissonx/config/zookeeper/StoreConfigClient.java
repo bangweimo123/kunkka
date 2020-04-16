@@ -1,5 +1,6 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
+import com.leshiguang.arch.redissonx.config.auth.AuthStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.redissonx.common.zookeeper.ConfigListenable;
 
@@ -11,21 +12,8 @@ import java.util.List;
  * @Modify
  */
 public interface StoreConfigClient extends ConfigListenable {
-    /**
-     * 获取一个cluster是否严格鉴权
-     *
-     * @param clusterName
-     * @return
-     */
-    Boolean isStrictAuth(String clusterName);
 
-    /**
-     * 获取一个cluster有效的应用列表
-     *
-     * @param clusterName
-     * @return
-     */
-    List<String> loadAuthApps(String clusterName);
+    List<AuthStrategy> loadAuthStategorys(String clusterName);
 
     /**
      * 获取一个category的配置

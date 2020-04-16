@@ -60,6 +60,11 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
 
     }
 
+    @Override
+    public org.redisson.config.Config getByCluster(String clusterName, RedissonxConnectConfig connectConfig) {
+        return null;
+    }
+
     private String buildPropertyKey(String clusterName, String propertyKey) {
         StringBuilder buf = new StringBuilder();
         buf.append(AppolloConstants.APOLLO_CLUSTER_PREFIX);

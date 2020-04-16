@@ -5,6 +5,7 @@ import com.leshiguang.arch.redissonx.client.TenantStoreKey;
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
 import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.arch.redissonx.exception.StoreException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +63,10 @@ public class StoreCategoryConfig implements Serializable {
     private int durationInSeconds = -1;
 
     private int hash = -1;
+
+    private List<Integer> tenantList;
+
+    private List<String> applicationList;
     /**
      * 热key策略列表
      */
@@ -72,6 +78,22 @@ public class StoreCategoryConfig implements Serializable {
 
     public void addHotKeyStrategy(HotKeyStrategy hotKeyStrategy) {
         this.hotKeyStrategys.put(hotKeyStrategy.getName(), hotKeyStrategy);
+    }
+
+    public List<Integer> getTenantList() {
+        return tenantList;
+    }
+
+    public void setTenantList(List<Integer> tenantList) {
+        this.tenantList = tenantList;
+    }
+
+    public List<String> getApplicationList() {
+        return applicationList;
+    }
+
+    public void setApplicationList(List<String> applicationList) {
+        this.applicationList = applicationList;
     }
 
     public String getCategory() {
@@ -198,14 +220,18 @@ public class StoreCategoryConfig implements Serializable {
 
     /**
      * Return the string key for cache store. Key
-     * Rule:{category}.{index}_{tenantId}
+     * Rule:{category}.{index}@{tenantId}
      */
 
     public String getFinalKey(StoreKey storeKey) {
         StringBuilder buf = threadLocalStringBuilderHelper.get().getStringBuilder();
         if (storeKey instanceof TenantStoreKey) {
-            String tenant = Integer.toString(((TenantStoreKey) storeKey).getTenantId());
-            return getFinalKey1(buf, tenant, storeKey.getParams());
+            if (null != ((TenantStoreKey) storeKey).getTenantId()) {
+                String tenant = Integer.toString(((TenantStoreKey) storeKey).getTenantId());
+                return getFinalKey1(buf, tenant, storeKey.getParams());
+            } else {
+                return getFinalKey0(buf, storeKey.getParams());
+            }
         } else {
             return getFinalKey0(buf, storeKey.getParams());
         }

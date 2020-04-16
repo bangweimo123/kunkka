@@ -5,7 +5,7 @@ import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
-import com.leshiguang.redissonx.common.entity.request.CategoryQueryRequest;
+import com.leshiguang.arch.redissonx.server.domain.request.CategoryQueryRequest;
 import org.redisson.RedissonxClient;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public interface CategoryService {
      * @param category
      * @return
      */
-    RedissonxResponse<Boolean> save(String clusterName, CategoryBO category, String operator);
+    RedissonxResponse<Boolean> save(String clusterName, CategoryVO category, String operator);
 
     /**
      * 获取category详情

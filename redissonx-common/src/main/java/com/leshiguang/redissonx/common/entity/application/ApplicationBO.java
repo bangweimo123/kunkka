@@ -12,11 +12,9 @@ import java.util.List;
  */
 @Data
 public class ApplicationBO implements Serializable {
-    private String authLevel;
-
-    private String authData;
-
     private String application;
+
+    private String clusterName;
 
     private List<ApplicationStrategyBO> strategyList;
 }

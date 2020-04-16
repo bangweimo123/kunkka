@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.redissonx.core.mapper.gen.ConnectMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="connect_name" jdbcType="VARCHAR" property="connectName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="use_https_mode" jdbcType="OTHER" property="useHttpsMode" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="auth_mode" jdbcType="VARCHAR" property="authMode" />
+    <result column="auth_info" jdbcType="VARCHAR" property="authInfo" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, connect_name, address, use_https_mode, create_time, update_time, creator, operator, 
+    auth_mode, auth_info, source
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from connect
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from connect
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition">
+    delete from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into connect (connect_name, address, use_https_mode, 
+      create_time, update_time, creator, 
+      operator, auth_mode, auth_info, 
+      source)
+    values (#{connectName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{useHttpsMode,jdbcType=OTHER}, 
+      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{authMode,jdbcType=VARCHAR}, #{authInfo,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into connect
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="connectName != null">
+        connect_name,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="useHttpsMode != null">
+        use_https_mode,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="authMode != null">
+        auth_mode,
+      </if>
+      <if test="authInfo != null">
+        auth_info,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="connectName != null">
+        #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="useHttpsMode != null">
+        #{useHttpsMode,jdbcType=OTHER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="authMode != null">
+        #{authMode,jdbcType=VARCHAR},
+      </if>
+      <if test="authInfo != null">
+        #{authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultType="java.lang.Long">
+    select count(*) from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update connect
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.connectName != null">
+        connect_name = #{record.connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useHttpsMode != null">
+        use_https_mode = #{record.useHttpsMode,jdbcType=OTHER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=OTHER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=OTHER},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operator != null">
+        operator = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authMode != null">
+        auth_mode = #{record.authMode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authInfo != null">
+        auth_info = #{record.authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null">
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update connect
+    set id = #{record.id,jdbcType=INTEGER},
+      connect_name = #{record.connectName,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      use_https_mode = #{record.useHttpsMode,jdbcType=OTHER},
+      create_time = #{record.createTime,jdbcType=OTHER},
+      update_time = #{record.updateTime,jdbcType=OTHER},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      auth_mode = #{record.authMode,jdbcType=VARCHAR},
+      auth_info = #{record.authInfo,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
+    update connect
+    <set>
+      <if test="connectName != null">
+        connect_name = #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="useHttpsMode != null">
+        use_https_mode = #{useHttpsMode,jdbcType=OTHER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=OTHER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="authMode != null">
+        auth_mode = #{authMode,jdbcType=VARCHAR},
+      </if>
+      <if test="authInfo != null">
+        auth_info = #{authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
+    update connect
+    set connect_name = #{connectName,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      use_https_mode = #{useHttpsMode,jdbcType=OTHER},
+      create_time = #{createTime,jdbcType=OTHER},
+      update_time = #{updateTime,jdbcType=OTHER},
+      creator = #{creator,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      auth_mode = #{authMode,jdbcType=VARCHAR},
+      auth_info = #{authInfo,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into connect (connect_name, address, use_https_mode, 
+      create_time, update_time, creator, 
+      operator, auth_mode, auth_info, 
+      source) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.connectName,jdbcType=VARCHAR}, #{record.address,jdbcType=VARCHAR}, #{record.useHttpsMode,jdbcType=OTHER}, 
+        #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR}, 
+        #{record.operator,jdbcType=VARCHAR}, #{record.authMode,jdbcType=VARCHAR}, #{record.authInfo,jdbcType=VARCHAR}, 
+        #{record.source,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

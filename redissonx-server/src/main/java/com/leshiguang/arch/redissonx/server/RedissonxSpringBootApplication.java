@@ -1,6 +1,5 @@
-package com.lifesense.arch.redissonx.server;
+package com.leshiguang.arch.redissonx.server;
 
-import com.ctrip.framework.apollo.Apollo;
 import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

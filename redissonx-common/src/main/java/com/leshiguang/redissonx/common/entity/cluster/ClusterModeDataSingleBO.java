@@ -8,20 +8,8 @@ import lombok.Data;
  * @Modify
  */
 @Data
-public class ClusterInnerSingleBO extends ClusterInnerBO {
-
-    /**
-     * 地址
-     */
-    private String address;
-    /**
-     * 是否使用https
-     */
-    private Boolean useHttpsMode;
-    /**
-     * 使用的数据库
-     */
-    private Integer database=0;
+public class ClusterModeDataSingleBO extends ClusterModeDataBO {
+    private static final long serialVersionUID = -1490986939320672029L;
     /**
      * 订阅的连接最小空闲大小
      */
