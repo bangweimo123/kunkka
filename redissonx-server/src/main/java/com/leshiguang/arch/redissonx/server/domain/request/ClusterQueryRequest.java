@@ -21,4 +21,6 @@ public class ClusterQueryRequest implements Serializable {
     private String tenant;
 
     private String application;
+
+    private List<Integer> statusList;
 }

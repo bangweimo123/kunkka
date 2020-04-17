@@ -47,6 +47,7 @@ public class ClusterController {
         queryRequest.setMode(request.getMode());
         queryRequest.setTenant(request.getTenant());
         queryRequest.setUserId(request.getUserId());
+        queryRequest.setStatusList(request.getStatusList());
         return clusterService.query(queryRequest, request.getPaging());
     }
 

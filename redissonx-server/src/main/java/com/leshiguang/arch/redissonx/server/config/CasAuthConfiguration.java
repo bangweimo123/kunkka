@@ -1,5 +1,6 @@
 package com.leshiguang.arch.redissonx.server.config;
 
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import com.leshiguang.arch.cas.support.fliter.FilterChainProxy;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
