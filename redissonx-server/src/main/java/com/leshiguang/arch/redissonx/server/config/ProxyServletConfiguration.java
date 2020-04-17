@@ -25,6 +25,7 @@ public class ProxyServletConfiguration {
         ServletRegistrationBean proxyServlet = new ServletRegistrationBean(new RedissonxProxyServlet(), servlet_url);
         proxyServlet.addInitParameter("targetUri", prefix + target_url);
         proxyServlet.addInitParameter(ProxyServlet.P_LOG, logging_enabled);
+        proxyServlet.setLoadOnStartup(2);
         return proxyServlet;
     }
 }
