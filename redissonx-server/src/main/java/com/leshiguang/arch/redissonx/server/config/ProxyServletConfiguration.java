@@ -8,24 +8,25 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ProxyServletConfiguration {
-
     @Value("${proxy.prefix}")
     private String prefix;
     @Value("${proxy.serverUrl}")
-    private String servlet_url;
-
+    private String proxyUrl;
     @Value("${proxy.targetUrl}")
-    private String target_url;
-
+    private String targetUrl;
     @Value("${proxy.loggingEnabled:true}")
     private String logging_enabled;
+    @Value("${proxy.ignore:fonts*}")
+    private String ignore;
+    @Value("${proxy.index:index.html}")
+    private String index;
 
     @Bean
     public ServletRegistrationBean proxyServletBean() {
-        ServletRegistrationBean proxyServlet = new ServletRegistrationBean(new RedissonxProxyServlet(), servlet_url);
-        proxyServlet.addInitParameter("targetUri", prefix + target_url);
+        ServletRegistrationBean proxyServlet = new ServletRegistrationBean(new RedissonxProxyServlet(ignore, index), proxyUrl);
+        proxyServlet.addInitParameter("targetUri", prefix + targetUrl);
         proxyServlet.addInitParameter(ProxyServlet.P_LOG, logging_enabled);
-        proxyServlet.setLoadOnStartup(2);
+        proxyServlet.addUrlMappings("/redissonx");
         return proxyServlet;
     }
 }

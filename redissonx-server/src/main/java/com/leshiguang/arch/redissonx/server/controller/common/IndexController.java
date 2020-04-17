@@ -3,11 +3,10 @@ package com.leshiguang.arch.redissonx.server.controller.common;
 import com.leshiguang.arch.cas.support.service.LogoutService;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +18,12 @@ import java.io.IOException;
  * @Date 2020-03-20 11:43
  * @Modify
  */
-@Controller
+@RestController
 public class IndexController {
     @Resource
     private LogoutService logoutService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public void index(HttpServletResponse res) {
         try {
             res.sendRedirect("/redissonx");
@@ -33,13 +32,13 @@ public class IndexController {
         }
     }
 
-    @RequestMapping(value = "/echo", method = RequestMethod.GET)
+    @GetMapping(value = "/echo")
     @ResponseBody
-    public RedissonxResponse echo(@RequestParam String requestId) {
-        return RedissonxResponseBuilder.success(true);
+    public RedissonxResponse echo(@RequestParam(required = false) String requestId) {
+        return RedissonxResponseBuilder.success(requestId);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @GetMapping(value = "/logout")
     public void logout(HttpServletRequest req, HttpServletResponse res) {
         logoutService.logout(req, res);
     }
