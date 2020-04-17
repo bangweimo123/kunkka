@@ -17,12 +17,12 @@ public class ProxyServletConfiguration {
     @Value("${proxy.targetUrl}")
     private String target_url;
 
-    @Value("${proxy.loggingEnabled:false}")
+    @Value("${proxy.loggingEnabled:true}")
     private String logging_enabled;
 
     @Bean
     public ServletRegistrationBean proxyServletBean() {
-        ServletRegistrationBean proxyServlet = new ServletRegistrationBean(new ProxyServlet(), servlet_url);
+        ServletRegistrationBean proxyServlet = new ServletRegistrationBean(new RedissonxProxyServlet(), servlet_url);
         proxyServlet.addInitParameter("targetUri", prefix + target_url);
         proxyServlet.addInitParameter(ProxyServlet.P_LOG, logging_enabled);
         return proxyServlet;
