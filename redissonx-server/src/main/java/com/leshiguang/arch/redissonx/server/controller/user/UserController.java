@@ -5,6 +5,7 @@ import com.leshiguang.arch.cas.support.entity.LoginUserInfoEntity;
 import com.leshiguang.arch.cas.support.service.UserInfoService;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,13 @@ public class UserController {
 
     @GetMapping("/api/user/userinfo")
     public RedissonxResponse<LoginUserInfoEntity> userinfo() {
-        return RedissonxResponseBuilder.success(userInfoService.fetchLoginUser());
+        LoginUserInfoEntity loginUserInfoEntity = userInfoService.fetchLoginUser();
+        if (null == loginUserInfoEntity || StringUtils.isBlank(loginUserInfoEntity.getUserId())) {
+            loginUserInfoEntity = new LoginUserInfoEntity();
+            loginUserInfoEntity.setUserId("bangwei.mo");
+            loginUserInfoEntity.setName("莫邦伟");
+            loginUserInfoEntity.setEmail("bangwei.mo@lifesense.com");
+        }
+        return RedissonxResponseBuilder.success(loginUserInfoEntity);
     }
 }
