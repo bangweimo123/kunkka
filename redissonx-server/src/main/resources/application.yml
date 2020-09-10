@@ -3,7 +3,7 @@ server:
   servlet:
     context-path: /
 app:
-  name: redissonx
+  name: redissonx-server
 mybatis:
   mapper-locations: classpath*:config/sqlmap/*/*.xml
   type-aliases-package: com.leshiguang.arch.redissonx.core.entity.gen
@@ -12,4 +12,14 @@ threadpool:
   max-pool-size: 20
   queue-capacity: 1000
   keep-alive-seconds: 300
-
+dubbo:
+  application:
+    name: redissonx-server
+  metadata-report:
+    address: zookeeper://10.19.189.181:2181
+  protocol:
+    name: dubbo
+    port: 20882
+  registry:
+    address: zookeeper://10.19.189.181:2181
+  version: 1.0.0

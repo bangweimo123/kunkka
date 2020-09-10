@@ -23,7 +23,7 @@ public class ClusterQueryReq implements Serializable {
 
     private List<Integer> statusList;
 
-    private String tenant;
+    private List<Integer> tenantList;
 
-    private String application;
+    private List<String> applicationList;
 }

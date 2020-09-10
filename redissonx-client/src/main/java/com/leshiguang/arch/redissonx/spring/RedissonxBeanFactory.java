@@ -1,11 +1,13 @@
 package com.leshiguang.arch.redissonx.spring;
 
-import org.redisson.config.RedissonxConfigLoader;
-import org.redisson.config.RedissonxConnectConfig;
-import org.redisson.config.ZookeeperRedissonxConfigLoader;
+import com.leshiguang.arch.redissonx.exception.ConfigException;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
 import org.redisson.config.Config;
+import org.redisson.config.RedissonxConfigLoader;
+import org.redisson.config.RedissonxConnectConfig;
+import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -24,6 +26,10 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
      */
     private String clusterName;
     /**
+     * 集群组名
+     */
+    private String groupName;
+    /**
      * 连接配置
      */
     private RedissonxConnectConfig connectConfig;
@@ -38,6 +44,14 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
 
     public void setClusterName(String clusterName) {
         this.clusterName = clusterName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public RedissonxConnectConfig getConnectConfig() {
@@ -58,11 +72,14 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
         if (null == configLoader) {
             configLoader = new ZookeeperRedissonxConfigLoader();
         }
-        Config config = configLoader.getByCluster(clusterName, connectConfig);
-        if (null == config) {
-            LOGGER.error("can't find config from apollo for redissonx cluster:[" + clusterName + "]");
+        if (StringUtils.isBlank(clusterName)) {
+            throw new ConfigException("clusterName can not be empty!");
         }
-        redissonxClient = Redissonx.create(clusterName, config);
+        Config redissonConfig = configLoader.getByCluster(clusterName, connectConfig);
+        if (null == redissonConfig) {
+            throw new ConfigException("clusterName:[" + clusterName + "] or groupName :[" + clusterName + "] can't find config from " + configLoader.getName());
+        }
+        redissonxClient = Redissonx.create(clusterName, redissonConfig);
     }
 
     public RedissonxClient getObject() throws Exception {

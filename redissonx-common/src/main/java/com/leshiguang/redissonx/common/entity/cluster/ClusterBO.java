@@ -1,6 +1,5 @@
 package com.leshiguang.redissonx.common.entity.cluster;
 
-import com.leshiguang.redissonx.common.entity.connect.ConnectBO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,23 +18,15 @@ public class ClusterBO implements Serializable {
      */
     private String clusterName;
     /**
-     * 连接
-     */
-    private ConnectBO connect;
-    /**
-     * 数据库
-     */
-    private Integer database;
-    /**
      * 模式 single/cluster/sentinel/replicate/masterslave
      */
     private String mode;
     /**
-     * 支持的租户
+     * 连接列表
      */
-    private List<String> tenantList;
+    private List<ClusterConnectBO> connectList;
     /**
-     * 支持的应用
+     * 策略列表
      */
-    private List<String> applicationList;
+    private List<ClusterStrategyBO> strategyList;
 }

@@ -41,6 +41,17 @@ public class CategoryController {
         return categoryService.delete(clusterName, category, userInfoService.fetchLoginUser().getUserId());
     }
 
+
+    @GetMapping("/api/category/hardDelete/{clusterName}")
+    public RedissonxResponse hardDelete(@PathVariable String clusterName, @RequestParam("category") String category) {
+        return categoryService.hardDelete(clusterName, category, userInfoService.fetchLoginUser().getUserId());
+    }
+
+    @GetMapping("/api/category/reset/{clusterName}")
+    public RedissonxResponse reset(@PathVariable String clusterName, @RequestParam("category") String category) {
+        return categoryService.reset(clusterName, category, userInfoService.fetchLoginUser().getUserId());
+    }
+
     @GetMapping("/api/category/publish/{clusterName}")
     public RedissonxResponse publish(@PathVariable String clusterName, @RequestParam("category") String category, @RequestParam("version") String version) {
         return categoryService.publish(clusterName, category, version, userInfoService.fetchLoginUser().getUserId());
@@ -68,29 +79,31 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/scan/{clusterName}")
-    public RedissonxResponse scan(@PathVariable String clusterName, @RequestParam(value = "category", required = false) String category, @RequestParam(value = "tenantId", required = false) Integer tenantId, @RequestParam(value = "paramFormat", required = false) String paramFormat) {
-        return categoryService.scan(clusterName, category, paramFormat, tenantId, userInfoService.fetchLoginUser().getUserId());
+    public RedissonxResponse scan(@PathVariable String clusterName, @RequestParam(value = "region") String region, @RequestParam(value = "category", required = false) String category, @RequestParam(value = "tenantId", required = false) Integer tenantId, @RequestParam(value = "paramFormat", required = false) String paramFormat) {
+        return categoryService.scan(clusterName, region, category, paramFormat, tenantId, userInfoService.fetchLoginUser().getUserId());
     }
 
     @GetMapping("/api/category/keyvalue/{clusterName}")
-    public RedissonxResponse keyvalue(@PathVariable String clusterName, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key) {
-        return redisKeyService.keyvalue(clusterName, category, key);
+    public RedissonxResponse keyvalue(@PathVariable String clusterName, @RequestParam(value = "region") String region, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key) {
+        return redisKeyService.keyvalue(clusterName, region, category, key);
     }
 
     @PostMapping("/api/category/keyvaluesave/{clusterName}")
     public RedissonxResponse keyvaluesave(@PathVariable String clusterName, @RequestBody RedisKeyValueSaveRequest request) {
         List<String> params = request.getParams();
         String category = request.getCategory();
+        String region = request.getRegion();
+        Integer tenantId = request.getTenantId();
         MValueBO value = request.getValue();
         String[] paramsData = new String[params.size()];
         for (int i = 0; i < params.size(); i++) {
             paramsData[i] = params.get(i);
         }
-        return redisKeyService.keyValueSave(clusterName, category, value.parse(), paramsData);
+        return redisKeyService.keyValueSave(clusterName, region, category, tenantId, value.parse(), paramsData);
     }
 
     @GetMapping("/api/category/keyvaluedelete/{clusterName}")
-    public RedissonxResponse keyvaluedelete(@PathVariable String clusterName, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key) {
-        return redisKeyService.deleteKey(clusterName, category, key);
+    public RedissonxResponse keyvaluedelete(@PathVariable String clusterName, @RequestParam(value = "region") String region, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key) {
+        return redisKeyService.deleteKey(clusterName, region, category, key);
     }
 }

@@ -6,6 +6,8 @@ import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 
+import java.util.List;
+
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
  * @Date 2020-04-15 14:14
@@ -13,7 +15,7 @@ import com.leshiguang.redissonx.common.base.RedissonxTable;
  */
 public interface ConnectService {
     /**
-     * 拉取集群列表
+     * 拉取连接列表
      *
      * @param request
      * @return
@@ -37,4 +39,12 @@ public interface ConnectService {
      * @return
      */
     RedissonxResponse<Boolean> delete(String connectName, String operator);
+
+    /**
+     * 加载连接对应的集群
+     *
+     * @param connectName
+     * @return
+     */
+    RedissonxResponse<List<String>> loadRelationClusters(String connectName);
 }

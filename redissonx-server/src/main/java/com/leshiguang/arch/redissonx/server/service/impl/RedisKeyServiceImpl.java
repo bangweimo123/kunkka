@@ -1,6 +1,7 @@
 package com.leshiguang.arch.redissonx.server.service.impl;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
+import com.leshiguang.arch.redissonx.client.TenantStoreKey;
 import com.leshiguang.arch.redissonx.server.domain.rediskey.RedisKeyValueVO;
 import com.leshiguang.arch.redissonx.server.service.CategoryService;
 import com.leshiguang.arch.redissonx.server.service.RedisKeyService;
@@ -23,8 +24,8 @@ public class RedisKeyServiceImpl implements RedisKeyService {
     private CategoryService categoryService;
 
     @Override
-    public RedissonxResponse<RedisKeyValueVO> keyvalue(String clusterName, String category, String key) {
-        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName);
+    public RedissonxResponse<RedisKeyValueVO> keyvalue(String clusterName, String region, String category, String key) {
+        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName, region);
         RBucket<Object> bucket = redissonxClient.getBucket(key);
         long remainTimeToLive = bucket.remainTimeToLive();
         Object data = bucket.get();
@@ -35,17 +36,25 @@ public class RedisKeyServiceImpl implements RedisKeyService {
     }
 
     @Override
-    public RedissonxResponse<Boolean> keyValueSave(String clusterName, String category, Object value, Object... params) {
-        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName);
-        StoreKey storeKey = new StoreKey(category, params);
+    public RedissonxResponse<Boolean> keyValueSave(String clusterName, String region, String category, Integer tenantId, Object value, Object... params) {
+        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName, region);
+        if (redissonxClient == null) {
+            return RedissonxResponseBuilder.fail(405, "该区域未找到client连接，请查看是否绑定连接!");
+        }
+        StoreKey storeKey;
+        if (tenantId != null && tenantId > 0) {
+            storeKey = new TenantStoreKey(category, tenantId, params);
+        } else {
+            storeKey = new StoreKey(category, params);
+        }
         RBucket<Object> bucket = redissonxClient.getBucket(storeKey);
         bucket.set(value);
         return RedissonxResponseBuilder.success(true);
     }
 
     @Override
-    public RedissonxResponse<Boolean> deleteKey(String clusterName, String category, String key) {
-        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName);
+    public RedissonxResponse<Boolean> deleteKey(String clusterName, String region, String category, String key) {
+        RedissonxClient redissonxClient = categoryService.getClientByClusterName(clusterName, region);
         RBucket<Object> bucket = redissonxClient.getBucket(key);
         boolean deleteResult = bucket.delete();
         return RedissonxResponseBuilder.success(deleteResult);

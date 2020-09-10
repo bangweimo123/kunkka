@@ -4,20 +4,17 @@
   <resultMap id="BaseResultMap" type="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
-    <result column="mode" jdbcType="VARCHAR" property="mode" />
-    <result column="connect_name" jdbcType="VARCHAR" property="connectName" />
+    <result column="cluster_mode" jdbcType="VARCHAR" property="clusterMode" />
     <result column="create_time" jdbcType="OTHER" property="createTime" />
     <result column="update_time" jdbcType="OTHER" property="updateTime" />
     <result column="owner" jdbcType="VARCHAR" property="owner" />
     <result column="member" jdbcType="VARCHAR" property="member" />
     <result column="status" jdbcType="OTHER" property="status" />
-    <result column="application_list" jdbcType="VARCHAR" property="applicationList" />
-    <result column="tenant_list" jdbcType="VARCHAR" property="tenantList" />
-    <result column="ds" jdbcType="INTEGER" property="ds" />
+    <result column="strategys" jdbcType="OTHER" property="strategys" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cluster_name, mode, connect_name, create_time, update_time, owner, member, status, 
-    application_list, tenant_list, ds
+    id, cluster_name, cluster_mode, create_time, update_time, owner, member, status, 
+    strategys
   </sql>
   <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition" resultMap="BaseResultMap">
     select
@@ -54,14 +51,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cluster (cluster_name, mode, connect_name, 
-      create_time, update_time, owner, 
-      member, status, application_list, 
-      tenant_list, ds)
-    values (#{clusterName,jdbcType=VARCHAR}, #{mode,jdbcType=VARCHAR}, #{connectName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{owner,jdbcType=VARCHAR}, 
-      #{member,jdbcType=VARCHAR}, #{status,jdbcType=OTHER}, #{applicationList,jdbcType=VARCHAR}, 
-      #{tenantList,jdbcType=VARCHAR}, #{ds,jdbcType=INTEGER})
+    insert into cluster (cluster_name, cluster_mode, create_time, 
+      update_time, owner, member, 
+      status, strategys)
+    values (#{clusterName,jdbcType=VARCHAR}, #{clusterMode,jdbcType=VARCHAR}, #{createTime,jdbcType=OTHER}, 
+      #{updateTime,jdbcType=OTHER}, #{owner,jdbcType=VARCHAR}, #{member,jdbcType=VARCHAR}, 
+      #{status,jdbcType=OTHER}, #{strategys,jdbcType=OTHER})
   </insert>
   <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -72,11 +67,8 @@
       <if test="clusterName != null">
         cluster_name,
       </if>
-      <if test="mode != null">
-        mode,
-      </if>
-      <if test="connectName != null">
-        connect_name,
+      <if test="clusterMode != null">
+        cluster_mode,
       </if>
       <if test="createTime != null">
         create_time,
@@ -93,25 +85,16 @@
       <if test="status != null">
         status,
       </if>
-      <if test="applicationList != null">
-        application_list,
-      </if>
-      <if test="tenantList != null">
-        tenant_list,
-      </if>
-      <if test="ds != null">
-        ds,
+      <if test="strategys != null">
+        strategys,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="clusterName != null">
         #{clusterName,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        #{mode,jdbcType=VARCHAR},
-      </if>
-      <if test="connectName != null">
-        #{connectName,jdbcType=VARCHAR},
+      <if test="clusterMode != null">
+        #{clusterMode,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=OTHER},
@@ -128,14 +111,8 @@
       <if test="status != null">
         #{status,jdbcType=OTHER},
       </if>
-      <if test="applicationList != null">
-        #{applicationList,jdbcType=VARCHAR},
-      </if>
-      <if test="tenantList != null">
-        #{tenantList,jdbcType=VARCHAR},
-      </if>
-      <if test="ds != null">
-        #{ds,jdbcType=INTEGER},
+      <if test="strategys != null">
+        #{strategys,jdbcType=OTHER},
       </if>
     </trim>
   </insert>
@@ -154,11 +131,8 @@
       <if test="record.clusterName != null">
         cluster_name = #{record.clusterName,jdbcType=VARCHAR},
       </if>
-      <if test="record.mode != null">
-        mode = #{record.mode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.connectName != null">
-        connect_name = #{record.connectName,jdbcType=VARCHAR},
+      <if test="record.clusterMode != null">
+        cluster_mode = #{record.clusterMode,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=OTHER},
@@ -175,14 +149,8 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=OTHER},
       </if>
-      <if test="record.applicationList != null">
-        application_list = #{record.applicationList,jdbcType=VARCHAR},
-      </if>
-      <if test="record.tenantList != null">
-        tenant_list = #{record.tenantList,jdbcType=VARCHAR},
-      </if>
-      <if test="record.ds != null">
-        ds = #{record.ds,jdbcType=INTEGER},
+      <if test="record.strategys != null">
+        strategys = #{record.strategys,jdbcType=OTHER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -193,16 +161,13 @@
     update cluster
     set id = #{record.id,jdbcType=INTEGER},
       cluster_name = #{record.clusterName,jdbcType=VARCHAR},
-      mode = #{record.mode,jdbcType=VARCHAR},
-      connect_name = #{record.connectName,jdbcType=VARCHAR},
+      cluster_mode = #{record.clusterMode,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=OTHER},
       update_time = #{record.updateTime,jdbcType=OTHER},
       owner = #{record.owner,jdbcType=VARCHAR},
       member = #{record.member,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=OTHER},
-      application_list = #{record.applicationList,jdbcType=VARCHAR},
-      tenant_list = #{record.tenantList,jdbcType=VARCHAR},
-      ds = #{record.ds,jdbcType=INTEGER}
+      strategys = #{record.strategys,jdbcType=OTHER}
     <if test="_parameter != null">
       <include refid="common.Update_By_Example_Where_Clause" />
     </if>
@@ -213,11 +178,8 @@
       <if test="clusterName != null">
         cluster_name = #{clusterName,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        mode = #{mode,jdbcType=VARCHAR},
-      </if>
-      <if test="connectName != null">
-        connect_name = #{connectName,jdbcType=VARCHAR},
+      <if test="clusterMode != null">
+        cluster_mode = #{clusterMode,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=OTHER},
@@ -234,14 +196,8 @@
       <if test="status != null">
         status = #{status,jdbcType=OTHER},
       </if>
-      <if test="applicationList != null">
-        application_list = #{applicationList,jdbcType=VARCHAR},
-      </if>
-      <if test="tenantList != null">
-        tenant_list = #{tenantList,jdbcType=VARCHAR},
-      </if>
-      <if test="ds != null">
-        ds = #{ds,jdbcType=INTEGER},
+      <if test="strategys != null">
+        strategys = #{strategys,jdbcType=OTHER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -249,28 +205,25 @@
   <update id="updateById" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Cluster">
     update cluster
     set cluster_name = #{clusterName,jdbcType=VARCHAR},
-      mode = #{mode,jdbcType=VARCHAR},
-      connect_name = #{connectName,jdbcType=VARCHAR},
+      cluster_mode = #{clusterMode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=OTHER},
       update_time = #{updateTime,jdbcType=OTHER},
       owner = #{owner,jdbcType=VARCHAR},
       member = #{member,jdbcType=VARCHAR},
       status = #{status,jdbcType=OTHER},
-      application_list = #{applicationList,jdbcType=VARCHAR},
-      tenant_list = #{tenantList,jdbcType=VARCHAR},
-      ds = #{ds,jdbcType=INTEGER}
+      strategys = #{strategys,jdbcType=OTHER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
-    insert into cluster (cluster_name, mode, connect_name, 
+    insert into cluster (cluster_name, cluster_mode, 
       create_time, update_time, owner, 
-      member, status, application_list, 
-      tenant_list, ds) values
+      member, status, strategys
+      ) values
     <foreach collection="list" item="record" separator=",">
-       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.mode,jdbcType=VARCHAR}, #{record.connectName,jdbcType=VARCHAR}, 
+       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.clusterMode,jdbcType=VARCHAR}, 
         #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.owner,jdbcType=VARCHAR}, 
-        #{record.member,jdbcType=VARCHAR}, #{record.status,jdbcType=OTHER}, #{record.applicationList,jdbcType=VARCHAR}, 
-        #{record.tenantList,jdbcType=VARCHAR}, #{record.ds,jdbcType=INTEGER})
+        #{record.member,jdbcType=VARCHAR}, #{record.status,jdbcType=OTHER}, #{record.strategys,jdbcType=OTHER}
+        )
     </foreach>
   </insert>
   <select id="selectOneByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ClusterCondition" resultMap="BaseResultMap">

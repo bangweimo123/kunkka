@@ -10,5 +10,4 @@ import lombok.Data;
  */
 @Data
 public class ConnectVO extends ConnectBO {
-    private String address;
 }

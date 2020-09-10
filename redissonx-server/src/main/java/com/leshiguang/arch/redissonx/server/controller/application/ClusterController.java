@@ -42,13 +42,18 @@ public class ClusterController {
     @PostMapping("/api/cluster/query")
     public RedissonxResponse query(@RequestBody ClusterQueryReq request) {
         ClusterQueryRequest queryRequest = new ClusterQueryRequest();
-        queryRequest.setApplication(request.getApplication());
+        queryRequest.setApplicationList(request.getApplicationList());
         queryRequest.setKeyword(request.getKeyword());
-        queryRequest.setMode(request.getMode());
-        queryRequest.setTenant(request.getTenant());
+        queryRequest.setClusterMode(request.getMode());
+        queryRequest.setTenantList(request.getTenantList());
         queryRequest.setUserId(request.getUserId());
         queryRequest.setStatusList(request.getStatusList());
         return clusterService.query(queryRequest, request.getPaging());
+    }
+
+    @GetMapping("/api/cluster/loadConnectsByCluster/{clusterName}")
+    public RedissonxResponse loadConnectsByCluster(@PathVariable String clusterName) {
+        return clusterService.loadConnectsByCluster(clusterName);
     }
 
     @GetMapping("/api/cluster/publish/{clusterName}")
@@ -59,5 +64,15 @@ public class ClusterController {
     @GetMapping("/api/cluster/offline/{clusterName}")
     public RedissonxResponse offline(@PathVariable String clusterName) {
         return clusterService.offline(clusterName, userInfoService.fetchLoginUser().getUserId());
+    }
+
+    @GetMapping("/api/cluster/hardDelete/{clusterName}")
+    public RedissonxResponse hardDelete(@PathVariable String clusterName) {
+        return clusterService.hardDelete(clusterName, userInfoService.fetchLoginUser().getUserId());
+    }
+
+    @GetMapping("/api/cluster/reset/{clusterName}")
+    public RedissonxResponse reset(@PathVariable String clusterName) {
+        return clusterService.reset(clusterName, userInfoService.fetchLoginUser().getUserId());
     }
 }

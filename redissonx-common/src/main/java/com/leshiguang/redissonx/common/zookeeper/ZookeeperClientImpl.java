@@ -4,6 +4,7 @@ import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
+import com.leshiguang.arch.common.util.RegionUtil;
 import com.leshiguang.redissonx.common.constants.RedissonxConstants;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
@@ -28,21 +29,16 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     private Config config = ConfigService.getConfig(RedissonxConstants.APOLLO_NS);
     private ZkClient zkClient;
-
     private PathProvider pathProvider;
-
+    private ZookeeperConfig zkConfig;
+    private String region;
 
     public ZookeeperClientImpl() {
-        try {
-            init();
-        } catch (Exception e) {
-            LOGGER.error("failed to init zk StoreConfigClient", e);
-        }
-    }
-
-    protected void init() {
-        preparePathProvider();
-        zkClient = prepareZkClient();
+        ZookeeperConfig zkConfig = new ZookeeperConfig();
+        zkConfig.setAddress(config.getProperty(RedissonxConstants.ZK_ADDRESS, ""));
+        zkConfig.setConnectTimeout(config.getIntProperty(RedissonxConstants.ZK_CONNECTION_TIMEOUT, zkConfig.getConnectTimeout()));
+        zkConfig.setSessionTimeout(config.getIntProperty(RedissonxConstants.ZK_SESSION_TIMEOUT, zkConfig.getSessionTimeout()));
+        zkConfig.setOperationRetryTimeout(config.getLongProperty(RedissonxConstants.ZK_OPERATION_RETRY_TIMEOUT, zkConfig.getOperationRetryTimeout()));
         config.addChangeListener(new ConfigChangeListener() {
             @Override
             public void onChange(ConfigChangeEvent configChangeEvent) {
@@ -55,28 +51,43 @@ public class ZookeeperClientImpl implements ZookeeperClient {
                 }
             }
         });
+        this.zkConfig = zkConfig;
+        this.region = RegionUtil.getRegionKey();
+        this.init();
+    }
+
+    public ZookeeperClientImpl(String region, ZookeeperConfig zkConfig) {
+        this.region = region;
+        this.zkConfig = zkConfig;
+        this.init();
+
+    }
+
+    protected void init() {
+        preparePathProvider();
+        zkClient = prepareZkClient();
     }
 
     protected void preparePathProvider() {
         pathProvider = new PathProvider();
-        pathProvider.addTemplate("clusterList", "/redissonx/cluster");
-        pathProvider.addTemplate("cluster", "/redissonx/cluster/$0/info");
-        pathProvider.addTemplate("strict", "/redissonx/cluster/$0/auth/strict");
-        pathProvider.addTemplate("application", "/redissonx/cluster/$0/auth/applications");
-        pathProvider.addTemplate("categoryPage", "/redissonx/cluster/$0/bucket");
-        pathProvider.addTemplate("categoryBucket", "/redissonx/cluster/$0/bucket/@bucket");
-        pathProvider.addTemplate("category", "/redissonx/cluster/$0/bucket/@bucket/$1");
-        pathProvider.addTemplate("hotkey", "/redissonx/cluster/$0/hotkeys");
+        pathProvider.addTemplate("cluster", "/redissonx/cluster/$0/$1/info");
+        pathProvider.addTemplate("strict", "/redissonx/cluster/$0/$1/auth/strict");
+        pathProvider.addTemplate("application", "/redissonx/cluster/$0/$1/auth/applications");
+        pathProvider.addTemplate("categoryPage", "/redissonx/cluster/$0/$1/bucket");
+        pathProvider.addTemplate("categoryBucket", "/redissonx/cluster/$0/$1/bucket/@bucket");
+        pathProvider.addTemplate("category", "/redissonx/cluster/$0/$1/bucket/@bucket/$2");
+        pathProvider.addTemplate("hotkey", "/redissonx/cluster/$0/$1/hotkeys");
+        pathProvider.addTemplate("clusterGroup", "/redissonx/clustergroup/$0/$1/$2");
     }
 
     public ZkClient prepareZkClient() {
-        String zkAddress = config.getProperty(RedissonxConstants.ZK_ADDRESS, "");
+        String zkAddress = zkConfig.getAddress();
         if (StringUtils.isBlank(zkAddress)) {
             throw new NullPointerException("redissonx zookeeper address is empty");
         }
-        Integer zkSessionTimeout = config.getIntProperty(RedissonxConstants.ZK_SESSION_TIMEOUT, 30000);
-        Integer zkConnectionTimeout = config.getIntProperty(RedissonxConstants.ZK_CONNECTION_TIMEOUT, 2147483647);
-        Long operationRetryTimeout = config.getLongProperty(RedissonxConstants.ZK_OPERATION_RETRY_TIMEOUT, -1L);
+        Integer zkSessionTimeout = zkConfig.getSessionTimeout();
+        Integer zkConnectionTimeout = zkConfig.getConnectTimeout();
+        Long operationRetryTimeout = zkConfig.getOperationRetryTimeout();
         ZkClient zkClient = new ZkClient(zkAddress, zkSessionTimeout, zkConnectionTimeout, new SerializableSerializer(), operationRetryTimeout);
         zkClient.subscribeStateChanges(new IZkStateListener() {
 
@@ -121,7 +132,7 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     @Override
     public ClusterBO getCluster(String clusterName) {
-        String clusterPath = pathProvider.getPath("cluster", clusterName);
+        String clusterPath = pathProvider.getPath("cluster", clusterName, region);
         if (zkClient.exists(clusterPath)) {
             ClusterBO clusterBO = zkClient.readData(clusterPath, true);
             return clusterBO;
@@ -131,7 +142,7 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     @Override
     public boolean setCluster(ClusterBO cluster) {
-        String clusterPath = pathProvider.getPath("cluster", cluster.getClusterName());
+        String clusterPath = pathProvider.getPath("cluster", cluster.getClusterName(), region);
         if (!zkClient.exists(clusterPath)) {
             zkClient.createPersistent(clusterPath, true);
         }
@@ -141,13 +152,13 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     @Override
     public boolean existCluster(String clusterName) {
-        String clusterPath = pathProvider.getPath("cluster", clusterName);
+        String clusterPath = pathProvider.getPath("cluster", clusterName, region);
         return zkClient.exists(clusterPath);
     }
 
     @Override
     public boolean deleteCluster(String clusterName) {
-        String clusterPath = pathProvider.getPath("cluster", clusterName);
+        String clusterPath = pathProvider.getPath("cluster", clusterName, region);
         if (zkClient.exists(clusterPath)) {
             return zkClient.deleteRecursive(clusterPath);
         } else {
@@ -159,7 +170,7 @@ public class ZookeeperClientImpl implements ZookeeperClient {
     @Override
     public CategoryBO getCategory(String clusterName, String category) {
         Integer bucket = category.hashCode() % 50 + 50;
-        String categoryPath = pathProvider.getPathWithBucket("category", bucket, clusterName, category);
+        String categoryPath = pathProvider.getPathWithBucket("category", bucket, clusterName, region, category);
         if (zkClient.exists(categoryPath)) {
             CategoryBO categoryBO = zkClient.readData(categoryPath, true);
             return categoryBO;
@@ -170,7 +181,7 @@ public class ZookeeperClientImpl implements ZookeeperClient {
     @Override
     public boolean setCategory(String clusterName, CategoryBO category) {
         Integer bucket = category.getCategory().hashCode() % 50 + 50;
-        String categoryPath = pathProvider.getPathWithBucket("category", bucket, clusterName, category.getCategory());
+        String categoryPath = pathProvider.getPathWithBucket("category", bucket, clusterName, region, category.getCategory());
         try {
             if (!zkClient.exists(categoryPath)) {
                 zkClient.createPersistent(categoryPath, true);
@@ -187,19 +198,19 @@ public class ZookeeperClientImpl implements ZookeeperClient {
     @Override
     public void addCategoryConfigListener(String clusterName, String category, IZkDataListener listener) {
         Integer bucket = category.hashCode() % 50 + 50;
-        String path = pathProvider.getPathWithBucket("category", bucket, clusterName, category);
+        String path = pathProvider.getPathWithBucket("category", bucket, clusterName, region, category);
         zkClient.subscribeDataChanges(path, listener);
     }
 
     @Override
     public void addHotKeyConfigListener(String clusterName, IZkDataListener listener) {
-        String path = pathProvider.getPath("hotkey", clusterName);
+        String path = pathProvider.getPath("hotkey", clusterName, region);
         zkClient.subscribeDataChanges(path, listener);
     }
 
     @Override
     public void addAuthAppsListner(String clusterName, IZkChildListener listener) {
-        String path = pathProvider.getPath("application", clusterName);
+        String path = pathProvider.getPath("application", clusterName, region);
         zkClient.subscribeChildChanges(path, listener);
     }
 }

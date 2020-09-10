@@ -63,10 +63,6 @@ public class StoreCategoryConfig implements Serializable {
     private int durationInSeconds = -1;
 
     private int hash = -1;
-
-    private List<Integer> tenantList;
-
-    private List<String> applicationList;
     /**
      * 热key策略列表
      */
@@ -78,22 +74,6 @@ public class StoreCategoryConfig implements Serializable {
 
     public void addHotKeyStrategy(HotKeyStrategy hotKeyStrategy) {
         this.hotKeyStrategys.put(hotKeyStrategy.getName(), hotKeyStrategy);
-    }
-
-    public List<Integer> getTenantList() {
-        return tenantList;
-    }
-
-    public void setTenantList(List<Integer> tenantList) {
-        this.tenantList = tenantList;
-    }
-
-    public List<String> getApplicationList() {
-        return applicationList;
-    }
-
-    public void setApplicationList(List<String> applicationList) {
-        this.applicationList = applicationList;
     }
 
     public String getCategory() {

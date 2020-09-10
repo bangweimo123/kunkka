@@ -1,8 +1,8 @@
 package com.leshiguang.arch.redissonx.server.service.impl;
 
-import com.leshiguang.arch.redissonx.core.entity.gen.Category;
-import com.leshiguang.arch.redissonx.core.entity.gen.CategoryCondition;
+import com.leshiguang.arch.redissonx.core.entity.gen.*;
 import com.leshiguang.arch.redissonx.core.mapper.gen.CategoryMapper;
+import com.leshiguang.arch.redissonx.core.mapper.gen.ClusterConnectMappingMapper;
 import com.leshiguang.arch.redissonx.server.domain.category.CategoryVO;
 import com.leshiguang.arch.redissonx.server.domain.request.CategoryQueryRequest;
 import com.leshiguang.arch.redissonx.server.service.CategoryService;
@@ -12,7 +12,7 @@ import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
-import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientImpl;
+import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redissonx;
@@ -37,24 +37,29 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryServiceImpl.class);
-    private ZookeeperClient zookeeperClient = new ZookeeperClientImpl();
     @Resource
     private CategoryMapper categoryMapper;
+    @Resource
+    private ClusterConnectMappingMapper clusterConnectMappingMapper;
     private RedissonxConfigLoader configLoader = new ZookeeperRedissonxConfigLoader();
 
     private Map<String, RedissonxClient> redissonxClientMap = new ConcurrentHashMap<String, RedissonxClient>();
 
-    public RedissonxClient getClientByClusterName(String clusterName) {
-        if (!redissonxClientMap.containsKey(clusterName)) {
+    public RedissonxClient getClientByClusterName(String clusterName, String region) {
+        String key = clusterName + "_" + region;
+        if (!redissonxClientMap.containsKey(key)) {
             synchronized (this) {
-                if (!redissonxClientMap.containsKey(clusterName)) {
-                    Config config = configLoader.getByCluster(clusterName);
+                if (!redissonxClientMap.containsKey(key)) {
+                    Config config = configLoader.getByClusterAndRegion(clusterName, region);
+                    if (null == config) {
+                        return null;
+                    }
                     RedissonxClient redissonxClient = Redissonx.create(clusterName, config);
-                    redissonxClientMap.put(clusterName, redissonxClient);
+                    redissonxClientMap.put(key, redissonxClient);
                 }
             }
         }
-        return redissonxClientMap.get(clusterName);
+        return redissonxClientMap.get(key);
     }
 
     @Override
@@ -195,6 +200,27 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public RedissonxResponse<Boolean> hardDelete(String clusterName, String category, String operator) {
+        CategoryCondition condition = new CategoryCondition();
+        condition.createCriteria().andClusterNameEqualTo(clusterName).andCategoryEqualTo(category);
+        int deleteCount = categoryMapper.deleteByCondition(condition);
+        boolean deleteStatus = deleteCount > 0;
+        return RedissonxResponseBuilder.success(deleteStatus);
+    }
+
+    @Override
+    public RedissonxResponse<Boolean> reset(String clusterName, String category, String operator) {
+        CategoryCondition condition = new CategoryCondition();
+        condition.createCriteria().andClusterNameEqualTo(clusterName).andCategoryEqualTo(category);
+        Category statusCategory = new Category();
+        statusCategory.setcStatus(1);
+        statusCategory.setUpdateTime(new Date());
+        int updateCount = categoryMapper.updateByConditionSelective(statusCategory, condition);
+        boolean updateStatus = updateCount > 0;
+        return RedissonxResponseBuilder.success(updateStatus);
+    }
+
+    @Override
     public RedissonxResponse<Boolean> publish(String clusterName, String category, String version, String operator) {
         Boolean result = false;
         try {
@@ -211,12 +237,18 @@ public class CategoryServiceImpl implements CategoryService {
             if (updateStatus) {
                 Category newestCategory = categoryMapper.selectOneByCondition(condition);
                 CategoryBO toZkCategory = toBO(newestCategory);
-                boolean setZkStatus = zookeeperClient.setCategory(clusterName, toZkCategory);
-                if (!setZkStatus) {
-                    //rollback
-                    result = false;
+                ClusterConnectMappingCondition mappingCondition = new ClusterConnectMappingCondition();
+                mappingCondition.createCriteria().andClusterNameEqualTo(clusterName);
+                List<ClusterConnectMapping> mappingList = clusterConnectMappingMapper.selectByCondition(mappingCondition);
+                Set<String> regionList = new HashSet<>();
+                for (ClusterConnectMapping clusterConnectMapping : mappingList) {
+                    regionList.add(clusterConnectMapping.getRegion());
                 }
-                result = setZkStatus;
+                for (String region : regionList) {
+                    ZookeeperClient zookeeperClient = ZookeeperClientFactory.getInstance(region);
+                    zookeeperClient.setCategory(clusterName, toZkCategory);
+                }
+                result = true;
             } else {
                 result = false;
             }
@@ -244,12 +276,18 @@ public class CategoryServiceImpl implements CategoryService {
             if (updateStatus) {
                 Category newestCategory = categoryMapper.selectOneByCondition(condition);
                 CategoryBO toZkCategory = toBO(newestCategory);
-                boolean setZkStatus = zookeeperClient.setCategory(clusterName, toZkCategory);
-                if (!setZkStatus) {
-                    //rollback
-                    result = false;
+                ClusterConnectMappingCondition mappingCondition = new ClusterConnectMappingCondition();
+                mappingCondition.createCriteria().andClusterNameEqualTo(clusterName);
+                List<ClusterConnectMapping> mappingList = clusterConnectMappingMapper.selectByCondition(mappingCondition);
+                Set<String> regionList = new HashSet<>();
+                for (ClusterConnectMapping clusterConnectMapping : mappingList) {
+                    regionList.add(clusterConnectMapping.getRegion());
                 }
-                result = setZkStatus;
+                for (String region : regionList) {
+                    ZookeeperClient zookeeperClient = ZookeeperClientFactory.getInstance(region);
+                    zookeeperClient.setCategory(clusterName, toZkCategory);
+                }
+                result = true;
             } else {
                 result = false;
             }
@@ -274,18 +312,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, Integer tenantId, String operator) {
+    public RedissonxResponse<List<String>> scan(String clusterName, String region, String category, String paramFormat, Integer tenantId, String operator) {
         List<String> result = new ArrayList<>();
         if (StringUtils.isBlank(category)) {
             result = loadOnlineCategorys(clusterName);
         } else {
-            RedissonxClient redissonxClient = getClientByClusterName(clusterName);
+            RedissonxClient redissonxClient = getClientByClusterName(clusterName, region);
             if (null != redissonxClient) {
                 RKeys rKeys = redissonxClient.getKeys();
                 StringBuffer pattern = new StringBuffer();
                 pattern.append(category);
+                pattern.append("\\.");
                 if (StringUtils.isNotBlank(paramFormat)) {
-                    pattern.append("\\.");
                     pattern.append(paramFormat);
                 }
                 pattern.append("*");
@@ -293,7 +331,7 @@ public class CategoryServiceImpl implements CategoryService {
                     pattern.append("@t");
                     pattern.append(tenantId);
                 }
-                Iterable<String> keys = rKeys.getKeysByPattern(pattern.toString(),50000);
+                Iterable<String> keys = rKeys.getKeysByPattern(pattern.toString(), 50000);
                 Iterator<String> iterator = keys.iterator();
                 if (iterator != null) {
                     while (iterator.hasNext()) {

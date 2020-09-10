@@ -14,7 +14,9 @@ import java.io.Serializable;
 public class ConnectQueryReq implements Serializable {
     private RedissonxPaging paging;
 
-    private String source;
+    private String region;
+
+    private String address;
 
     private String keyword;
 }

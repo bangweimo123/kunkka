@@ -12,9 +12,14 @@ import java.util.List;
  */
 @Data
 public class RedisKeyValueSaveRequest implements Serializable {
+    private String region;
+
     private String category;
+
+    private Integer tenantId;
 
     private List<String> params;
 
     private MValueBO value;
+
 }

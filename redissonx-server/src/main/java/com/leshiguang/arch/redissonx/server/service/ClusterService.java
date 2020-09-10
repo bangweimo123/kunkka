@@ -1,10 +1,14 @@
 package com.leshiguang.arch.redissonx.server.service;
 
 import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterVO;
+import com.leshiguang.arch.redissonx.server.domain.connect.ConnectVO;
 import com.leshiguang.arch.redissonx.server.domain.request.ClusterQueryRequest;
 import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
+
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -47,6 +51,24 @@ public interface ClusterService {
     RedissonxResponse<Boolean> delete(String clusterName, String operator);
 
     /**
+     * 强制删除
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> hardDelete(String clusterName, String operator);
+
+    /**
+     * 恢复
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> reset(String clusterName, String operator);
+
+    /**
      * 发布集群
      *
      * @param clusterName
@@ -63,4 +85,12 @@ public interface ClusterService {
      * @return
      */
     RedissonxResponse<Boolean> offline(String clusterName, String operator);
+
+    /**
+     * 通过集群获取连接
+     *
+     * @param clusterName
+     * @return
+     */
+    RedissonxResponse<List<ClusterConnectBO>> loadConnectsByCluster(String clusterName);
 }

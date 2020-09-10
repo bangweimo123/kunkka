@@ -1,8 +1,11 @@
 package org.redisson.config;
 
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
 import com.leshiguang.redissonx.common.entity.connect.ConnectPasswordBO;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -14,10 +17,12 @@ public class SingleConfigBuilder implements IConfigBuilder {
     public Config build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig) {
         org.redisson.config.Config redissonConfig = new org.redisson.config.Config();
         SingleServerConfig singleServerConfig = redissonConfig.useSingleServer();
-        String address = clusterBO.getConnect().getAddressList().get(0);
-        Boolean useHttpsMode = clusterBO.getConnect().getUseHttpsMode();
+        List<ClusterConnectBO> connectList = clusterBO.getConnectList();
+        ClusterConnectBO connect = connectList.get(0);
+        Boolean useHttpsMode = connect.getConnect().getUseHttpsMode();
+        String address = connect.getConnect().getAddress();
         singleServerConfig.setAddress((useHttpsMode ? "rediss" : "redis") + "://" + address);
-        Integer database = clusterBO.getDatabase();
+        Integer database = connect.getDatabase();
         if (null != database) {
             singleServerConfig.setDatabase(database);
         }
@@ -57,13 +62,13 @@ public class SingleConfigBuilder implements IConfigBuilder {
         }
 
 
-        String authMode = clusterBO.getConnect().getAuthMode();
+        String authMode = connect.getConnect().getAuthMode();
         if (StringUtils.isNotBlank(authMode)) {
             switch (authMode) {
                 case "none":
                     break;
                 case "password":
-                    ConnectPasswordBO connectPasswordBO = clusterBO.getConnect().getPassword();
+                    ConnectPasswordBO connectPasswordBO = connect.getConnect().getPassword();
                     if (StringUtils.isNotBlank(connectPasswordBO.getPassword())) {
                         singleServerConfig.setPassword(connectPasswordBO.getPassword());
                     }

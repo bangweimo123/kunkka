@@ -16,7 +16,7 @@ import java.util.List;
  * @Modify
  */
 public interface CategoryService {
-    RedissonxClient getClientByClusterName(String clusterName);
+    RedissonxClient getClientByClusterName(String clusterName, String region);
 
     /**
      * 查询category
@@ -55,6 +55,25 @@ public interface CategoryService {
      */
     RedissonxResponse<Boolean> delete(String clusterName, String category, String operator);
 
+
+    /**
+     * 强制删除
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> hardDelete(String clusterName, String category, String operator);
+
+    /**
+     * 恢复
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     */
+    RedissonxResponse<Boolean> reset(String clusterName, String category, String operator);
+
     /**
      * 发布
      *
@@ -83,5 +102,5 @@ public interface CategoryService {
      * @param operator
      * @return
      */
-    RedissonxResponse<List<String>> scan(String clusterName, String category, String paramFormat, Integer tenantId, String operator);
+    RedissonxResponse<List<String>> scan(String clusterName, String region, String category, String paramFormat, Integer tenantId, String operator);
 }

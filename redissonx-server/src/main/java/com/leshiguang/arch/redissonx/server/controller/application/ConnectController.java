@@ -34,11 +34,17 @@ public class ConnectController {
         return connectService.delete(connectName, userInfoService.fetchLoginUser().getUserId());
     }
 
+    @GetMapping("/api/connect/loadRelationClusters/{connectName}")
+    public RedissonxResponse loadRelationClusters(@PathVariable String connectName) {
+        return connectService.loadRelationClusters(connectName);
+    }
+
     @PostMapping("/api/connect/query")
     public RedissonxResponse query(@RequestBody ConnectQueryReq request) {
         ConnectQueryRequest queryRequest = new ConnectQueryRequest();
         queryRequest.setKeyword(request.getKeyword());
-        queryRequest.setSource(request.getSource());
+        queryRequest.setRegion(request.getRegion());
+        queryRequest.setAddress(request.getAddress());
         return connectService.query(queryRequest, request.getPaging());
     }
 }

@@ -267,143 +267,73 @@ public class ClusterCondition {
             return (Criteria) this;
         }
 
-        public Criteria andModeIsNull() {
-            addCriterion("mode is null");
+        public Criteria andClusterModeIsNull() {
+            addCriterion("cluster_mode is null");
             return (Criteria) this;
         }
 
-        public Criteria andModeIsNotNull() {
-            addCriterion("mode is not null");
+        public Criteria andClusterModeIsNotNull() {
+            addCriterion("cluster_mode is not null");
             return (Criteria) this;
         }
 
-        public Criteria andModeEqualTo(String value) {
-            addCriterion("mode =", value, "mode");
+        public Criteria andClusterModeEqualTo(String value) {
+            addCriterion("cluster_mode =", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotEqualTo(String value) {
-            addCriterion("mode <>", value, "mode");
+        public Criteria andClusterModeNotEqualTo(String value) {
+            addCriterion("cluster_mode <>", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeGreaterThan(String value) {
-            addCriterion("mode >", value, "mode");
+        public Criteria andClusterModeGreaterThan(String value) {
+            addCriterion("cluster_mode >", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeGreaterThanOrEqualTo(String value) {
-            addCriterion("mode >=", value, "mode");
+        public Criteria andClusterModeGreaterThanOrEqualTo(String value) {
+            addCriterion("cluster_mode >=", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeLessThan(String value) {
-            addCriterion("mode <", value, "mode");
+        public Criteria andClusterModeLessThan(String value) {
+            addCriterion("cluster_mode <", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeLessThanOrEqualTo(String value) {
-            addCriterion("mode <=", value, "mode");
+        public Criteria andClusterModeLessThanOrEqualTo(String value) {
+            addCriterion("cluster_mode <=", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeLike(String value) {
-            addCriterion("mode like", value, "mode");
+        public Criteria andClusterModeLike(String value) {
+            addCriterion("cluster_mode like", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotLike(String value) {
-            addCriterion("mode not like", value, "mode");
+        public Criteria andClusterModeNotLike(String value) {
+            addCriterion("cluster_mode not like", value, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeIn(List<String> values) {
-            addCriterion("mode in", values, "mode");
+        public Criteria andClusterModeIn(List<String> values) {
+            addCriterion("cluster_mode in", values, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotIn(List<String> values) {
-            addCriterion("mode not in", values, "mode");
+        public Criteria andClusterModeNotIn(List<String> values) {
+            addCriterion("cluster_mode not in", values, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeBetween(String value1, String value2) {
-            addCriterion("mode between", value1, value2, "mode");
+        public Criteria andClusterModeBetween(String value1, String value2) {
+            addCriterion("cluster_mode between", value1, value2, "clusterMode");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotBetween(String value1, String value2) {
-            addCriterion("mode not between", value1, value2, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameIsNull() {
-            addCriterion("connect_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameIsNotNull() {
-            addCriterion("connect_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameEqualTo(String value) {
-            addCriterion("connect_name =", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameNotEqualTo(String value) {
-            addCriterion("connect_name <>", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameGreaterThan(String value) {
-            addCriterion("connect_name >", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameGreaterThanOrEqualTo(String value) {
-            addCriterion("connect_name >=", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameLessThan(String value) {
-            addCriterion("connect_name <", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameLessThanOrEqualTo(String value) {
-            addCriterion("connect_name <=", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameLike(String value) {
-            addCriterion("connect_name like", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameNotLike(String value) {
-            addCriterion("connect_name not like", value, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameIn(List<String> values) {
-            addCriterion("connect_name in", values, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameNotIn(List<String> values) {
-            addCriterion("connect_name not in", values, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameBetween(String value1, String value2) {
-            addCriterion("connect_name between", value1, value2, "connectName");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameNotBetween(String value1, String value2) {
-            addCriterion("connect_name not between", value1, value2, "connectName");
+        public Criteria andClusterModeNotBetween(String value1, String value2) {
+            addCriterion("cluster_mode not between", value1, value2, "clusterMode");
             return (Criteria) this;
         }
 
@@ -727,203 +657,73 @@ public class ClusterCondition {
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListIsNull() {
-            addCriterion("application_list is null");
+        public Criteria andStrategysIsNull() {
+            addCriterion("strategys is null");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListIsNotNull() {
-            addCriterion("application_list is not null");
+        public Criteria andStrategysIsNotNull() {
+            addCriterion("strategys is not null");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListEqualTo(String value) {
-            addCriterion("application_list =", value, "applicationList");
+        public Criteria andStrategysEqualTo(String value) {
+            addCriterion("strategys =", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListNotEqualTo(String value) {
-            addCriterion("application_list <>", value, "applicationList");
+        public Criteria andStrategysNotEqualTo(String value) {
+            addCriterion("strategys <>", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListGreaterThan(String value) {
-            addCriterion("application_list >", value, "applicationList");
+        public Criteria andStrategysGreaterThan(String value) {
+            addCriterion("strategys >", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListGreaterThanOrEqualTo(String value) {
-            addCriterion("application_list >=", value, "applicationList");
+        public Criteria andStrategysGreaterThanOrEqualTo(String value) {
+            addCriterion("strategys >=", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListLessThan(String value) {
-            addCriterion("application_list <", value, "applicationList");
+        public Criteria andStrategysLessThan(String value) {
+            addCriterion("strategys <", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListLessThanOrEqualTo(String value) {
-            addCriterion("application_list <=", value, "applicationList");
+        public Criteria andStrategysLessThanOrEqualTo(String value) {
+            addCriterion("strategys <=", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListLike(String value) {
-            addCriterion("application_list like", value, "applicationList");
+        public Criteria andStrategysLike(String value) {
+            addCriterion("strategys like", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListNotLike(String value) {
-            addCriterion("application_list not like", value, "applicationList");
+        public Criteria andStrategysNotLike(String value) {
+            addCriterion("strategys not like", value, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListIn(List<String> values) {
-            addCriterion("application_list in", values, "applicationList");
+        public Criteria andStrategysIn(List<String> values) {
+            addCriterion("strategys in", values, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListNotIn(List<String> values) {
-            addCriterion("application_list not in", values, "applicationList");
+        public Criteria andStrategysNotIn(List<String> values) {
+            addCriterion("strategys not in", values, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListBetween(String value1, String value2) {
-            addCriterion("application_list between", value1, value2, "applicationList");
+        public Criteria andStrategysBetween(String value1, String value2) {
+            addCriterion("strategys between", value1, value2, "strategys");
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListNotBetween(String value1, String value2) {
-            addCriterion("application_list not between", value1, value2, "applicationList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListIsNull() {
-            addCriterion("tenant_list is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListIsNotNull() {
-            addCriterion("tenant_list is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListEqualTo(String value) {
-            addCriterion("tenant_list =", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListNotEqualTo(String value) {
-            addCriterion("tenant_list <>", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListGreaterThan(String value) {
-            addCriterion("tenant_list >", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListGreaterThanOrEqualTo(String value) {
-            addCriterion("tenant_list >=", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListLessThan(String value) {
-            addCriterion("tenant_list <", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListLessThanOrEqualTo(String value) {
-            addCriterion("tenant_list <=", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListLike(String value) {
-            addCriterion("tenant_list like", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListNotLike(String value) {
-            addCriterion("tenant_list not like", value, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListIn(List<String> values) {
-            addCriterion("tenant_list in", values, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListNotIn(List<String> values) {
-            addCriterion("tenant_list not in", values, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListBetween(String value1, String value2) {
-            addCriterion("tenant_list between", value1, value2, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListNotBetween(String value1, String value2) {
-            addCriterion("tenant_list not between", value1, value2, "tenantList");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsIsNull() {
-            addCriterion("ds is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsIsNotNull() {
-            addCriterion("ds is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsEqualTo(Integer value) {
-            addCriterion("ds =", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsNotEqualTo(Integer value) {
-            addCriterion("ds <>", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsGreaterThan(Integer value) {
-            addCriterion("ds >", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsGreaterThanOrEqualTo(Integer value) {
-            addCriterion("ds >=", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsLessThan(Integer value) {
-            addCriterion("ds <", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsLessThanOrEqualTo(Integer value) {
-            addCriterion("ds <=", value, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsIn(List<Integer> values) {
-            addCriterion("ds in", values, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsNotIn(List<Integer> values) {
-            addCriterion("ds not in", values, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsBetween(Integer value1, Integer value2) {
-            addCriterion("ds between", value1, value2, "ds");
-            return (Criteria) this;
-        }
-
-        public Criteria andDsNotBetween(Integer value1, Integer value2) {
-            addCriterion("ds not between", value1, value2, "ds");
+        public Criteria andStrategysNotBetween(String value1, String value2) {
+            addCriterion("strategys not between", value1, value2, "strategys");
             return (Criteria) this;
         }
 
@@ -932,13 +732,8 @@ public class ClusterCondition {
             return (Criteria) this;
         }
 
-        public Criteria andModeLikeInsensitive(String value) {
-            addCriterion("upper(mode) like", value.toUpperCase(), "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andConnectNameLikeInsensitive(String value) {
-            addCriterion("upper(connect_name) like", value.toUpperCase(), "connectName");
+        public Criteria andClusterModeLikeInsensitive(String value) {
+            addCriterion("upper(cluster_mode) like", value.toUpperCase(), "clusterMode");
             return (Criteria) this;
         }
 
@@ -952,13 +747,8 @@ public class ClusterCondition {
             return (Criteria) this;
         }
 
-        public Criteria andApplicationListLikeInsensitive(String value) {
-            addCriterion("upper(application_list) like", value.toUpperCase(), "applicationList");
-            return (Criteria) this;
-        }
-
-        public Criteria andTenantListLikeInsensitive(String value) {
-            addCriterion("upper(tenant_list) like", value.toUpperCase(), "tenantList");
+        public Criteria andStrategysLikeInsensitive(String value) {
+            addCriterion("upper(strategys) like", value.toUpperCase(), "strategys");
             return (Criteria) this;
         }
     }

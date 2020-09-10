@@ -27,6 +27,7 @@ public class ProxyServletConfiguration {
         proxyServlet.addInitParameter("targetUri", prefix + targetUrl);
         proxyServlet.addInitParameter(ProxyServlet.P_LOG, logging_enabled);
         proxyServlet.addUrlMappings("/redissonx");
+        proxyServlet.setOrder(10);
         return proxyServlet;
     }
 }

@@ -18,5 +18,9 @@ public class ConnectQueryRequest implements Serializable {
     /**
      * 所属云
      */
-    private String source;
+    private String region;
+    /**
+     * 地址
+     */
+    private String address;
 }

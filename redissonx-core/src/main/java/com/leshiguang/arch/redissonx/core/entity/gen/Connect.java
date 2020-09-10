@@ -20,7 +20,7 @@ public class Connect implements Serializable {
     private String connectName;
 
     /**
-     * 地址,多个地址用,分割
+     * 地址
      */
     private String address;
 
@@ -60,9 +60,9 @@ public class Connect implements Serializable {
     private String authInfo;
 
     /**
-     * 所属云
+     * 所属区域
      */
-    private String source;
+    private String region;
 
     /**
      * 自增id
@@ -97,16 +97,16 @@ public class Connect implements Serializable {
     }
 
     /**
-     * 地址,多个地址用,分割
-     * @return address 地址,多个地址用,分割
+     * 地址
+     * @return address 地址
      */
     public String getAddress() {
         return address;
     }
 
     /**
-     * 地址,多个地址用,分割
-     * @param address 地址,多个地址用,分割
+     * 地址
+     * @param address 地址
      */
     public void setAddress(String address) {
         this.address = address;
@@ -225,18 +225,18 @@ public class Connect implements Serializable {
     }
 
     /**
-     * 所属云
-     * @return source 所属云
+     * 所属区域
+     * @return region 所属区域
      */
-    public String getSource() {
-        return source;
+    public String getRegion() {
+        return region;
     }
 
     /**
-     * 所属云
-     * @param source 所属云
+     * 所属区域
+     * @param region 所属区域
      */
-    public void setSource(String source) {
-        this.source = source;
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

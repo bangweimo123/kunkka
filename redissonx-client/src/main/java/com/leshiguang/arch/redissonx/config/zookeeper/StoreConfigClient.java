@@ -22,4 +22,8 @@ public interface StoreConfigClient extends ConfigListenable {
      * @return
      */
     StoreCategoryConfig getStoreCategoryConfig(String clusterName, String category);
+
+
+
+
 }

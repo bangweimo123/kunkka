@@ -1,7 +1,6 @@
 package com.leshiguang.redissonx.common.entity.category;
 
 import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,9 +15,13 @@ import java.util.List;
 public class CategoryBO implements Serializable {
     private static final long serialVersionUID = -8154502424484404775L;
     /**
-     * clusterName
+     * 所属集群
      */
     private String clusterName;
+    /**
+     * 所属组
+     */
+    private String groupName;
     /**
      * category name
      */

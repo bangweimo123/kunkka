@@ -13,13 +13,13 @@ import java.util.List;
  * @Modify
  */
 public class TenantAuthStrategy implements AuthStrategy {
-    private List<String> tenantList;
+    private List<Integer> tenantList;
 
-    public List<String> getTenantList() {
+    public List<Integer> getTenantList() {
         return tenantList;
     }
 
-    public void setTenantList(List<String> tenantList) {
+    public void setTenantList(List<Integer> tenantList) {
         this.tenantList = tenantList;
     }
 

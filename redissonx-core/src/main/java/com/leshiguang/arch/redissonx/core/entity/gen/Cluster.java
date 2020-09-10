@@ -22,12 +22,7 @@ public class Cluster implements Serializable {
     /**
      * 集群类型
      */
-    private String mode;
-
-    /**
-     * 连接名
-     */
-    private String connectName;
+    private String clusterMode;
 
     /**
      * 创建时间
@@ -55,19 +50,9 @@ public class Cluster implements Serializable {
     private Integer status;
 
     /**
-     * 应用列表
+     * 策略
      */
-    private String applicationList;
-
-    /**
-     * 租户列表
-     */
-    private String tenantList;
-
-    /**
-     * 数据库
-     */
-    private Integer ds;
+    private String strategys;
 
     /**
      * 自增id
@@ -103,34 +88,18 @@ public class Cluster implements Serializable {
 
     /**
      * 集群类型
-     * @return mode 集群类型
+     * @return cluster_mode 集群类型
      */
-    public String getMode() {
-        return mode;
+    public String getClusterMode() {
+        return clusterMode;
     }
 
     /**
      * 集群类型
-     * @param mode 集群类型
+     * @param clusterMode 集群类型
      */
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    /**
-     * 连接名
-     * @return connect_name 连接名
-     */
-    public String getConnectName() {
-        return connectName;
-    }
-
-    /**
-     * 连接名
-     * @param connectName 连接名
-     */
-    public void setConnectName(String connectName) {
-        this.connectName = connectName;
+    public void setClusterMode(String clusterMode) {
+        this.clusterMode = clusterMode;
     }
 
     /**
@@ -214,50 +183,18 @@ public class Cluster implements Serializable {
     }
 
     /**
-     * 应用列表
-     * @return application_list 应用列表
+     * 策略
+     * @return strategys 策略
      */
-    public String getApplicationList() {
-        return applicationList;
+    public String getStrategys() {
+        return strategys;
     }
 
     /**
-     * 应用列表
-     * @param applicationList 应用列表
+     * 策略
+     * @param strategys 策略
      */
-    public void setApplicationList(String applicationList) {
-        this.applicationList = applicationList;
-    }
-
-    /**
-     * 租户列表
-     * @return tenant_list 租户列表
-     */
-    public String getTenantList() {
-        return tenantList;
-    }
-
-    /**
-     * 租户列表
-     * @param tenantList 租户列表
-     */
-    public void setTenantList(String tenantList) {
-        this.tenantList = tenantList;
-    }
-
-    /**
-     * 数据库
-     * @return ds 数据库
-     */
-    public Integer getDs() {
-        return ds;
-    }
-
-    /**
-     * 数据库
-     * @param ds 数据库
-     */
-    public void setDs(Integer ds) {
-        this.ds = ds;
+    public void setStrategys(String strategys) {
+        this.strategys = strategys;
     }
 }

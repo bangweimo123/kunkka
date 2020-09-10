@@ -12,9 +12,10 @@ import java.util.List;
  */
 @Data
 public class ApplicationBO implements Serializable {
+    /**
+     * 应用名
+     */
     private String application;
-
-    private String clusterName;
 
     private List<ApplicationStrategyBO> strategyList;
 }

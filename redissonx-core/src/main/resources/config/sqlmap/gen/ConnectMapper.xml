@@ -12,11 +12,11 @@
     <result column="operator" jdbcType="VARCHAR" property="operator" />
     <result column="auth_mode" jdbcType="VARCHAR" property="authMode" />
     <result column="auth_info" jdbcType="VARCHAR" property="authInfo" />
-    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
   </resultMap>
   <sql id="Base_Column_List">
     id, connect_name, address, use_https_mode, create_time, update_time, creator, operator, 
-    auth_mode, auth_info, source
+    auth_mode, auth_info, region
   </sql>
   <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultMap="BaseResultMap">
     select
@@ -56,11 +56,11 @@
     insert into connect (connect_name, address, use_https_mode, 
       create_time, update_time, creator, 
       operator, auth_mode, auth_info, 
-      source)
+      region)
     values (#{connectName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{useHttpsMode,jdbcType=OTHER}, 
       #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR}, 
       #{operator,jdbcType=VARCHAR}, #{authMode,jdbcType=VARCHAR}, #{authInfo,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR})
+      #{region,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -95,8 +95,8 @@
       <if test="authInfo != null">
         auth_info,
       </if>
-      <if test="source != null">
-        source,
+      <if test="region != null">
+        region,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -127,8 +127,8 @@
       <if test="authInfo != null">
         #{authInfo,jdbcType=VARCHAR},
       </if>
-      <if test="source != null">
-        #{source,jdbcType=VARCHAR},
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -171,8 +171,8 @@
       <if test="record.authInfo != null">
         auth_info = #{record.authInfo,jdbcType=VARCHAR},
       </if>
-      <if test="record.source != null">
-        source = #{record.source,jdbcType=VARCHAR},
+      <if test="record.region != null">
+        region = #{record.region,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -191,7 +191,7 @@
       operator = #{record.operator,jdbcType=VARCHAR},
       auth_mode = #{record.authMode,jdbcType=VARCHAR},
       auth_info = #{record.authInfo,jdbcType=VARCHAR},
-      source = #{record.source,jdbcType=VARCHAR}
+      region = #{record.region,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="common.Update_By_Example_Where_Clause" />
     </if>
@@ -226,8 +226,8 @@
       <if test="authInfo != null">
         auth_info = #{authInfo,jdbcType=VARCHAR},
       </if>
-      <if test="source != null">
-        source = #{source,jdbcType=VARCHAR},
+      <if test="region != null">
+        region = #{region,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -243,19 +243,19 @@
       operator = #{operator,jdbcType=VARCHAR},
       auth_mode = #{authMode,jdbcType=VARCHAR},
       auth_info = #{authInfo,jdbcType=VARCHAR},
-      source = #{source,jdbcType=VARCHAR}
+      region = #{region,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     insert into connect (connect_name, address, use_https_mode, 
       create_time, update_time, creator, 
       operator, auth_mode, auth_info, 
-      source) values
+      region) values
     <foreach collection="list" item="record" separator=",">
        ( #{record.connectName,jdbcType=VARCHAR}, #{record.address,jdbcType=VARCHAR}, #{record.useHttpsMode,jdbcType=OTHER}, 
         #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR}, 
         #{record.operator,jdbcType=VARCHAR}, #{record.authMode,jdbcType=VARCHAR}, #{record.authInfo,jdbcType=VARCHAR}, 
-        #{record.source,jdbcType=VARCHAR})
+        #{record.region,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <select id="selectOneByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultMap="BaseResultMap">

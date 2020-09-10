@@ -15,6 +15,11 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApolloRedissonxConfigLoader.class);
 
     @Override
+    public String getName() {
+        return "apollo";
+    }
+
+    @Override
     public org.redisson.config.Config getByCluster(String clusterName) {
         Config config = ConfigService.getAppConfig();
         org.redisson.config.Config redissonConfig = new org.redisson.config.Config();
@@ -62,6 +67,16 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
 
     @Override
     public org.redisson.config.Config getByCluster(String clusterName, RedissonxConnectConfig connectConfig) {
+        return null;
+    }
+
+    @Override
+    public org.redisson.config.Config getByClusterAndRegion(String clusterName, String reigon) {
+        return null;
+    }
+
+    @Override
+    public org.redisson.config.Config getByClusterAndRegion(String clusterName, String region, RedissonxConnectConfig connectConfig) {
         return null;
     }
 

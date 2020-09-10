@@ -16,11 +16,11 @@ public class ClusterQueryRequest implements Serializable {
 
     private String keyword;
 
-    private String mode;
+    private String clusterMode;
 
-    private String tenant;
+    private List<Integer> tenantList;
 
-    private String application;
+    private List<String> applicationList;
 
     private List<Integer> statusList;
 }

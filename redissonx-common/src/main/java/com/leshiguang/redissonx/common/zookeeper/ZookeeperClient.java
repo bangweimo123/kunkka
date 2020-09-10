@@ -20,14 +20,12 @@ public interface ZookeeperClient extends ConfigListenable {
      * @return
      */
     ClusterBO getCluster(String clusterName);
-
     /**
      * 设置cluster
      *
      * @param cluster
      */
     boolean setCluster(ClusterBO cluster);
-
     /**
      * 判断集群是否存在
      *
@@ -37,7 +35,6 @@ public interface ZookeeperClient extends ConfigListenable {
     boolean existCluster(String clusterName);
 
     boolean deleteCluster(String clusterName);
-
     /**
      * 获取一个category的配置
      *
