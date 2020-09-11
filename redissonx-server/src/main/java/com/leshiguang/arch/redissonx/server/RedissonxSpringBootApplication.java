@@ -20,7 +20,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {"com.leshiguang.arch.cas", "com.leshiguang.arch.redissonx"}, exclude = {TaskExecutionAutoConfiguration.class, // 禁用定时任务
 })
 @MapperScan({"com.leshiguang.arch.redissonx.core.mapper.gen", "com.leshiguang.arch.redissonx.core.mapper.ext"})
-@EnableDubbo(scanBasePackages = {"com.leshiguang.arch.redissonx"})
 public class RedissonxSpringBootApplication {
 
     public static void main(String[] args) {
