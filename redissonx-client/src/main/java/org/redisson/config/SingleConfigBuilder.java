@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class SingleConfigBuilder implements IConfigBuilder {
     @Override
-    public Config build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig) {
-        org.redisson.config.Config redissonConfig = new org.redisson.config.Config();
+    public RedissonxConfig build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig) {
+        RedissonxConfig redissonConfig = new RedissonxConfig();
         SingleServerConfig singleServerConfig = redissonConfig.useSingleServer();
         List<ClusterConnectBO> connectList = clusterBO.getConnectList();
         ClusterConnectBO connect = connectList.get(0);
@@ -82,6 +82,7 @@ public class SingleConfigBuilder implements IConfigBuilder {
                     break;
             }
         }
+        redissonConfig.setStrategyList(clusterBO.getStrategyList());
         return redissonConfig;
     }
 }

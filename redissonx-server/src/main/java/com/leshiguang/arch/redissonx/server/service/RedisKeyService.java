@@ -1,5 +1,6 @@
 package com.leshiguang.arch.redissonx.server.service;
 
+import com.leshiguang.arch.redissonx.server.domain.rediskey.MValueBO;
 import com.leshiguang.arch.redissonx.server.domain.rediskey.RedisKeyValueVO;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 
@@ -11,9 +12,9 @@ import java.util.List;
  * @Modify
  */
 public interface RedisKeyService {
-    RedissonxResponse<RedisKeyValueVO> keyvalue(String clusterName, String region, String category, String key);
+    RedissonxResponse<RedisKeyValueVO> keyvalue(String clusterName, String region, String category, String key, String type);
 
-    RedissonxResponse<Boolean> keyValueSave(String clusterName, String region, String category, Integer tenantId, Object value, Object... params);
+    RedissonxResponse<Boolean> keyValueSave(String clusterName, String region, String category, Integer tenantId, MValueBO value, Object... params);
 
     RedissonxResponse<Boolean> deleteKey(String clusterName, String region, String category, String key);
 }

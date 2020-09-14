@@ -2,39 +2,40 @@ package com.leshiguang.arch.redissonx.config.auth;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
 import com.leshiguang.arch.redissonx.client.TenantStoreKey;
-import com.leshiguang.arch.redissonx.exception.StoreAuthException;
-import org.apache.commons.collections4.CollectionUtils;
+import com.leshiguang.redissonx.common.enums.StrategyOperate;
 
 import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
- * @Date 2020-04-16 15:00
- * @Modify
+ * @Date 2020-09-11 17:25
+ * @Description
  */
 public class TenantAuthStrategy implements AuthStrategy {
     private List<Integer> tenantList;
 
-    public List<Integer> getTenantList() {
-        return tenantList;
-    }
+    private StrategyOperate operate;
 
-    public void setTenantList(List<Integer> tenantList) {
+
+    public TenantAuthStrategy(List<Integer> tenantList, StrategyOperate operate) {
         this.tenantList = tenantList;
+        this.operate = operate;
     }
 
     @Override
     public boolean auth(StoreKey storeKey) {
         if (storeKey instanceof TenantStoreKey) {
             TenantStoreKey tenantStoreKey = (TenantStoreKey) storeKey;
-            Integer tenantId = tenantStoreKey.getTenantId();
-            if (CollectionUtils.isNotEmpty(tenantList)) {
-                boolean exist = tenantList.contains(tenantId);
-                if (!exist) {
-                    throw new StoreAuthException("no auth for category:" + tenantStoreKey.getCategory() + ",with tenantId:" + tenantId);
-                }
+            switch (operate) {
+                case in:
+                    return tenantList.contains(tenantStoreKey.getTenantId());
+                case notIn:
+                    return !tenantList.contains(tenantStoreKey.getTenantId());
             }
+            return false;
+        } else {
+            return true;
         }
-        return true;
+
     }
 }

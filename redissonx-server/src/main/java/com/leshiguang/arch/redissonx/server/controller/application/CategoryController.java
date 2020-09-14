@@ -84,8 +84,8 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/keyvalue/{clusterName}")
-    public RedissonxResponse keyvalue(@PathVariable String clusterName, @RequestParam(value = "region") String region, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key) {
-        return redisKeyService.keyvalue(clusterName, region, category, key);
+    public RedissonxResponse keyvalue(@PathVariable String clusterName, @RequestParam(value = "region") String region, @RequestParam(value = "category") String category, @RequestParam(value = "key") String key, @RequestParam(value = "keyType", required = false) String keyType) {
+        return redisKeyService.keyvalue(clusterName, region, category, key, keyType);
     }
 
     @PostMapping("/api/category/keyvaluesave/{clusterName}")
@@ -99,7 +99,7 @@ public class CategoryController {
         for (int i = 0; i < params.size(); i++) {
             paramsData[i] = params.get(i);
         }
-        return redisKeyService.keyValueSave(clusterName, region, category, tenantId, value.parse(), paramsData);
+        return redisKeyService.keyValueSave(clusterName, region, category, tenantId, value, paramsData);
     }
 
     @GetMapping("/api/category/keyvaluedelete/{clusterName}")

@@ -8,5 +8,5 @@ import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
  * @Modify
  */
 public interface IConfigBuilder {
-    Config build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig);
+    RedissonxConfig build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig);
 }

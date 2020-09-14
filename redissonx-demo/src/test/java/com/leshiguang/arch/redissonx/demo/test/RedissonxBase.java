@@ -1,54 +1,37 @@
-package com.leshiguang.arch.redissonx.demo;
+package com.leshiguang.arch.redissonx.demo.test;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
-import com.leshiguang.arch.redissonx.client.TenantStoreKey;
-import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
-import com.leshiguang.arch.redissonx.config.zookeeper.StoreConfigClient;
-import com.leshiguang.arch.redissonx.config.zookeeper.ZkStoreConfigClient;
+import com.leshiguang.arch.redissonx.demo.base.BaseTest;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.redisson.RedissonxClient;
 import org.redisson.api.RBucket;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.annotation.Resource;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
- * @Date 2020-03-17 19:55
- * @Modify
+ * @Date 2020-09-14 13:37
+ * @Description
  */
-public class RedissonxSpringHandler {
+@Slf4j
+public class RedissonxBase extends BaseTest {
     private static ExecutorService es = Executors.newCachedThreadPool();
-
     @Resource
-    private RedissonxClient redissonxClient;
+    protected RedissonxClient redissonxClient;
 
-    public static void main(String[] args) {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/appcontext-core.xml");
-        RedissonxClient redissonxClient = applicationContext.getBean("redissonxClient", RedissonxClient.class);
-        testTenantKey(redissonxClient);
-
-    }
-
-    public static void testSimpleKey(RedissonxClient redissonxClient) {
-        StoreKey storeKey = new StoreKey("testredissonx4", 2, 3);
+    @Test
+    public void simpleKey() {
+        StoreKey storeKey = new StoreKey("bangweimo", 2);
         RBucket<String> bucket = redissonxClient.getBucket(storeKey);
         long a = bucket.remainTimeToLive();
         System.out.println(a);
     }
 
-    public static void testTenantKey(RedissonxClient redissonxClient) {
-        StoreKey storeKey = new TenantStoreKey("mysleep", 2, 2);
-        RBucket<String> bucket = redissonxClient.getBucket(storeKey);
-        bucket.set("bangwei.mo");
-        System.out.println(bucket.get());
 
-    }
-
-    public static void testSet(RedissonxClient redissonxClient) {
+    public void testSet() {
         for (int i = 1; i < 10; i++) {
             for (int j = 1; j < 10; j++) {
                 StoreKey storeKey = new StoreKey("testredissonx4", i, j);
@@ -63,7 +46,7 @@ public class RedissonxSpringHandler {
         for (int i = 1; i < 3; i++) {
             for (int j = 1; j < 4; j++) {
 
-                es.submit(new MThread(redissonxClient, i, j));
+                es.submit(new RedissonxBase.MThread(redissonxClient, i, j));
             }
         }
         while (!es.isShutdown() && !es.isTerminated()) {
@@ -97,5 +80,4 @@ public class RedissonxSpringHandler {
             }
         }
     }
-
 }

@@ -8,11 +8,11 @@ package org.redisson.config;
 public interface RedissonxConfigLoader {
     String getName();
 
-    Config getByCluster(String clusterName);
+    RedissonxConfig getByCluster(String clusterName);
 
-    Config getByCluster(String clusterName, RedissonxConnectConfig connectConfig);
+    RedissonxConfig getByCluster(String clusterName, RedissonxConnectConfig connectConfig);
 
-    Config getByClusterAndRegion(String clusterName, String reigon);
+    RedissonxConfig getByClusterAndRegion(String clusterName, String reigon);
 
-    Config getByClusterAndRegion(String clusterName, String region, RedissonxConnectConfig connectConfig);
+    RedissonxConfig getByClusterAndRegion(String clusterName, String region, RedissonxConnectConfig connectConfig);
 }

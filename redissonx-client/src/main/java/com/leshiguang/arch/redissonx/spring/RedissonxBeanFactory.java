@@ -4,10 +4,7 @@ import com.leshiguang.arch.redissonx.exception.ConfigException;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
-import org.redisson.config.Config;
-import org.redisson.config.RedissonxConfigLoader;
-import org.redisson.config.RedissonxConnectConfig;
-import org.redisson.config.ZookeeperRedissonxConfigLoader;
+import org.redisson.config.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -26,10 +23,6 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
      */
     private String clusterName;
     /**
-     * 集群组名
-     */
-    private String groupName;
-    /**
      * 连接配置
      */
     private RedissonxConnectConfig connectConfig;
@@ -44,14 +37,6 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
 
     public void setClusterName(String clusterName) {
         this.clusterName = clusterName;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
     }
 
     public RedissonxConnectConfig getConnectConfig() {
@@ -75,11 +60,12 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
         if (StringUtils.isBlank(clusterName)) {
             throw new ConfigException("clusterName can not be empty!");
         }
-        Config redissonConfig = configLoader.getByCluster(clusterName, connectConfig);
+        RedissonxConfig redissonConfig = configLoader.getByCluster(clusterName, connectConfig);
         if (null == redissonConfig) {
-            throw new ConfigException("clusterName:[" + clusterName + "] or groupName :[" + clusterName + "] can't find config from " + configLoader.getName());
+            throw new ConfigException("clusterName:[" + clusterName + "]  can't find config from " + configLoader.getName());
         }
         redissonxClient = Redissonx.create(clusterName, redissonConfig);
+        LOGGER.info("redissonx inited cluster:[" + clusterName + "]");
     }
 
     public RedissonxClient getObject() throws Exception {

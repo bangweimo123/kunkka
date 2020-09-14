@@ -1,15 +1,18 @@
 package org.redisson;
 
 import com.leshiguang.arch.redissonx.client.StoreKey;
+import com.leshiguang.arch.redissonx.config.auth.ClusterStrategyHandler;
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.hotkey.HotKeyStrategyEnum;
 import com.leshiguang.arch.redissonx.config.hotkey.LocalCacheHotKeyStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfigManager;
+import com.leshiguang.arch.redissonx.exception.StoreAuthException;
 import com.leshiguang.arch.redissonx.exception.StoreException;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
+import org.redisson.config.RedissonxConfig;
 import org.redisson.plugin.RedissonxBucket;
 import org.redisson.plugin.RedissonxLocalBucket;
 import org.slf4j.Logger;
@@ -26,15 +29,18 @@ public class Redissonx extends Redisson implements RedissonxClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(Redissonx.class);
     private StoreCategoryConfigManager storeCategoryConfigManager;
 
+    private ClusterStrategyHandler clusterStrategyHandler;
+
     public void setStoreCategoryConfigManager(StoreCategoryConfigManager storeCategoryConfigManager) {
         this.storeCategoryConfigManager = storeCategoryConfigManager;
     }
 
-    protected Redissonx(Config config) {
+    protected Redissonx(RedissonxConfig config) {
         super(config);
+        clusterStrategyHandler = new ClusterStrategyHandler(config.getStrategyList(), config.getAuthStrategys());
     }
 
-    public static RedissonxClient create(String clusterName, Config config) {
+    public static RedissonxClient create(String clusterName, RedissonxConfig config) {
         Redissonx redissonx = new Redissonx(config);
         if (config.isReferenceEnabled()) {
             redissonx.enableRedissonReferenceSupport();
@@ -66,21 +72,30 @@ public class Redissonx extends Redisson implements RedissonxClient {
         }
 
         public RFacade(Redissonx redissonx, StoreKey storeKey, Codec codec, RI<T> ri) {
+            //权限判断
+            if (redissonx.clusterStrategyHandler.beAuth()) {
+                if (!redissonx.clusterStrategyHandler.auth(storeKey)) {
+                    throw new StoreAuthException("no auth for this application/tenant use this storeKey!");
+                }
+            }
             StoreCategoryConfig categoryConfig = redissonx.parseCategoryConfig(storeKey);
             String finalName = categoryConfig.getFinalKey(storeKey);
             T result = ri.build(redissonx, categoryConfig, finalName, codec);
             if (result instanceof RedissonExpirable) {
                 boolean expireResult = ((RedissonExpirable) result).expire(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
                 if (!expireResult) {
-                    LOGGER.warn("set expire info error");
+                    LOGGER.warn("set expire info error for storeKey:" + storeKey);
                 }
             }
             //热key逻辑
-            if (categoryConfig.getHot() && result instanceof RBucket) {
+            if (categoryConfig.getHot()) {
                 HotKeyStrategy hotKeyStrategy = categoryConfig.getHotKeyStrategy(HotKeyStrategyEnum.LOCAL.name());
                 if (null != hotKeyStrategy) {
                     LocalCacheHotKeyStrategy localCacheHotKeyStrategy = (LocalCacheHotKeyStrategy) hotKeyStrategy;
-                    result = (T) new RedissonxLocalBucket(codec, redissonx.connectionManager.getCommandExecutor(), finalName, localCacheHotKeyStrategy.getHotHolder());
+                    //仅支持bucket的热key逻辑 TODO
+                    if (result instanceof RBucket) {
+                        result = (T) new RedissonxLocalBucket(codec, redissonx.connectionManager.getCommandExecutor(), finalName, localCacheHotKeyStrategy.getHotHolder());
+                    }
                 }
             }
 

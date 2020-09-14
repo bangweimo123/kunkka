@@ -19,6 +19,7 @@ import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
 import org.redisson.api.RKeys;
 import org.redisson.config.Config;
+import org.redisson.config.RedissonxConfig;
 import org.redisson.config.RedissonxConfigLoader;
 import org.redisson.config.ZookeeperRedissonxConfigLoader;
 import org.slf4j.Logger;
@@ -50,10 +51,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (!redissonxClientMap.containsKey(key)) {
             synchronized (this) {
                 if (!redissonxClientMap.containsKey(key)) {
-                    Config config = configLoader.getByClusterAndRegion(clusterName, region);
+                    RedissonxConfig config = configLoader.getByClusterAndRegion(clusterName, region);
                     if (null == config) {
                         return null;
                     }
+                    config.setAuthStrategys(false);
                     RedissonxClient redissonxClient = Redissonx.create(clusterName, config);
                     redissonxClientMap.put(key, redissonxClient);
                 }
