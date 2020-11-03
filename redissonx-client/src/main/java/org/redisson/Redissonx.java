@@ -81,12 +81,6 @@ public class Redissonx extends Redisson implements RedissonxClient {
             StoreCategoryConfig categoryConfig = redissonx.parseCategoryConfig(storeKey);
             String finalName = categoryConfig.getFinalKey(storeKey);
             T result = ri.build(redissonx, categoryConfig, finalName, codec);
-            if (result instanceof RedissonExpirable) {
-                boolean expireResult = ((RedissonExpirable) result).expire(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
-                if (!expireResult) {
-                    LOGGER.warn("set expire info error for storeKey:" + storeKey);
-                }
-            }
             //热key逻辑
             if (categoryConfig.getHot()) {
                 HotKeyStrategy hotKeyStrategy = categoryConfig.getHotKeyStrategy(HotKeyStrategyEnum.LOCAL.name());
