@@ -11,11 +11,6 @@ import java.io.Serializable;
  */
 @Data
 public class ClusterAuthStrategyBO implements Serializable {
-    /**
-     * 认知方式(init,runtime)
-     */
-    private String authMode;
-
     private String source;
 
     private String operator;
