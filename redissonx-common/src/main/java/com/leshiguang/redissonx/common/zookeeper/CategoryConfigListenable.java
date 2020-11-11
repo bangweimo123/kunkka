@@ -8,10 +8,6 @@ import org.I0Itec.zkclient.IZkDataListener;
  * @Date 2020-03-16 15:04
  * @Modify
  */
-public interface ConfigListenable {
+public interface CategoryConfigListenable {
     void addCategoryConfigListener(String clusterName, String category, IZkDataListener listener);
-
-    void addHotKeyConfigListener(String clusterName, IZkDataListener listener);
-
-    void addAuthAppsListner(String clusterName, IZkChildListener listener);
 }

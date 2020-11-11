@@ -8,6 +8,7 @@ import com.leshiguang.arch.redissonx.core.mapper.gen.ClusterConnectMappingMapper
 import com.leshiguang.arch.redissonx.core.mapper.gen.ClusterMapper;
 import com.leshiguang.arch.redissonx.core.mapper.gen.ConnectMapper;
 import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterConnectVO;
+import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterPublishOption;
 import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterVO;
 import com.leshiguang.arch.redissonx.server.domain.request.ClusterQueryRequest;
 import com.leshiguang.arch.redissonx.server.service.ClusterService;
@@ -15,9 +16,10 @@ import com.leshiguang.redissonx.common.base.RedissonxPaging;
 import com.leshiguang.redissonx.common.base.RedissonxResponse;
 import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterAuthStrategyBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
-import com.leshiguang.redissonx.common.entity.cluster.ClusterStrategyBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterSimpleBO;
 import com.leshiguang.redissonx.common.enums.StrategySource;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientFactory;
@@ -48,17 +50,6 @@ public class ClusterServiceImpl implements ClusterService {
     private CategoryMapper categoryMapper;
     @Resource
     private ClusterConnectMappingMapper clusterConnectMappingMapper;
-
-    private RedissonxResponse validatorCluster(ClusterBO cluster) {
-        try {
-            Validate.notBlank(cluster.getClusterName(), "集群名不能为空");
-        } catch (IllegalArgumentException iae) {
-            return RedissonxResponseBuilder.fail(604, iae.getMessage());
-        } catch (NullPointerException npe) {
-            return RedissonxResponseBuilder.fail(605, "空指针异常");
-        }
-        return null;
-    }
 
     @Override
     public RedissonxResponse<RedissonxTable<ClusterVO>> query(ClusterQueryRequest request, RedissonxPaging paging) {
@@ -126,26 +117,46 @@ public class ClusterServiceImpl implements ClusterService {
             int updateCount = clusterMapper.updateByIdSelective(operationCluster);
             result = updateCount > 0;
         }
-        if (result) {
-            //批量添加mapping关系
-            if (CollectionUtils.isNotEmpty(cluster.getConnectList())) {
-                ClusterConnectMappingCondition mappingCondition = new ClusterConnectMappingCondition();
-                mappingCondition.createCriteria().andClusterNameEqualTo(cluster.getClusterName());
-                clusterConnectMappingMapper.deleteByCondition(mappingCondition);
-                List<ClusterConnectMapping> mappingList = new ArrayList<>();
-                for (ClusterConnectVO clusterConnect : cluster.getConnectList()) {
-                    ClusterConnectMapping clusterConnectMapping = new ClusterConnectMapping();
-                    clusterConnectMapping.setDs(clusterConnect.getDatabase());
-                    clusterConnectMapping.setClusterName(cluster.getClusterName());
-                    clusterConnectMapping.setConnectName(clusterConnect.getConnectName());
-                    clusterConnectMapping.setRegion(clusterConnect.getRegion());
-                    mappingList.add(clusterConnectMapping);
-                }
-                clusterConnectMappingMapper.batchInsert(mappingList);
+        return RedissonxResponseBuilder.success(result);
+    }
+
+    @Override
+    public RedissonxResponse<Boolean> saveConnects(ClusterVO cluster, String operator) {
+        //批量添加mapping关系
+        if (CollectionUtils.isNotEmpty(cluster.getConnectList())) {
+            ClusterConnectMappingCondition mappingCondition = new ClusterConnectMappingCondition();
+            mappingCondition.createCriteria().andClusterNameEqualTo(cluster.getClusterName());
+            clusterConnectMappingMapper.deleteByCondition(mappingCondition);
+            List<ClusterConnectMapping> mappingList = new ArrayList<>();
+            for (ClusterConnectVO clusterConnect : cluster.getConnectList()) {
+                ClusterConnectMapping clusterConnectMapping = new ClusterConnectMapping();
+                clusterConnectMapping.setDs(clusterConnect.getDatabase());
+                clusterConnectMapping.setClusterName(cluster.getClusterName());
+                clusterConnectMapping.setConnectName(clusterConnect.getConnectName());
+                clusterConnectMapping.setRegion(clusterConnect.getRegion());
+                mappingList.add(clusterConnectMapping);
             }
+            clusterConnectMappingMapper.batchInsert(mappingList);
+        }
+        return RedissonxResponseBuilder.success(true);
+    }
+
+    @Override
+    public RedissonxResponse<Boolean> saveAuths(ClusterVO cluster, String operator) {
+        ClusterCondition condition = new ClusterCondition();
+        condition.createCriteria().andClusterNameEqualTo(cluster.getClusterName());
+        Cluster existCluster = clusterMapper.selectOneByCondition(condition);
+        Boolean result = false;
+        Cluster operationCluster = toDBAuthEntity(cluster);
+        if (null != existCluster) {
+            operationCluster.setUpdateTime(new Date());
+            operationCluster.setId(existCluster.getId());
+            int updateCount = clusterMapper.updateByIdSelective(operationCluster);
+            result = updateCount > 0;
         }
         return RedissonxResponseBuilder.success(result);
     }
+
 
     @Override
     public RedissonxResponse<Boolean> delete(String clusterName, String operator) {
@@ -169,6 +180,14 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     @Override
+    public RedissonxResponse<Boolean> isOnline(String clusterName) {
+        ClusterCondition condition = new ClusterCondition();
+        condition.createCriteria().andClusterNameEqualTo(clusterName).andStatusEqualTo(2);
+        long onlineCount = clusterMapper.countByCondition(condition);
+        return RedissonxResponseBuilder.success(onlineCount > 0);
+    }
+
+    @Override
     public RedissonxResponse<Boolean> reset(String clusterName, String operator) {
         ClusterCondition condition = new ClusterCondition();
         condition.createCriteria().andClusterNameEqualTo(clusterName);
@@ -181,7 +200,7 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     @Override
-    public RedissonxResponse<Boolean> publish(String clusterName, String operator) {
+    public RedissonxResponse<Boolean> publish(String clusterName, String operator, ClusterPublishOption option) {
         Boolean result = false;
         try {
             ClusterCondition condition = new ClusterCondition();
@@ -193,7 +212,7 @@ public class ClusterServiceImpl implements ClusterService {
             boolean updateStatus = updateCount > 0;
             if (updateStatus) {
                 Cluster newestEntity = clusterMapper.selectOneByCondition(condition);
-                ClusterBO toZkEntity = toBO(newestEntity);
+                ClusterBO toZkEntity = toBO(newestEntity, option);
                 ClusterConnectMappingCondition mappingCondition = new ClusterConnectMappingCondition();
                 mappingCondition.createCriteria().andClusterNameEqualTo(clusterName);
                 List<ClusterConnectMapping> mappingList = clusterConnectMappingMapper.selectByCondition(mappingCondition);
@@ -219,9 +238,13 @@ public class ClusterServiceImpl implements ClusterService {
                     for (Map.Entry<String, List<ClusterConnectBO>> connectMapping : connectsMapping.entrySet()) {
                         String region = connectMapping.getKey();
                         List<ClusterConnectBO> connectList = connectMapping.getValue();
-                        toZkEntity.setConnectList(connectList);
+                        toZkEntity.setConnects(connectList);
                         ZookeeperClient zookeeperClient = ZookeeperClientFactory.getInstance(region);
-                        boolean setResult = zookeeperClient.setCluster(toZkEntity);
+                        if (zookeeperClient == null) {
+                            LOGGER.error("no exist zookeeperClient for region:[" + region + "],please config apollo first!");
+                            continue;
+                        }
+                        boolean setResult = zookeeperClient.setCluster(clusterName, toZkEntity);
                         if (!setResult) {
                             LOGGER.error("publish to zk error for cluster:" + clusterName);
                         }
@@ -282,24 +305,25 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     @Override
-    public RedissonxResponse<List<ClusterConnectBO>> loadConnectsByCluster(String clusterName) {
-        List<ClusterConnectBO> connects = new ArrayList<>();
+    public RedissonxResponse<List<ClusterConnectVO>> loadConnectsByCluster(String clusterName) {
+        List<ClusterConnectVO> connects = new ArrayList<>();
         try {
             ClusterConnectMappingCondition condition = new ClusterConnectMappingCondition();
             condition.createCriteria().andClusterNameEqualTo(clusterName);
             List<ClusterConnectMapping> mappingList = clusterConnectMappingMapper.selectByCondition(condition);
             for (ClusterConnectMapping mapping : mappingList) {
-                ClusterConnectBO clusterConnect = new ClusterConnectBO();
+                ClusterConnectVO clusterConnect = new ClusterConnectVO();
                 String connect = mapping.getConnectName();
                 ConnectCondition connectCondition = new ConnectCondition();
                 connectCondition.createCriteria().andConnectNameEqualTo(connect);
                 Connect connectItem = connectMapper.selectOneByCondition(connectCondition);
-                clusterConnect.setConnect(ConnectServiceImpl.toBO(connectItem));
+                clusterConnect.setConnectName(connectItem.getConnectName());
                 clusterConnect.setDatabase(mapping.getDs());
+                clusterConnect.setRegion(mapping.getRegion());
                 connects.add(clusterConnect);
             }
         } catch (Exception e) {
-            LOGGER.error("exception for offline cluster", e);
+            LOGGER.error("exception for loadConnectsByCluster", e);
             return RedissonxResponseBuilder.fail(407, "exception to load");
         }
         return RedissonxResponseBuilder.success(connects);
@@ -331,9 +355,9 @@ public class ClusterServiceImpl implements ClusterService {
         }
         target.setStatus(source.getStatus());
         if (StringUtils.isNotEmpty(source.getStrategys())) {
-            List<ClusterStrategyBO> strategyList = JSON.parseObject(source.getStrategys(), new TypeReference<List<ClusterStrategyBO>>() {
+            List<ClusterAuthStrategyBO> strategyList = JSON.parseObject(source.getStrategys(), new TypeReference<List<ClusterAuthStrategyBO>>() {
             });
-            for (ClusterStrategyBO strategy : strategyList) {
+            for (ClusterAuthStrategyBO strategy : strategyList) {
                 StrategySource strategySource = StrategySource.parse(strategy.getSource());
                 switch (strategySource) {
                     case application:
@@ -349,15 +373,21 @@ public class ClusterServiceImpl implements ClusterService {
         return target;
     }
 
-    private ClusterBO toBO(Cluster source) {
+    private ClusterBO toBO(Cluster source, ClusterPublishOption option) {
         ClusterBO target = new ClusterBO();
-        if (StringUtils.isNotEmpty(source.getStrategys())) {
-            List<ClusterStrategyBO> strategyList = JSON.parseObject(source.getStrategys(), new TypeReference<List<ClusterStrategyBO>>() {
-            });
-            target.setStrategyList(strategyList);
+        if (option.getAuth() || option.getAll()) {
+            if (StringUtils.isNotEmpty(source.getStrategys())) {
+                List<ClusterAuthStrategyBO> strategyList = JSON.parseObject(source.getStrategys(), new TypeReference<List<ClusterAuthStrategyBO>>() {
+                });
+                target.setAuthStrategies(strategyList);
+            }
         }
-        target.setClusterName(source.getClusterName());
-        target.setMode(source.getClusterMode());
+        if (option.getAll()) {
+            ClusterSimpleBO clusterSimple = new ClusterSimpleBO();
+            clusterSimple.setClusterName(source.getClusterName());
+            clusterSimple.setMode(source.getClusterMode());
+            target.setCluster(clusterSimple);
+        }
         return target;
     }
 
@@ -371,24 +401,29 @@ public class ClusterServiceImpl implements ClusterService {
         }
         target.setStatus(source.getStatus());
         target.setClusterName(source.getClusterName());
+        target.setClusterMode(source.getMode());
+        return target;
+    }
 
-        List<ClusterStrategyBO> clusterStrategyList = new ArrayList<>();
+    private Cluster toDBAuthEntity(ClusterVO source) {
+        Cluster target = new Cluster();
+        target.setClusterName(source.getClusterName());
+        List<ClusterAuthStrategyBO> clusterStrategyList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(source.getApplicationList())) {
-            ClusterStrategyBO s1 = new ClusterStrategyBO();
+            ClusterAuthStrategyBO s1 = new ClusterAuthStrategyBO();
             s1.setSource(StrategySource.application.getDesc());
             s1.setOperator("in");
             s1.setData(source.getApplicationList());
             clusterStrategyList.add(s1);
         }
         if (CollectionUtils.isNotEmpty(source.getTenantList())) {
-            ClusterStrategyBO s2 = new ClusterStrategyBO();
+            ClusterAuthStrategyBO s2 = new ClusterAuthStrategyBO();
             s2.setSource(StrategySource.tenant.getDesc());
             s2.setOperator("in");
             s2.setData(source.getTenantList());
             clusterStrategyList.add(s2);
         }
         target.setStrategys(JSON.toJSONString(clusterStrategyList));
-        target.setClusterMode(source.getMode());
         return target;
     }
 }

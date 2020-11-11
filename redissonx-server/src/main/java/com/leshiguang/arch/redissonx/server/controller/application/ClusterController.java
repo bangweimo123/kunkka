@@ -1,6 +1,7 @@
 package com.leshiguang.arch.redissonx.server.controller.application;
 
 import com.leshiguang.arch.cas.support.service.UserInfoService;
+import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterPublishOption;
 import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterQueryReq;
 import com.leshiguang.arch.redissonx.server.domain.cluster.ClusterVO;
 import com.leshiguang.arch.redissonx.server.domain.request.ClusterQueryRequest;
@@ -27,6 +28,46 @@ public class ClusterController {
     @PostMapping("/api/cluster/save")
     public RedissonxResponse save(@RequestBody ClusterVO cluster) {
         return clusterService.save(cluster, userInfoService.fetchLoginUser().getUserId());
+    }
+
+    @PostMapping("/api/cluster/connects/save")
+    public RedissonxResponse saveConnects(@RequestBody ClusterVO cluster) {
+        RedissonxResponse<Boolean> saveResult = clusterService.saveConnects(cluster, userInfoService.fetchLoginUser().getUserId());
+        return saveResult;
+    }
+
+    @GetMapping("/api/cluster/connects/publish/{clusterName}")
+    public RedissonxResponse publishConnects(@PathVariable String clusterName) {
+        RedissonxResponse<Boolean> isOnlineResult = clusterService.isOnline(clusterName);
+        if (isOnlineResult.getData()) {
+            ClusterPublishOption publishOption = new ClusterPublishOption();
+            publishOption.setAll(false);
+            publishOption.setAuth(false);
+            publishOption.setConnect(true);
+            return clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId(), publishOption);
+        } else {
+            return isOnlineResult;
+        }
+    }
+
+
+    @PostMapping("/api/cluster/auths/save")
+    public RedissonxResponse saveAuths(@RequestBody ClusterVO cluster) {
+        return clusterService.saveAuths(cluster, userInfoService.fetchLoginUser().getUserId());
+    }
+
+    @GetMapping("/api/cluster/auths/publish/{clusterName}")
+    public RedissonxResponse publishAuths(@PathVariable String clusterName) {
+        RedissonxResponse<Boolean> isOnlineResult = clusterService.isOnline(clusterName);
+        if (isOnlineResult.getData()) {
+            ClusterPublishOption publishOption = new ClusterPublishOption();
+            publishOption.setAll(false);
+            publishOption.setAuth(true);
+            publishOption.setConnect(false);
+            return clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId(), publishOption);
+        } else {
+            return isOnlineResult;
+        }
     }
 
     @GetMapping("/api/cluster/delete/{clusterName}")
@@ -58,7 +99,11 @@ public class ClusterController {
 
     @GetMapping("/api/cluster/publish/{clusterName}")
     public RedissonxResponse publish(@PathVariable String clusterName) {
-        return clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId());
+        ClusterPublishOption publishOption = new ClusterPublishOption();
+        publishOption.setAll(true);
+        publishOption.setAuth(false);
+        publishOption.setConnect(false);
+        return clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId(), publishOption);
     }
 
     @GetMapping("/api/cluster/offline/{clusterName}")

@@ -337,66 +337,6 @@ public class ConnectCondition {
             return (Criteria) this;
         }
 
-        public Criteria andUseHttpsModeIsNull() {
-            addCriterion("use_https_mode is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeIsNotNull() {
-            addCriterion("use_https_mode is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeEqualTo(Integer value) {
-            addCriterion("use_https_mode =", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeNotEqualTo(Integer value) {
-            addCriterion("use_https_mode <>", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeGreaterThan(Integer value) {
-            addCriterion("use_https_mode >", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("use_https_mode >=", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeLessThan(Integer value) {
-            addCriterion("use_https_mode <", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeLessThanOrEqualTo(Integer value) {
-            addCriterion("use_https_mode <=", value, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeIn(List<Integer> values) {
-            addCriterion("use_https_mode in", values, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeNotIn(List<Integer> values) {
-            addCriterion("use_https_mode not in", values, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeBetween(Integer value1, Integer value2) {
-            addCriterion("use_https_mode between", value1, value2, "useHttpsMode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseHttpsModeNotBetween(Integer value1, Integer value2) {
-            addCriterion("use_https_mode not between", value1, value2, "useHttpsMode");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

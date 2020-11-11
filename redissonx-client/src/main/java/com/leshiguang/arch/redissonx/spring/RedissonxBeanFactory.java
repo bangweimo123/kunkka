@@ -1,6 +1,9 @@
 package com.leshiguang.arch.redissonx.spring;
 
 import com.leshiguang.arch.redissonx.exception.ConfigException;
+import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
+import com.leshiguang.redissonx.common.zookeeper.ZookeeperClientFactory;
+import org.I0Itec.zkclient.IZkDataListener;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redissonx;
 import org.redisson.RedissonxClient;
@@ -65,11 +68,40 @@ public class RedissonxBeanFactory implements FactoryBean, DisposableBean, Initia
             throw new ConfigException("clusterName:[" + clusterName + "]  can't find config from " + configLoader.getName());
         }
         redissonxClient = Redissonx.create(clusterName, redissonConfig);
+
+        ZookeeperClient zookeeperClient = ZookeeperClientFactory.getInstance(redissonConfig.getRegion());
+        zookeeperClient.addConnectConfigListener(redissonConfig.getClusterName(), new IZkDataListener() {
+            @Override
+            public void handleDataChange(String s, Object o) throws Exception {
+                reloadClient(clusterName);
+            }
+
+            @Override
+            public void handleDataDeleted(String s) throws Exception {
+                reloadClient(clusterName);
+            }
+        });
         LOGGER.info("redissonx inited cluster:[" + clusterName + "]");
     }
 
     public RedissonxClient getObject() throws Exception {
         return redissonxClient;
+    }
+
+    private void reloadClient(String clusterName) {
+        RedissonxConfig redissonConfig = configLoader.getByCluster(clusterName, connectConfig);
+        if (null == redissonConfig) {
+            throw new ConfigException("clusterName:[" + clusterName + "]  can't find config from " + configLoader.getName());
+        }
+        RedissonxClient _reload = Redissonx.create(clusterName, redissonConfig);
+        synchronized (this) {
+            RedissonxClient _refer = redissonxClient;
+            try {
+                redissonxClient = _reload;
+            } finally {
+                _refer.shutdown();
+            }
+        }
     }
 
     @Override

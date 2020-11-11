@@ -2,17 +2,13 @@ package com.leshiguang.redissonx.common.zookeeper;
 
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
-import com.leshiguang.redissonx.common.entity.hotkey.HotKeyBO;
-import org.I0Itec.zkclient.ZkClient;
-
-import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
  * @Date 2020-03-20 14:28
  * @Modify
  */
-public interface ZookeeperClient extends ConfigListenable {
+public interface ZookeeperClient extends CategoryConfigListenable, AuthStrategyConfigListenable, ConnectConfigListenable {
     /**
      * 加载cluster
      *
@@ -20,12 +16,14 @@ public interface ZookeeperClient extends ConfigListenable {
      * @return
      */
     ClusterBO getCluster(String clusterName);
+
     /**
      * 设置cluster
      *
      * @param cluster
      */
-    boolean setCluster(ClusterBO cluster);
+    boolean setCluster(String clusterName, ClusterBO cluster);
+
     /**
      * 判断集群是否存在
      *
@@ -34,7 +32,14 @@ public interface ZookeeperClient extends ConfigListenable {
      */
     boolean existCluster(String clusterName);
 
+    /**
+     * 删除集群
+     *
+     * @param clusterName
+     * @return
+     */
     boolean deleteCluster(String clusterName);
+
     /**
      * 获取一个category的配置
      *

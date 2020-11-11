@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
                     if (null == config) {
                         return null;
                     }
-                    config.setAuthStrategys(false);
+                    config.setAuthStrict(false);
                     RedissonxClient redissonxClient = Redissonx.create(clusterName, config);
                     redissonxClientMap.put(key, redissonxClient);
                 }

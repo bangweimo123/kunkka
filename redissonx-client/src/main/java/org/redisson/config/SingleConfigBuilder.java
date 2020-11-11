@@ -3,6 +3,7 @@ package org.redisson.config;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
 import com.leshiguang.redissonx.common.entity.connect.ConnectPasswordBO;
+import com.leshiguang.redissonx.common.enums.AuthMode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -14,14 +15,13 @@ import java.util.List;
  */
 public class SingleConfigBuilder implements IConfigBuilder {
     @Override
-    public RedissonxConfig build(ClusterBO clusterBO, RedissonxConnectConfig connectConfig) {
+    public RedissonxConfig build(ClusterBO cluster, RedissonxConnectConfig connectConfig) {
         RedissonxConfig redissonConfig = new RedissonxConfig();
         SingleServerConfig singleServerConfig = redissonConfig.useSingleServer();
-        List<ClusterConnectBO> connectList = clusterBO.getConnectList();
+        List<ClusterConnectBO> connectList = cluster.getConnects();
         ClusterConnectBO connect = connectList.get(0);
-        Boolean useHttpsMode = connect.getConnect().getUseHttpsMode();
         String address = connect.getConnect().getAddress();
-        singleServerConfig.setAddress((useHttpsMode ? "rediss" : "redis") + "://" + address);
+        singleServerConfig.setAddress("redis://" + address);
         Integer database = connect.getDatabase();
         if (null != database) {
             singleServerConfig.setDatabase(database);
@@ -64,25 +64,19 @@ public class SingleConfigBuilder implements IConfigBuilder {
 
         String authMode = connect.getConnect().getAuthMode();
         if (StringUtils.isNotBlank(authMode)) {
-            switch (authMode) {
-                case "none":
+            AuthMode authModeEnum = AuthMode.parse(authMode);
+            switch (authModeEnum) {
+                case none:
                     break;
-                case "password":
+                case password:
                     ConnectPasswordBO connectPasswordBO = connect.getConnect().getPassword();
                     if (StringUtils.isNotBlank(connectPasswordBO.getPassword())) {
                         singleServerConfig.setPassword(connectPasswordBO.getPassword());
                     }
                     break;
-                case "ssh":
-                    //ssh证书逻辑
-//                    ConnectSSHBO connectSSHBO=clusterBO.getConnect().getSsh();
-//                    singleServerConfig.setSslEnableEndpointIdentification(true);
-//                    singleServerConfig.setSslKeystorePassword(connectSSHBO.getPassword());
-//                    singleServerConfig.setSslProvider()
-                    break;
             }
         }
-        redissonConfig.setStrategyList(clusterBO.getStrategyList());
+        redissonConfig.setStrategyList(cluster.getAuthStrategies());
         return redissonConfig;
     }
 }

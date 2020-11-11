@@ -1,23 +1,26 @@
 package com.leshiguang.redissonx.common.zookeeper;
 
 import com.ctrip.framework.apollo.Config;
-import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.leshiguang.arch.common.util.RegionUtil;
 import com.leshiguang.redissonx.common.constants.RedissonxConstants;
 import com.leshiguang.redissonx.common.entity.category.CategoryBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterAuthStrategyBO;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterConnectBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterSimpleBO;
 import com.leshiguang.redissonx.common.path.PathProvider;
-import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.IZkStateListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zookeeper.Watcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -39,14 +42,11 @@ public class ZookeeperClientImpl implements ZookeeperClient {
         zkConfig.setConnectTimeout(config.getIntProperty(RedissonxConstants.ZK_CONNECTION_TIMEOUT, zkConfig.getConnectTimeout()));
         zkConfig.setSessionTimeout(config.getIntProperty(RedissonxConstants.ZK_SESSION_TIMEOUT, zkConfig.getSessionTimeout()));
         zkConfig.setOperationRetryTimeout(config.getLongProperty(RedissonxConstants.ZK_OPERATION_RETRY_TIMEOUT, zkConfig.getOperationRetryTimeout()));
-        config.addChangeListener(new ConfigChangeListener() {
-            @Override
-            public void onChange(ConfigChangeEvent configChangeEvent) {
-                if (configChangeEvent.getNamespace().equalsIgnoreCase(RedissonxConstants.APOLLO_NS)) {
-                    for (String changeKey : configChangeEvent.changedKeys()) {
-                        if (changeKey.startsWith("zk")) {
-                            renewZkClient();
-                        }
+        config.addChangeListener(configChangeEvent -> {
+            if (configChangeEvent.getNamespace().equalsIgnoreCase(RedissonxConstants.APOLLO_NS)) {
+                for (String changeKey : configChangeEvent.changedKeys()) {
+                    if (changeKey.startsWith("zk")) {
+                        renewZkClient();
                     }
                 }
             }
@@ -70,14 +70,13 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     protected void preparePathProvider() {
         pathProvider = new PathProvider();
+        pathProvider.addTemplate("cluster-base", "/redissonx/cluster/$0/$1");
         pathProvider.addTemplate("cluster", "/redissonx/cluster/$0/$1/info");
-        pathProvider.addTemplate("strict", "/redissonx/cluster/$0/$1/auth/strict");
-        pathProvider.addTemplate("application", "/redissonx/cluster/$0/$1/auth/applications");
+        pathProvider.addTemplate("clusterConnects", "/redissonx/cluster/$0/$1/connects");
+        pathProvider.addTemplate("clusterAuthStrategys", "/redissonx/cluster/$0/$1/auth/strategys");
         pathProvider.addTemplate("categoryPage", "/redissonx/cluster/$0/$1/bucket");
         pathProvider.addTemplate("categoryBucket", "/redissonx/cluster/$0/$1/bucket/@bucket");
         pathProvider.addTemplate("category", "/redissonx/cluster/$0/$1/bucket/@bucket/$2");
-        pathProvider.addTemplate("hotkey", "/redissonx/cluster/$0/$1/hotkeys");
-        pathProvider.addTemplate("clusterGroup", "/redissonx/clustergroup/$0/$1/$2");
     }
 
     public ZkClient prepareZkClient() {
@@ -132,21 +131,48 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     @Override
     public ClusterBO getCluster(String clusterName) {
+        ClusterBO cluster = new ClusterBO();
         String clusterPath = pathProvider.getPath("cluster", clusterName, region);
         if (zkClient.exists(clusterPath)) {
-            ClusterBO clusterBO = zkClient.readData(clusterPath, true);
-            return clusterBO;
+            ClusterSimpleBO clusterSimple = zkClient.readData(clusterPath, true);
+            cluster.setCluster(clusterSimple);
         }
-        return null;
+        String connectsPath = pathProvider.getPath("clusterConnects", clusterName, region);
+        if (zkClient.exists(connectsPath)) {
+            List<ClusterConnectBO> connectList = zkClient.readData(connectsPath, true);
+            cluster.setConnects(connectList);
+        }
+        String authStrategysPath = pathProvider.getPath("clusterAuthStrategys", clusterName, region);
+        if (zkClient.exists(authStrategysPath)) {
+            List<ClusterAuthStrategyBO> authStrategyList = zkClient.readData(authStrategysPath, true);
+            cluster.setAuthStrategies(authStrategyList);
+        }
+        return cluster;
     }
 
     @Override
-    public boolean setCluster(ClusterBO cluster) {
-        String clusterPath = pathProvider.getPath("cluster", cluster.getClusterName(), region);
-        if (!zkClient.exists(clusterPath)) {
-            zkClient.createPersistent(clusterPath, true);
+    public boolean setCluster(String clusterName, ClusterBO cluster) {
+        if (null != cluster.getCluster()) {
+            String clusterPath = pathProvider.getPath("cluster", clusterName, region);
+            if (!zkClient.exists(clusterPath)) {
+                zkClient.createPersistent(clusterPath, true);
+            }
+            zkClient.writeData(clusterPath, cluster.getCluster());
         }
-        zkClient.writeData(clusterPath, cluster);
+        if (CollectionUtils.isNotEmpty(cluster.getConnects())) {
+            String connectsPath = pathProvider.getPath("clusterConnects", clusterName, region);
+            if (!zkClient.exists(connectsPath)) {
+                zkClient.createPersistent(connectsPath, true);
+            }
+            zkClient.writeData(connectsPath, cluster.getConnects());
+        }
+        if (CollectionUtils.isNotEmpty(cluster.getAuthStrategies())) {
+            String authStrategysPath = pathProvider.getPath("clusterAuthStrategys", clusterName, region);
+            if (!zkClient.exists(authStrategysPath)) {
+                zkClient.createPersistent(authStrategysPath, true);
+            }
+            zkClient.writeData(authStrategysPath, cluster.getAuthStrategies());
+        }
         return true;
     }
 
@@ -158,7 +184,7 @@ public class ZookeeperClientImpl implements ZookeeperClient {
 
     @Override
     public boolean deleteCluster(String clusterName) {
-        String clusterPath = pathProvider.getPath("cluster", clusterName, region);
+        String clusterPath = pathProvider.getPath("cluster-base", clusterName, region);
         if (zkClient.exists(clusterPath)) {
             return zkClient.deleteRecursive(clusterPath);
         } else {
@@ -203,14 +229,15 @@ public class ZookeeperClientImpl implements ZookeeperClient {
     }
 
     @Override
-    public void addHotKeyConfigListener(String clusterName, IZkDataListener listener) {
-        String path = pathProvider.getPath("hotkey", clusterName, region);
+    public void addAuthStrategoyConfigListener(String clusterName, IZkDataListener listener) {
+        String path = pathProvider.getPath("clusterAuthStrategys", clusterName, region);
         zkClient.subscribeDataChanges(path, listener);
     }
 
     @Override
-    public void addAuthAppsListner(String clusterName, IZkChildListener listener) {
-        String path = pathProvider.getPath("application", clusterName, region);
-        zkClient.subscribeChildChanges(path, listener);
+    public void addConnectConfigListener(String clusterName, IZkDataListener listener) {
+        String path = pathProvider.getPath("clusterConnects", clusterName, region);
+        zkClient.subscribeDataChanges(path, listener);
+
     }
 }

@@ -11,12 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @Modify
  */
 public class TenantStoreKey extends StoreKey {
-    private static final Integer DEFAULT_TENANT = 1;
     private Integer tenantId;
-
-    private TenantStoreKey(String category, Object... params) {
-        this(category, DEFAULT_TENANT, category, params);
-    }
 
     public TenantStoreKey(String category, Integer tenantId, Object... params) {
         super(category, params);

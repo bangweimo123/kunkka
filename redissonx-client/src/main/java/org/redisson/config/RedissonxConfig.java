@@ -1,6 +1,6 @@
 package org.redisson.config;
 
-import com.leshiguang.redissonx.common.entity.cluster.ClusterStrategyBO;
+import com.leshiguang.redissonx.common.entity.cluster.ClusterAuthStrategyBO;
 
 import java.util.List;
 
@@ -10,28 +10,47 @@ import java.util.List;
  * @Description
  */
 public class RedissonxConfig extends Config {
+    private String clusterName;
+
+    private String region;
     /**
      * 策略列表
      */
-    private List<ClusterStrategyBO> strategyList;
+    private List<ClusterAuthStrategyBO> strategyList;
     /**
      * 是否开启权限策略校验,默认为true
      */
-    private Boolean authStrategys = true;
+    private Boolean authStrict = true;
 
-    public List<ClusterStrategyBO> getStrategyList() {
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public List<ClusterAuthStrategyBO> getStrategyList() {
         return strategyList;
     }
 
-    public void setStrategyList(List<ClusterStrategyBO> strategyList) {
+    public void setStrategyList(List<ClusterAuthStrategyBO> strategyList) {
         this.strategyList = strategyList;
     }
 
-    public Boolean getAuthStrategys() {
-        return authStrategys;
+    public String getClusterName() {
+        return clusterName;
     }
 
-    public void setAuthStrategys(Boolean authStrategys) {
-        this.authStrategys = authStrategys;
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+    public Boolean getAuthStrict() {
+        return authStrict;
+    }
+
+    public void setAuthStrict(Boolean authStrict) {
+        this.authStrict = authStrict;
     }
 }

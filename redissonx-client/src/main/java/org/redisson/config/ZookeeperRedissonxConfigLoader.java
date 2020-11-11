@@ -1,6 +1,6 @@
 package org.redisson.config;
 
-import com.leshiguang.arch.common.util.AppUtil;
+import com.leshiguang.arch.common.util.RegionUtil;
 import com.leshiguang.arch.redissonx.exception.StoreConfigException;
 import com.leshiguang.redissonx.common.entity.cluster.ClusterBO;
 import com.leshiguang.redissonx.common.zookeeper.ZookeeperClient;
@@ -22,14 +22,9 @@ public class ZookeeperRedissonxConfigLoader implements RedissonxConfigLoader {
     }
 
     @Override
-    public RedissonxConfig getByCluster(String clusterName) {
-        return getByCluster(clusterName, null);
-    }
-
-    @Override
     public RedissonxConfig getByCluster(String clusterName, RedissonxConnectConfig connectConfig) {
         ZookeeperClient zookeeperClient = ZookeeperClientFactory.getDefaultInstance();
-        return get(zookeeperClient, clusterName, connectConfig);
+        return get(zookeeperClient, clusterName, RegionUtil.getRegionKey(), connectConfig);
 
     }
 
@@ -44,7 +39,7 @@ public class ZookeeperRedissonxConfigLoader implements RedissonxConfigLoader {
         try {
             ZookeeperClient zookeeperClient = ZookeeperClientFactory.getInstance(region);
             if (null != zookeeperClient) {
-                return get(zookeeperClient, clusterName, connectConfig);
+                return get(zookeeperClient, clusterName, region, connectConfig);
             } else {
                 throw new StoreConfigException("cluster not exist for region:" + region);
             }
@@ -54,15 +49,18 @@ public class ZookeeperRedissonxConfigLoader implements RedissonxConfigLoader {
         }
     }
 
-    private RedissonxConfig get(ZookeeperClient zookeeperClient, String clusterName, RedissonxConnectConfig connectConfig) {
+    private RedissonxConfig get(ZookeeperClient zookeeperClient, String clusterName, String region, RedissonxConnectConfig connectConfig) {
         if (!zookeeperClient.existCluster(clusterName)) {
             throw new StoreConfigException("cluster not exist for clusterName:" + clusterName);
         }
-        ClusterBO clusterBO = zookeeperClient.getCluster(clusterName);
-        if (null != clusterBO) {
-            String clusterMode = clusterBO.getMode();
+        ClusterBO cluster = zookeeperClient.getCluster(clusterName);
+        if (null != cluster) {
+            String clusterMode = cluster.getCluster().getMode();
             IConfigBuilder configBuilder = getConfigBuilder(clusterMode);
-            return configBuilder.build(clusterBO, connectConfig);
+            RedissonxConfig redissonxConfig = configBuilder.build(cluster, connectConfig);
+            redissonxConfig.setRegion(region);
+            redissonxConfig.setClusterName(clusterName);
+            return redissonxConfig;
         } else {
             throw new StoreConfigException("can't find cluster from zk for clusterName:" + clusterName);
         }

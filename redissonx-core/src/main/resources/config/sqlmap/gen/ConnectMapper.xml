@@ -5,7 +5,6 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="connect_name" jdbcType="VARCHAR" property="connectName" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="use_https_mode" jdbcType="OTHER" property="useHttpsMode" />
     <result column="create_time" jdbcType="OTHER" property="createTime" />
     <result column="update_time" jdbcType="OTHER" property="updateTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -15,7 +14,7 @@
     <result column="region" jdbcType="VARCHAR" property="region" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, connect_name, address, use_https_mode, create_time, update_time, creator, operator, 
+    id, connect_name, address, create_time, update_time, creator, operator,
     auth_mode, auth_info, region
   </sql>
   <select id="selectByCondition" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition" resultMap="BaseResultMap">
@@ -34,7 +33,7 @@
     <include refid="common.Mysql_Pagination_Limit" />
   </select>
   <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from connect
     where id = #{id,jdbcType=INTEGER}
@@ -53,13 +52,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into connect (connect_name, address, use_https_mode, 
-      create_time, update_time, creator, 
-      operator, auth_mode, auth_info, 
+    insert into connect (connect_name, address,
+      create_time, update_time, creator,
+      operator, auth_mode, auth_info,
       region)
-    values (#{connectName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{useHttpsMode,jdbcType=OTHER}, 
-      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR}, 
-      #{operator,jdbcType=VARCHAR}, #{authMode,jdbcType=VARCHAR}, #{authInfo,jdbcType=VARCHAR}, 
+    values (#{connectName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+      #{createTime,jdbcType=OTHER}, #{updateTime,jdbcType=OTHER}, #{creator,jdbcType=VARCHAR},
+      #{operator,jdbcType=VARCHAR}, #{authMode,jdbcType=VARCHAR}, #{authInfo,jdbcType=VARCHAR},
       #{region,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.leshiguang.arch.redissonx.core.entity.gen.Connect">
@@ -73,9 +72,6 @@
       </if>
       <if test="address != null">
         address,
-      </if>
-      <if test="useHttpsMode != null">
-        use_https_mode,
       </if>
       <if test="createTime != null">
         create_time,
@@ -105,9 +101,6 @@
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="useHttpsMode != null">
-        #{useHttpsMode,jdbcType=OTHER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=OTHER},
@@ -150,9 +143,6 @@
       <if test="record.address != null">
         address = #{record.address,jdbcType=VARCHAR},
       </if>
-      <if test="record.useHttpsMode != null">
-        use_https_mode = #{record.useHttpsMode,jdbcType=OTHER},
-      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=OTHER},
       </if>
@@ -184,7 +174,6 @@
     set id = #{record.id,jdbcType=INTEGER},
       connect_name = #{record.connectName,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
-      use_https_mode = #{record.useHttpsMode,jdbcType=OTHER},
       create_time = #{record.createTime,jdbcType=OTHER},
       update_time = #{record.updateTime,jdbcType=OTHER},
       creator = #{record.creator,jdbcType=VARCHAR},
@@ -204,9 +193,6 @@
       </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="useHttpsMode != null">
-        use_https_mode = #{useHttpsMode,jdbcType=OTHER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=OTHER},
@@ -236,7 +222,6 @@
     update connect
     set connect_name = #{connectName,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      use_https_mode = #{useHttpsMode,jdbcType=OTHER},
       create_time = #{createTime,jdbcType=OTHER},
       update_time = #{updateTime,jdbcType=OTHER},
       creator = #{creator,jdbcType=VARCHAR},
@@ -247,14 +232,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
-    insert into connect (connect_name, address, use_https_mode, 
-      create_time, update_time, creator, 
-      operator, auth_mode, auth_info, 
+    insert into connect (connect_name, address,
+      create_time, update_time, creator,
+      operator, auth_mode, auth_info,
       region) values
     <foreach collection="list" item="record" separator=",">
-       ( #{record.connectName,jdbcType=VARCHAR}, #{record.address,jdbcType=VARCHAR}, #{record.useHttpsMode,jdbcType=OTHER}, 
-        #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR}, 
-        #{record.operator,jdbcType=VARCHAR}, #{record.authMode,jdbcType=VARCHAR}, #{record.authInfo,jdbcType=VARCHAR}, 
+       ( #{record.connectName,jdbcType=VARCHAR}, #{record.address,jdbcType=VARCHAR},
+        #{record.createTime,jdbcType=OTHER}, #{record.updateTime,jdbcType=OTHER}, #{record.creator,jdbcType=VARCHAR},
+        #{record.operator,jdbcType=VARCHAR}, #{record.authMode,jdbcType=VARCHAR}, #{record.authInfo,jdbcType=VARCHAR},
         #{record.region,jdbcType=VARCHAR})
     </foreach>
   </insert>

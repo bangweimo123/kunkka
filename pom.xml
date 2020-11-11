@@ -7,7 +7,7 @@
     <groupId>com.leshiguang.arch</groupId>
     <artifactId>redissonx</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <modules>
         <module>redissonx-client</module>
         <module>redissonx-demo</module>
@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.jdk>1.8</project.build.jdk>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <redissonx.version>0.0.1-SNAPSHOT</redissonx.version>
+        <redissonx.version>0.0.2-SNAPSHOT</redissonx.version>
         <fastjson.version>1.2.60</fastjson.version>
         <guava.version>27.0.1-jre</guava.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>

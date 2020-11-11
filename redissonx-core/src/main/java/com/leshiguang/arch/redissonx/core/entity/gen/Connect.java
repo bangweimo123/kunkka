@@ -23,12 +23,6 @@ public class Connect implements Serializable {
      * 地址
      */
     private String address;
-
-    /**
-     * 是否使用https
-     */
-    private Integer useHttpsMode;
-
     /**
      * 创建时间
      */
@@ -110,22 +104,6 @@ public class Connect implements Serializable {
      */
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    /**
-     * 是否使用https
-     * @return use_https_mode 是否使用https
-     */
-    public Integer getUseHttpsMode() {
-        return useHttpsMode;
-    }
-
-    /**
-     * 是否使用https
-     * @param useHttpsMode 是否使用https
-     */
-    public void setUseHttpsMode(Integer useHttpsMode) {
-        this.useHttpsMode = useHttpsMode;
     }
 
     /**

@@ -10,7 +10,12 @@ import java.io.Serializable;
  * @Description
  */
 @Data
-public class ClusterStrategyBO implements Serializable {
+public class ClusterAuthStrategyBO implements Serializable {
+    /**
+     * 认知方式(init,runtime)
+     */
+    private String authMode;
+
     private String source;
 
     private String operator;

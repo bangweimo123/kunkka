@@ -14,19 +14,15 @@ import java.util.List;
 public class ClusterBO implements Serializable {
     private static final long serialVersionUID = -7865144088316178836L;
     /**
-     * 集群名
+     * 集群对象
      */
-    private String clusterName;
-    /**
-     * 模式 single/cluster/sentinel/replicate/masterslave
-     */
-    private String mode;
+    private ClusterSimpleBO cluster;
     /**
      * 连接列表
      */
-    private List<ClusterConnectBO> connectList;
+    private List<ClusterConnectBO> connects;
     /**
-     * 策略列表
+     * 权限策略
      */
-    private List<ClusterStrategyBO> strategyList;
+    private List<ClusterAuthStrategyBO> authStrategies;
 }

@@ -2,9 +2,11 @@ package com.leshiguang.arch.redissonx.server.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.leshiguang.arch.redissonx.core.entity.gen.*;
+import com.leshiguang.arch.redissonx.core.entity.gen.ClusterConnectMapping;
+import com.leshiguang.arch.redissonx.core.entity.gen.ClusterConnectMappingCondition;
+import com.leshiguang.arch.redissonx.core.entity.gen.Connect;
+import com.leshiguang.arch.redissonx.core.entity.gen.ConnectCondition;
 import com.leshiguang.arch.redissonx.core.mapper.gen.ClusterConnectMappingMapper;
-import com.leshiguang.arch.redissonx.core.mapper.gen.ClusterMapper;
 import com.leshiguang.arch.redissonx.core.mapper.gen.ConnectMapper;
 import com.leshiguang.arch.redissonx.server.domain.connect.ConnectVO;
 import com.leshiguang.arch.redissonx.server.domain.request.ConnectQueryRequest;
@@ -15,9 +17,7 @@ import com.leshiguang.redissonx.common.base.RedissonxResponseBuilder;
 import com.leshiguang.redissonx.common.base.RedissonxTable;
 import com.leshiguang.redissonx.common.entity.connect.ConnectBO;
 import com.leshiguang.redissonx.common.entity.connect.ConnectPasswordBO;
-import com.leshiguang.redissonx.common.entity.connect.ConnectSSHBO;
 import com.leshiguang.redissonx.common.enums.AuthMode;
-import com.leshiguang.redissonx.common.enums.UseHttpMode;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -132,24 +132,17 @@ public class ConnectServiceImpl implements ConnectService {
         target.setConnectName(source.getConnectName());
         target.setAddress(source.getAddress());
         target.setRegion(source.getRegion());
-        target.setUseHttpsMode(source.getUseHttpsMode() == UseHttpMode.https.getCode());
         target.setAuthMode(source.getAuthMode());
         AuthMode authMode = AuthMode.parse(source.getAuthMode());
         switch (authMode) {
+            case none:
+                break;
             case password:
                 if (StringUtils.isNotBlank(source.getAuthInfo())) {
                     target.setPassword(JSON.parseObject(source.getAuthInfo(), new TypeReference<ConnectPasswordBO>() {
                     }));
                 } else {
                     target.setPassword(new ConnectPasswordBO());
-                }
-                break;
-            case ssh:
-                if (StringUtils.isNotBlank(source.getAuthInfo())) {
-                    target.setSsh(JSON.parseObject(source.getAuthInfo(), new TypeReference<ConnectSSHBO>() {
-                    }));
-                } else {
-                    target.setSsh(new ConnectSSHBO());
                 }
                 break;
         }
@@ -161,7 +154,6 @@ public class ConnectServiceImpl implements ConnectService {
         target.setConnectName(source.getConnectName());
         target.setAddress(source.getAddress());
         target.setRegion(source.getRegion());
-        target.setUseHttpsMode(source.getUseHttpsMode() == UseHttpMode.https.getCode());
         target.setAuthMode(source.getAuthMode());
         AuthMode authMode = AuthMode.parse(source.getAuthMode());
         switch (authMode) {
@@ -173,14 +165,6 @@ public class ConnectServiceImpl implements ConnectService {
                     target.setPassword(new ConnectPasswordBO());
                 }
                 break;
-            case ssh:
-                if (StringUtils.isNotBlank(source.getAuthInfo())) {
-                    target.setSsh(JSON.parseObject(source.getAuthInfo(), new TypeReference<ConnectSSHBO>() {
-                    }));
-                } else {
-                    target.setSsh(new ConnectSSHBO());
-                }
-                break;
         }
         return target;
     }
@@ -189,7 +173,6 @@ public class ConnectServiceImpl implements ConnectService {
         Connect target = new Connect();
         target.setConnectName(source.getConnectName());
         target.setAddress(source.getAddress());
-        target.setUseHttpsMode(source.getUseHttpsMode() ? 1 : 0);
         target.setRegion(source.getRegion());
         target.setAuthMode(source.getAuthMode());
         if (StringUtils.isNotBlank(source.getAuthMode())) {
@@ -199,11 +182,6 @@ public class ConnectServiceImpl implements ConnectService {
                 case password:
                     if (null != source.getPassword()) {
                         target.setAuthInfo(JSON.toJSONString(source.getPassword()));
-                    }
-                    break;
-                case ssh:
-                    if (null != source.getSsh()) {
-                        target.setAuthInfo(JSON.toJSONString(source.getSsh()));
                     }
                     break;
             }

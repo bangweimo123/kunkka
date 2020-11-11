@@ -1,20 +1,14 @@
 package com.leshiguang.arch.redissonx.config.zookeeper;
 
-import com.leshiguang.arch.redissonx.config.auth.AuthStrategy;
 import com.leshiguang.arch.redissonx.config.store.StoreCategoryConfig;
-import com.leshiguang.redissonx.common.zookeeper.ConfigListenable;
-
-import java.util.List;
+import com.leshiguang.redissonx.common.zookeeper.CategoryConfigListenable;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
  * @Date 2020-03-16 13:01
  * @Modify
  */
-public interface StoreConfigClient extends ConfigListenable {
-
-    List<AuthStrategy> loadAuthStategorys(String clusterName);
-
+public interface StoreConfigClient extends CategoryConfigListenable {
     /**
      * 获取一个category的配置
      *
@@ -22,8 +16,6 @@ public interface StoreConfigClient extends ConfigListenable {
      * @return
      */
     StoreCategoryConfig getStoreCategoryConfig(String clusterName, String category);
-
-
 
 
 }

@@ -20,7 +20,7 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
     }
 
     @Override
-    public RedissonxConfig getByCluster(String clusterName) {
+    public RedissonxConfig getByCluster(String clusterName, RedissonxConnectConfig connectConfig) {
         Config config = ConfigService.getAppConfig();
         RedissonxConfig redissonConfig = new RedissonxConfig();
         SingleServerConfig singleServerConfig = redissonConfig.useSingleServer();
@@ -63,11 +63,6 @@ public class ApolloRedissonxConfigLoader implements RedissonxConfigLoader {
         return redissonConfig;
 
 
-    }
-
-    @Override
-    public RedissonxConfig getByCluster(String clusterName, RedissonxConnectConfig connectConfig) {
-        return null;
     }
 
     @Override

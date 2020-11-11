@@ -11,7 +11,7 @@ import java.util.List;
  * @Date 2020-09-11 17:25
  * @Description
  */
-public class TenantAuthStrategy implements AuthStrategy {
+public class TenantAuthStrategy implements RuntimeAuthStrategy {
     private List<Integer> tenantList;
 
     private StrategyOperate operate;
@@ -23,7 +23,7 @@ public class TenantAuthStrategy implements AuthStrategy {
     }
 
     @Override
-    public boolean auth(StoreKey storeKey) {
+    public boolean authorize(StoreKey storeKey) {
         if (storeKey instanceof TenantStoreKey) {
             TenantStoreKey tenantStoreKey = (TenantStoreKey) storeKey;
             switch (operate) {
@@ -36,6 +36,5 @@ public class TenantAuthStrategy implements AuthStrategy {
         } else {
             return true;
         }
-
     }
 }

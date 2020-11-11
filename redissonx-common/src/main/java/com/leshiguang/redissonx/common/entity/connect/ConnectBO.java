@@ -18,31 +18,23 @@ public class ConnectBO implements Serializable {
      */
     private String connectName;
     /**
+     * 区域
+     */
+    private String region;
+    /**
+     * 环境
+     */
+    private String env;
+    /**
      * 连接地址
      */
     private String address;
-    /**
-     * https方式
-     */
-    private Boolean useHttpsMode;
     /**
      * 认证方式
      */
     private String authMode;
     /**
-     * ssh
-     */
-    private ConnectSSHBO ssh;
-    /**
      * 密码
      */
     private ConnectPasswordBO password;
-    /**
-     * https证书相关
-     */
-    private ConnectTLSBO tls;
-    /**
-     * 区域
-     */
-    private String region;
 }

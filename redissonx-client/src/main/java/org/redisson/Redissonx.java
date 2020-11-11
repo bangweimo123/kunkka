@@ -37,7 +37,10 @@ public class Redissonx extends Redisson implements RedissonxClient {
 
     protected Redissonx(RedissonxConfig config) {
         super(config);
-        clusterStrategyHandler = new ClusterStrategyHandler(config.getStrategyList(), config.getAuthStrategys());
+        clusterStrategyHandler = new ClusterStrategyHandler(config);
+        if (!clusterStrategyHandler.initAuthorize()) {
+            throw new StoreAuthException("init authorize error for cluster:[" + config.getClusterName() + "]");
+        }
     }
 
     public static RedissonxClient create(String clusterName, RedissonxConfig config) {
@@ -72,11 +75,8 @@ public class Redissonx extends Redisson implements RedissonxClient {
         }
 
         public RFacade(Redissonx redissonx, StoreKey storeKey, Codec codec, RI<T> ri) {
-            //权限判断
-            if (redissonx.clusterStrategyHandler.beAuth()) {
-                if (!redissonx.clusterStrategyHandler.auth(storeKey)) {
-                    throw new StoreAuthException("no auth for this application/tenant use this storeKey!");
-                }
+            if (!redissonx.clusterStrategyHandler.authorize(storeKey)) {
+                throw new StoreAuthException("runtime auth error for storeKey:" + storeKey);
             }
             StoreCategoryConfig categoryConfig = redissonx.parseCategoryConfig(storeKey);
             String finalName = categoryConfig.getFinalKey(storeKey);
@@ -92,7 +92,12 @@ public class Redissonx extends Redisson implements RedissonxClient {
                     }
                 }
             }
-
+            if (result instanceof RedissonExpirable && categoryConfig.getDurationSeconds() > 0) {
+                boolean expireOptions = ((RedissonExpirable) result).expire(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                if (!expireOptions) {
+                    LOGGER.warn("error to set expire for  storeKey:" + storeKey);
+                }
+            }
             data = result;
         }
 

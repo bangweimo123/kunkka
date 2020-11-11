@@ -7,8 +7,7 @@ package com.leshiguang.redissonx.common.enums;
  */
 public enum AuthMode {
     none(0, "none"),
-    password(1, "password"),
-    ssh(2, "ssh");
+    password(1, "password");
 
     AuthMode(Integer code, String desc) {
         this.code = code;

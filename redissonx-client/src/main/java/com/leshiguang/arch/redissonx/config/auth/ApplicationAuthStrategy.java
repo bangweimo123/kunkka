@@ -1,7 +1,6 @@
 package com.leshiguang.arch.redissonx.config.auth;
 
 import com.leshiguang.arch.common.util.AppUtil;
-import com.leshiguang.arch.redissonx.client.StoreKey;
 import com.leshiguang.redissonx.common.enums.StrategyOperate;
 
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
  * @Date 2020-09-11 16:28
  * @Description
  */
-public class ApplicationAuthStrategy implements AuthStrategy {
+public class ApplicationAuthStrategy implements InitAuthStrategy {
     private List<String> applicationList;
 
     private StrategyOperate operate;
@@ -24,11 +23,6 @@ public class ApplicationAuthStrategy implements AuthStrategy {
         this.result = init();
     }
 
-    @Override
-    public boolean auth(StoreKey storeKey) {
-        return result;
-    }
-
     private Boolean init() {
         String currentApplication = AppUtil.appName();
         switch (operate) {
@@ -38,5 +32,10 @@ public class ApplicationAuthStrategy implements AuthStrategy {
                 return !applicationList.contains(currentApplication);
         }
         return false;
+    }
+
+    @Override
+    public boolean initAuthorize() {
+        return result;
     }
 }
