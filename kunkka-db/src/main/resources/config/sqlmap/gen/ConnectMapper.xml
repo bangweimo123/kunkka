@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.ConnectMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.Connect">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="connect_name" jdbcType="VARCHAR" property="connectName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="port" jdbcType="INTEGER" property="port" />
+    <result column="c_status" jdbcType="OTHER" property="cStatus" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, connect_name, region, host_name, port, c_status, create_time, update_time
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ConnectCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from connect
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from connect
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ConnectCondition">
+    delete from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.Connect">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into connect (connect_name, region, host_name, 
+      port, c_status, create_time, 
+      update_time)
+    values (#{connectName,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, 
+      #{port,jdbcType=INTEGER}, #{cStatus,jdbcType=OTHER}, #{createTime,jdbcType=OTHER}, 
+      #{updateTime,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.Connect">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into connect
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="connectName != null">
+        connect_name,
+      </if>
+      <if test="region != null">
+        region,
+      </if>
+      <if test="hostName != null">
+        host_name,
+      </if>
+      <if test="port != null">
+        port,
+      </if>
+      <if test="cStatus != null">
+        c_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="connectName != null">
+        #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="cStatus != null">
+        #{cStatus,jdbcType=OTHER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ConnectCondition" resultType="java.lang.Long">
+    select count(*) from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update connect
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.connectName != null">
+        connect_name = #{record.connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.region != null">
+        region = #{record.region,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hostName != null">
+        host_name = #{record.hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.port != null">
+        port = #{record.port,jdbcType=INTEGER},
+      </if>
+      <if test="record.cStatus != null">
+        c_status = #{record.cStatus,jdbcType=OTHER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=OTHER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=OTHER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update connect
+    set id = #{record.id,jdbcType=INTEGER},
+      connect_name = #{record.connectName,jdbcType=VARCHAR},
+      region = #{record.region,jdbcType=VARCHAR},
+      host_name = #{record.hostName,jdbcType=VARCHAR},
+      port = #{record.port,jdbcType=INTEGER},
+      c_status = #{record.cStatus,jdbcType=OTHER},
+      create_time = #{record.createTime,jdbcType=OTHER},
+      update_time = #{record.updateTime,jdbcType=OTHER}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.Connect">
+    update connect
+    <set>
+      <if test="connectName != null">
+        connect_name = #{connectName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null">
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null">
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="cStatus != null">
+        c_status = #{cStatus,jdbcType=OTHER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=OTHER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.Connect">
+    update connect
+    set connect_name = #{connectName,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
+      c_status = #{cStatus,jdbcType=OTHER},
+      create_time = #{createTime,jdbcType=OTHER},
+      update_time = #{updateTime,jdbcType=OTHER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into connect (connect_name, region, host_name, 
+      port, c_status, create_time, 
+      update_time) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.connectName,jdbcType=VARCHAR}, #{record.region,jdbcType=VARCHAR}, #{record.hostName,jdbcType=VARCHAR}, 
+        #{record.port,jdbcType=INTEGER}, #{record.cStatus,jdbcType=OTHER}, #{record.createTime,jdbcType=OTHER}, 
+        #{record.updateTime,jdbcType=OTHER})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ConnectCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from connect
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.ClusterConnectMappingMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMapping">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="master_node" jdbcType="VARCHAR" property="masterNode" />
+    <result column="slave_nodes" jdbcType="VARCHAR" property="slaveNodes" />
+    <result column="db" jdbcType="INTEGER" property="db" />
+    <result column="password_mode" jdbcType="OTHER" property="passwordMode" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="connect_params" jdbcType="VARCHAR" property="connectParams" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cluster_name, region, master_node, slave_nodes, db, password_mode, password, 
+    connect_params
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_connect_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cluster_connect_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cluster_connect_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMappingCondition">
+    delete from cluster_connect_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_connect_mapping (cluster_name, region, master_node, 
+      slave_nodes, db, password_mode, 
+      password, connect_params)
+    values (#{clusterName,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{masterNode,jdbcType=VARCHAR}, 
+      #{slaveNodes,jdbcType=VARCHAR}, #{db,jdbcType=INTEGER}, #{passwordMode,jdbcType=OTHER}, 
+      #{password,jdbcType=VARCHAR}, #{connectParams,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_connect_mapping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        cluster_name,
+      </if>
+      <if test="region != null">
+        region,
+      </if>
+      <if test="masterNode != null">
+        master_node,
+      </if>
+      <if test="slaveNodes != null">
+        slave_nodes,
+      </if>
+      <if test="db != null">
+        db,
+      </if>
+      <if test="passwordMode != null">
+        password_mode,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="connectParams != null">
+        connect_params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="masterNode != null">
+        #{masterNode,jdbcType=VARCHAR},
+      </if>
+      <if test="slaveNodes != null">
+        #{slaveNodes,jdbcType=VARCHAR},
+      </if>
+      <if test="db != null">
+        #{db,jdbcType=INTEGER},
+      </if>
+      <if test="passwordMode != null">
+        #{passwordMode,jdbcType=OTHER},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="connectParams != null">
+        #{connectParams,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMappingCondition" resultType="java.lang.Long">
+    select count(*) from cluster_connect_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update cluster_connect_mapping
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.clusterName != null">
+        cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.region != null">
+        region = #{record.region,jdbcType=VARCHAR},
+      </if>
+      <if test="record.masterNode != null">
+        master_node = #{record.masterNode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.slaveNodes != null">
+        slave_nodes = #{record.slaveNodes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.db != null">
+        db = #{record.db,jdbcType=INTEGER},
+      </if>
+      <if test="record.passwordMode != null">
+        password_mode = #{record.passwordMode,jdbcType=OTHER},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.connectParams != null">
+        connect_params = #{record.connectParams,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update cluster_connect_mapping
+    set id = #{record.id,jdbcType=INTEGER},
+      cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      region = #{record.region,jdbcType=VARCHAR},
+      master_node = #{record.masterNode,jdbcType=VARCHAR},
+      slave_nodes = #{record.slaveNodes,jdbcType=VARCHAR},
+      db = #{record.db,jdbcType=INTEGER},
+      password_mode = #{record.passwordMode,jdbcType=OTHER},
+      password = #{record.password,jdbcType=VARCHAR},
+      connect_params = #{record.connectParams,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMapping">
+    update cluster_connect_mapping
+    <set>
+      <if test="clusterName != null">
+        cluster_name = #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="masterNode != null">
+        master_node = #{masterNode,jdbcType=VARCHAR},
+      </if>
+      <if test="slaveNodes != null">
+        slave_nodes = #{slaveNodes,jdbcType=VARCHAR},
+      </if>
+      <if test="db != null">
+        db = #{db,jdbcType=INTEGER},
+      </if>
+      <if test="passwordMode != null">
+        password_mode = #{passwordMode,jdbcType=OTHER},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="connectParams != null">
+        connect_params = #{connectParams,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMapping">
+    update cluster_connect_mapping
+    set cluster_name = #{clusterName,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      master_node = #{masterNode,jdbcType=VARCHAR},
+      slave_nodes = #{slaveNodes,jdbcType=VARCHAR},
+      db = #{db,jdbcType=INTEGER},
+      password_mode = #{passwordMode,jdbcType=OTHER},
+      password = #{password,jdbcType=VARCHAR},
+      connect_params = #{connectParams,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into cluster_connect_mapping (cluster_name, region, master_node, 
+      slave_nodes, db, password_mode, 
+      password, connect_params) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.region,jdbcType=VARCHAR}, #{record.masterNode,jdbcType=VARCHAR}, 
+        #{record.slaveNodes,jdbcType=VARCHAR}, #{record.db,jdbcType=INTEGER}, #{record.passwordMode,jdbcType=OTHER}, 
+        #{record.password,jdbcType=VARCHAR}, #{record.connectParams,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterConnectMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_connect_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

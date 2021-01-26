@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.OperateLogMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.OperateLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="c_type" jdbcType="VARCHAR" property="cType" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="op_time" jdbcType="OTHER" property="opTime" />
+    <result column="rel_type" jdbcType="VARCHAR" property="relType" />
+    <result column="rel_key" jdbcType="VARCHAR" property="relKey" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, operator, c_type, content, op_time, rel_type, rel_key
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLogCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from operate_log
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from operate_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from operate_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLogCondition">
+    delete from operate_log
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into operate_log (operator, c_type, content, 
+      op_time, rel_type, rel_key
+      )
+    values (#{operator,jdbcType=VARCHAR}, #{cType,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{opTime,jdbcType=OTHER}, #{relType,jdbcType=VARCHAR}, #{relKey,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into operate_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="cType != null">
+        c_type,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="opTime != null">
+        op_time,
+      </if>
+      <if test="relType != null">
+        rel_type,
+      </if>
+      <if test="relKey != null">
+        rel_key,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null">
+        #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null">
+        #{opTime,jdbcType=OTHER},
+      </if>
+      <if test="relType != null">
+        #{relType,jdbcType=VARCHAR},
+      </if>
+      <if test="relKey != null">
+        #{relKey,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLogCondition" resultType="java.lang.Long">
+    select count(*) from operate_log
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update operate_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.operator != null">
+        operator = #{record.operator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cType != null">
+        c_type = #{record.cType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.opTime != null">
+        op_time = #{record.opTime,jdbcType=OTHER},
+      </if>
+      <if test="record.relType != null">
+        rel_type = #{record.relType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relKey != null">
+        rel_key = #{record.relKey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update operate_log
+    set id = #{record.id,jdbcType=INTEGER},
+      operator = #{record.operator,jdbcType=VARCHAR},
+      c_type = #{record.cType,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      op_time = #{record.opTime,jdbcType=OTHER},
+      rel_type = #{record.relType,jdbcType=VARCHAR},
+      rel_key = #{record.relKey,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLog">
+    update operate_log
+    <set>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null">
+        c_type = #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null">
+        op_time = #{opTime,jdbcType=OTHER},
+      </if>
+      <if test="relType != null">
+        rel_type = #{relType,jdbcType=VARCHAR},
+      </if>
+      <if test="relKey != null">
+        rel_key = #{relKey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLog">
+    update operate_log
+    set operator = #{operator,jdbcType=VARCHAR},
+      c_type = #{cType,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      op_time = #{opTime,jdbcType=OTHER},
+      rel_type = #{relType,jdbcType=VARCHAR},
+      rel_key = #{relKey,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into operate_log (operator, c_type, content, 
+      op_time, rel_type, rel_key
+      ) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.operator,jdbcType=VARCHAR}, #{record.cType,jdbcType=VARCHAR}, #{record.content,jdbcType=VARCHAR}, 
+        #{record.opTime,jdbcType=OTHER}, #{record.relType,jdbcType=VARCHAR}, #{record.relKey,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.OperateLogCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from operate_log
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

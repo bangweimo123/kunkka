@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.ClusterRegionMappingMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMapping">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, region, cluster_name
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_region_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cluster_region_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cluster_region_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMappingCondition">
+    delete from cluster_region_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_region_mapping (region, cluster_name)
+    values (#{region,jdbcType=VARCHAR}, #{clusterName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_region_mapping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="region != null">
+        region,
+      </if>
+      <if test="clusterName != null">
+        cluster_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="clusterName != null">
+        #{clusterName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMappingCondition" resultType="java.lang.Long">
+    select count(*) from cluster_region_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update cluster_region_mapping
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.region != null">
+        region = #{record.region,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clusterName != null">
+        cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update cluster_region_mapping
+    set id = #{record.id,jdbcType=INTEGER},
+      region = #{record.region,jdbcType=VARCHAR},
+      cluster_name = #{record.clusterName,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMapping">
+    update cluster_region_mapping
+    <set>
+      <if test="region != null">
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="clusterName != null">
+        cluster_name = #{clusterName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMapping">
+    update cluster_region_mapping
+    set region = #{region,jdbcType=VARCHAR},
+      cluster_name = #{clusterName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into cluster_region_mapping (region, cluster_name) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.region,jdbcType=VARCHAR}, #{record.clusterName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterRegionMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_region_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

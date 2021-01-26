@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.ClusterAuthMappingMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMapping">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cluster_name" jdbcType="VARCHAR" property="clusterName" />
+    <result column="field" jdbcType="VARCHAR" property="field" />
+    <result column="operate" jdbcType="VARCHAR" property="operate" />
+    <result column="data" jdbcType="VARCHAR" property="data" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cluster_name, field, operate, data
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_auth_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cluster_auth_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from cluster_auth_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMappingCondition">
+    delete from cluster_auth_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_auth_mapping (cluster_name, field, operate, 
+      data)
+    values (#{clusterName,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR}, #{operate,jdbcType=VARCHAR}, 
+      #{data,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cluster_auth_mapping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        cluster_name,
+      </if>
+      <if test="field != null">
+        field,
+      </if>
+      <if test="operate != null">
+        operate,
+      </if>
+      <if test="data != null">
+        data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clusterName != null">
+        #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="field != null">
+        #{field,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null">
+        #{data,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMappingCondition" resultType="java.lang.Long">
+    select count(*) from cluster_auth_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update cluster_auth_mapping
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.clusterName != null">
+        cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field != null">
+        field = #{record.field,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operate != null">
+        operate = #{record.operate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.data != null">
+        data = #{record.data,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update cluster_auth_mapping
+    set id = #{record.id,jdbcType=INTEGER},
+      cluster_name = #{record.clusterName,jdbcType=VARCHAR},
+      field = #{record.field,jdbcType=VARCHAR},
+      operate = #{record.operate,jdbcType=VARCHAR},
+      data = #{record.data,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMapping">
+    update cluster_auth_mapping
+    <set>
+      <if test="clusterName != null">
+        cluster_name = #{clusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="field != null">
+        field = #{field,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        operate = #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null">
+        data = #{data,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMapping">
+    update cluster_auth_mapping
+    set cluster_name = #{clusterName,jdbcType=VARCHAR},
+      field = #{field,jdbcType=VARCHAR},
+      operate = #{operate,jdbcType=VARCHAR},
+      data = #{data,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into cluster_auth_mapping (cluster_name, field, operate, 
+      data) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.clusterName,jdbcType=VARCHAR}, #{record.field,jdbcType=VARCHAR}, #{record.operate,jdbcType=VARCHAR}, 
+        #{record.data,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.ClusterAuthMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cluster_auth_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

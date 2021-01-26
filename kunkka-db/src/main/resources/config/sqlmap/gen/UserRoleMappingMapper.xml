@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leshiguang.arch.kunkka.db.mapper.gen.UserRoleMappingMapper">
+  <resultMap id="BaseResultMap" type="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMapping">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user" jdbcType="VARCHAR" property="user" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="create_time" jdbcType="OTHER" property="createTime" />
+    <result column="update_time" jdbcType="OTHER" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user, role, create_time, update_time
+  </sql>
+  <select id="selectByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_role_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="common.Mysql_Pagination_Limit" />
+  </select>
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_role_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from user_role_mapping
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMappingCondition">
+    delete from user_role_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_role_mapping (user, role, create_time, 
+      update_time)
+    values (#{user,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{createTime,jdbcType=OTHER}, 
+      #{updateTime,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMapping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_role_mapping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user != null">
+        user,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user != null">
+        #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMappingCondition" resultType="java.lang.Long">
+    select count(*) from user_role_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByConditionSelective" parameterType="map">
+    update user_role_mapping
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.user != null">
+        user = #{record.user,jdbcType=VARCHAR},
+      </if>
+      <if test="record.role != null">
+        role = #{record.role,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=OTHER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=OTHER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByCondition" parameterType="map">
+    update user_role_mapping
+    set id = #{record.id,jdbcType=INTEGER},
+      user = #{record.user,jdbcType=VARCHAR},
+      role = #{record.role,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=OTHER},
+      update_time = #{record.updateTime,jdbcType=OTHER}
+    <if test="_parameter != null">
+      <include refid="common.Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByIdSelective" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMapping">
+    update user_role_mapping
+    <set>
+      <if test="user != null">
+        user = #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=OTHER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=OTHER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMapping">
+    update user_role_mapping
+    set user = #{user,jdbcType=VARCHAR},
+      role = #{role,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=OTHER},
+      update_time = #{updateTime,jdbcType=OTHER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into user_role_mapping (user, role, create_time, 
+      update_time) values
+    <foreach collection="list" item="record" separator=",">
+       ( #{record.user,jdbcType=VARCHAR}, #{record.role,jdbcType=VARCHAR}, #{record.createTime,jdbcType=OTHER}, 
+        #{record.updateTime,jdbcType=OTHER})
+    </foreach>
+  </insert>
+  <select id="selectOneByCondition" parameterType="com.leshiguang.arch.kunkka.db.entity.gen.UserRoleMappingCondition" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_role_mapping
+    <if test="_parameter != null">
+      <include refid="common.Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

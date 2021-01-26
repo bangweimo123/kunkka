@@ -1,0 +1,14 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+app:
+  name: kunkka-web
+mybatis:
+  mapper-locations: classpath*:config/sqlmap/*/*.xml
+  type-aliases-package: com.leshiguang.arch.kunkka.db.entity.gen
+threadpool:
+  core-pool-size: 10
+  max-pool-size: 20
+  queue-capacity: 1000
+  keep-alive-seconds: 300

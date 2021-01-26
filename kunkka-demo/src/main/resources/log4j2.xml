@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN" monitorInterval="30">
+	<Properties>
+		<Property name="app-name">kunkka-demo</Property>
+		<Property name="app-env">${sys:env}</Property>
+		<Property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} ${hostName} [%p] %t %c - %m%n</Property>
+		<Property name="baseDir">/data/applogs/${app-name}/logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="${pattern}"/>
+		</Console>
+		<RollingFile name="RollingFileInfo" fileName="${baseDir}/app.log"
+					 filePattern="${baseDir}/app.log.%d{yyyy-MM-dd}">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+			<PatternLayout pattern="${pattern}"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="50MB"/>
+			</Policies>
+			<!-- 此行以下为自动清理日志的配置 -->
+			<DefaultRolloverStrategy min="1" max="5">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<!-- glob 项为需要自动清理日志的pattern -->
+					<IfFileName glob="app.log*"/>
+					<!-- 1d 表示自动清理掉1天以前的日志文件 -->
+					<IfLastModified age="24H"/>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		<CatAppender name="CatAppender">
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+		</CatAppender>
+	</Appenders>
+	<Loggers>
+		<logger name="org.apache.ibatis" level="INFO"></logger>
+		<logger name="com.lifesense.base.scheduler" level="DEBUG"></logger>
+		<logger name="com.alibaba" level="WARN"></logger>
+		<Root level="INFO">
+			<Appender-ref ref="Console"/>
+			<Appender-ref ref="RollingFileInfo"/>
+			<!--<Appender-ref ref="Async"/>-->
+			<Appender-ref ref="CatAppender"/>
+		</Root>
+	</Loggers>
+</configuration>
