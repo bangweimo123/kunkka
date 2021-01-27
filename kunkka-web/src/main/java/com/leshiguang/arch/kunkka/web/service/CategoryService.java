@@ -33,7 +33,7 @@ public interface CategoryService {
      *
      * @return
      */
-    CategoryVO load(String clusterName,String category) throws KunkkaException;
+    CategoryVO load(String clusterName, String category,String operator) throws KunkkaException;
 
     /**
      * 删除category
@@ -73,6 +73,7 @@ public interface CategoryService {
 
     /**
      * 下载所有的category
+     *
      * @param clusterName
      * @return
      * @throws KunkkaException

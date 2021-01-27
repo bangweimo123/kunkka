@@ -1,12 +1,8 @@
 package com.leshiguang.arch.kunkka.web.domain.category;
 
-import com.alibaba.fastjson.JSONObject;
 import com.leshiguang.arch.kunkka.web.domain.base.KunkkaPaging;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]

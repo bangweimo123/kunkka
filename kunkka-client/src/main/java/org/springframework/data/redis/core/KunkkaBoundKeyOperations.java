@@ -3,6 +3,7 @@ package org.springframework.data.redis.core;
 import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.config.CategoryConfig;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaChangeDurationException;
+import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportTypeException;
 import org.springframework.data.redis.connection.DataType;
 
 import java.util.Date;
@@ -20,6 +21,9 @@ public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonito
 
     KunkkaBoundKeyOperations(CategoryConfig categoryConfig, K key, RedisOperations<K, ?> operations) {
         this.categoryConfig = categoryConfig;
+        if (!categoryConfig.getcType().equalsIgnoreCase(getType().toString())) {
+            throw new KunkkaUnsupportTypeException();
+        }
         this.key = key;
         this.ops = operations;
 
@@ -47,6 +51,18 @@ public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonito
      * (non-Javadoc)
      * @see org.springframework.data.redis.core.BoundKeyOperations#expire(long, java.util.concurrent.TimeUnit)
      */
+
+    /**
+     * 只提供给Kunkka内部调用,外部无法访问
+     *
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    protected Boolean expireInner(long timeout, TimeUnit unit) {
+        return ops.expire(key, timeout, unit);
+    }
+
     @Override
     public Boolean expire(long timeout, TimeUnit unit) {
         if (!categoryConfig.getDurationChangeabled()) {

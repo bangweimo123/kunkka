@@ -6,9 +6,11 @@ import com.leshiguang.arch.kunkka.client.config.CategoryConfig;
 import com.leshiguang.arch.kunkka.client.ehcache.EhcacheValueOperations;
 import com.leshiguang.arch.kunkka.client.serialize.StoreKeyEhcacheSerializer;
 import com.leshiguang.arch.kunkka.client.serialize.StoreKeyRedisSerializer;
+import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.scaffold.common.utils.RegionUtil;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -29,6 +31,22 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
     }
 
 
+    protected interface IMC<T extends KunkkaBoundKeyOperations> {
+        T execute(CategoryConfig categoryConfig);
+    }
+
+    protected class BoundOperationsCommand<T extends KunkkaBoundKeyOperations> {
+
+        public T execute(K key, IMC<T> imc) throws KunkkaException {
+            CategoryConfig categoryConfig = processCategoryConfig(key);
+            T opt = imc.execute(categoryConfig);
+            if (opt.getExpire() <= 0 && categoryConfig.getDurationSeconds() > 0) {
+                opt.expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+            }
+            return opt;
+        }
+    }
+
     protected CategoryConfig processCategoryConfig(K key) {
         CategoryConfig categoryConfig = categoryConfigManager.getConfig(key.getCategory());
         return categoryConfig;
@@ -36,22 +54,22 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
 
     @Override
     public BoundListOperations<K, V> boundListOps(K key) {
-        return new KunkkaBoundListOperations(processCategoryConfig(key), key, redisTemplate);
+        return new BoundOperationsCommand<KunkkaBoundListOperations>().execute(key, (categoryConfig) -> new KunkkaBoundListOperations(categoryConfig, key, redisTemplate));
     }
 
     @Override
     public BoundGeoOperations<K, V> boundGeoOps(K key) {
-        return new KunkkaBoundGeoOperations<>(processCategoryConfig(key), key, redisTemplate);
+        return new BoundOperationsCommand<KunkkaBoundGeoOperations>().execute(key, (categoryConfig) -> new KunkkaBoundGeoOperations(categoryConfig, key, redisTemplate));
     }
 
     @Override
     public <HK, HV> BoundHashOperations<K, HK, HV> boundHashOps(K key) {
-        return new KunkkaBoundHashOperations<>(processCategoryConfig(key), key, redisTemplate);
+        return new BoundOperationsCommand<KunkkaBoundHashOperations>().execute(key, (categoryConfig) -> new KunkkaBoundHashOperations(categoryConfig, key, redisTemplate));
     }
 
     @Override
     public BoundSetOperations<K, V> boundSetOps(K key) {
-        return new KunkkaBoundSetOperations<>(processCategoryConfig(key), key, redisTemplate);
+        return new BoundOperationsCommand<KunkkaBoundSetOperations>().execute(key, (categoryConfig) -> new KunkkaBoundSetOperations(categoryConfig, key, redisTemplate));
     }
 
 //    @Override
@@ -61,12 +79,12 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
 
     @Override
     public BoundValueOperations<K, V> boundValueOps(K key) {
-        return new KunkkaBoundValueOperations(processCategoryConfig(key), key, redisTemplate, ehcacheValueOperations);
+        return new BoundOperationsCommand<KunkkaBoundValueOperations>().execute(key, (categoryConfig) -> new KunkkaBoundValueOperations(categoryConfig, key, redisTemplate, ehcacheValueOperations));
     }
 
     @Override
     public BoundZSetOperations<K, V> boundZSetOps(K key) {
-        return new KunkkaBoundZSetOperations<>(processCategoryConfig(key), key, redisTemplate);
+        return new BoundOperationsCommand<KunkkaBoundZSetOperations>().execute(key, (categoryConfig) -> new KunkkaBoundZSetOperations(categoryConfig, key, redisTemplate));
     }
 
     @Override

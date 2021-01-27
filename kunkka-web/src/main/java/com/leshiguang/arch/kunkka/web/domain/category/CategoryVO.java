@@ -30,4 +30,8 @@ public class CategoryVO extends CategoryBO {
      * 此category对应的cluster的区域列表
      */
     private List<String> regionList;
+    /**
+     * 是否有权限
+     */
+    private Boolean hasPrivilege = Boolean.FALSE;
 }

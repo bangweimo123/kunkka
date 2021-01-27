@@ -7,6 +7,7 @@ import com.leshiguang.arch.kunkka.client.KunkkaClient;
 import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.TenantStoreKey;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
+import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.web.domain.base.KunkkaPaging;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVReq;
@@ -16,7 +17,6 @@ import com.leshiguang.arch.kunkka.web.domain.rediskey.*;
 import com.leshiguang.arch.kunkka.web.exception.ServerErrorCode;
 import com.leshiguang.arch.kunkka.web.service.CategoryService;
 import com.leshiguang.arch.kunkka.web.service.RedisKeyService;
-import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -86,6 +86,9 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                 pattern.append(scanReq.getTenantId());
             }
             try {
+                if (null == scanReq.getPageSize()) {
+                    scanReq.setPageSize(5000l);
+                }
                 result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
             } catch (Exception e) {
                 LOGGER.warn("scan error for clusterName:{},region:{},category:{}", scanReq.getClusterName(), scanReq.getRegion(), scanReq.getCategory());
@@ -102,6 +105,9 @@ public class RedisKeyServiceImpl implements RedisKeyService {
         KunkkaClient kunkkaClient = getClientByClusterName(kvReq.getClusterName(), kvReq.getRegion());
         if (null == kunkkaClient) {
             throw new KunkkaException(ServerErrorCode.KUNKKA_CLIENT_NOT_FOUND_ERROR);
+        }
+        if (StringUtils.isBlank(kvReq.getKey())) {
+            return null;
         }
         RedisKeyValueVO valueVO = new RedisKeyValueVO();
         String type = kvReq.getType();
@@ -126,8 +132,10 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                     BoundListOperations boundListOperations = kunkkaClient.boundListOps(kvReq.getKey());
                     remainTimeToLive = boundListOperations.getExpire();
                     Long size = boundListOperations.size();
-                    List<Object> mList = boundListOperations.range(0, size - 1);
-                    valueVO.setData(JSON.toJSONString(mList));
+                    if (size > 1) {
+                        List<Object> mList = boundListOperations.range(0, size - 1);
+                        valueVO.setData(JSON.toJSONString(mList));
+                    }
                     valueVO.setRemainTimeToLive(remainTimeToLive);
                     break;
                 case set:

@@ -1,6 +1,5 @@
 package com.leshiguang.arch.kunkka.web.domain.category;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,5 +23,5 @@ public class CategoryScanReq implements Serializable {
 
     private Integer tenantId;
 
-    private Long pageSize = 5000l;
+    private Long pageSize;
 }

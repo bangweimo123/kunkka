@@ -184,11 +184,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
     @Override
     public void set(V value) {
         new MonitorCommand(MonitorMethod.create("set"), getCategoryConfig()).execute(getKey(), () -> {
-            if (getCategoryConfig().getDurationSeconds() > 0) {
-                ops.set(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
-            } else {
-                ops.set(getKey(), value);
-            }
+            ops.set(getKey(), value);
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
@@ -205,11 +201,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
-            if (getCategoryConfig().getDurationSeconds() > 0) {
-                return ops.setIfAbsent(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
-            } else {
-                return ops.setIfAbsent(getKey(), value);
-            }
+            return ops.setIfAbsent(getKey(), value);
         });
     }
 
@@ -241,11 +233,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
-            if (getCategoryConfig().getDurationSeconds() > 0) {
-                return ops.setIfPresent(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
-            } else {
-                return ops.setIfPresent(getKey(), value);
-            }
+            return ops.setIfPresent(getKey(), value);
         });
     }
 

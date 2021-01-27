@@ -492,6 +492,17 @@ public class ClusterServiceImpl implements ClusterService {
         return regions;
     }
 
+    @Override
+    public Boolean hasPrivilege(String clusterName, String operator) throws KunkkaException {
+        ClusterCondition condition = new ClusterCondition();
+        ClusterCondition.Criteria criteria = condition.or();
+        criteria.andClusterNameEqualTo(clusterName).andOwnerListLike("%" + operator + "%");
+        ClusterCondition.Criteria criteria2 = condition.or();
+        criteria2.andClusterNameEqualTo(clusterName).andMemberListLike("%" + operator + "%");
+        Long existCount = clusterMapper.countByCondition(condition);
+        return existCount > 0;
+    }
+
 
     private ClusterCondition buildCondition(String clusterName) {
         ClusterCondition condition = new ClusterCondition();

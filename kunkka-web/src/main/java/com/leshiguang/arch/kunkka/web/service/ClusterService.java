@@ -135,4 +135,14 @@ public interface ClusterService {
      * @throws KunkkaException
      */
     List<String> loadRegions(String clusterName) throws KunkkaException;
+
+    /**
+     * 是否有权限
+     *
+     * @param clusterName
+     * @param operator
+     * @return
+     * @throws KunkkaException
+     */
+    Boolean hasPrivilege(String clusterName, String operator) throws KunkkaException;
 }

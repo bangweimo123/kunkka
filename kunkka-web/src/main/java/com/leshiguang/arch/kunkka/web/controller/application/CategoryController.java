@@ -61,7 +61,7 @@ public class CategoryController extends ApiController {
 
     @GetMapping("load")
     public ResultData load(@RequestParam("clusterName") String clusterName, @RequestParam("category") String category) {
-        return ResultDataBuilder.success(categoryService.load(clusterName, category));
+        return ResultDataBuilder.success(categoryService.load(clusterName, category, userInfoService.fetchLoginUser().getUserId()));
     }
 
     @PostMapping("query")

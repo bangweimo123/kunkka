@@ -197,12 +197,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryVO load(String clusterName, String category) throws KunkkaException {
+    public CategoryVO load(String clusterName, String category, String operator) throws KunkkaException {
         if (StringUtils.isBlank(category)) {
             throw new KunkkaException(ServerErrorCode.PARAM_CHECK_ERROR, "category", category);
         }
         if (StringUtils.isBlank(clusterName)) {
             throw new KunkkaException(ServerErrorCode.PARAM_CHECK_ERROR, "clusterName", clusterName);
+        }
+        if (StringUtils.isBlank(operator)) {
+            operator = "bangwei.mo";
         }
         CategoryCondition condition = new CategoryCondition();
         condition.createCriteria().andClusterNameEqualTo(clusterName).andCategoryEqualTo(category);
@@ -210,6 +213,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (null != existCategory) {
             CategoryVO categoryVO = TRS.PO2VO(existCategory);
             categoryVO.setRegionList(clusterService.loadRegions(clusterName));
+            Boolean hasPrivilege = clusterService.hasPrivilege(clusterName, operator);
+            categoryVO.setHasPrivilege(hasPrivilege);
             return categoryVO;
         } else {
             throw new KunkkaException(ServerErrorCode.CATEGORY_NOT_EXISTS);

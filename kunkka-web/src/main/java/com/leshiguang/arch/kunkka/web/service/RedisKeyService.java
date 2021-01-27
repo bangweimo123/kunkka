@@ -1,10 +1,10 @@
 package com.leshiguang.arch.kunkka.web.service;
 
+import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVReq;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVSaveReq;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryScanReq;
 import com.leshiguang.arch.kunkka.web.domain.rediskey.RedisKeyValueVO;
-import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 
 import java.util.List;
 
