@@ -48,9 +48,9 @@ public abstract class AbstractMonitorOperations<K extends StoreKey> {
                 processTransaction(t, method, key);
                 imcVoid.execute();
                 //当key存在, expire为空 category的expire存在的时候，设置expire
-//                if (categoryConfig.getDurationSeconds() > 0 && method.isCanExpireable() && canExpire()) {
-//                    expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
-//                }
+                if (categoryConfig.getDurationSeconds() > 0 && method.isCanExpireable() && canExpire()) {
+                    expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                }
                 t.setSuccessStatus();
             } catch (Throwable e) {
                 KunkkaException exception = handleException(e);

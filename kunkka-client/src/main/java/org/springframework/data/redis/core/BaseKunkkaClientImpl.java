@@ -7,7 +7,6 @@ import com.leshiguang.arch.kunkka.client.config.cluster.ClusterConfigManager;
 import com.leshiguang.arch.kunkka.client.config.cluster.ConnectFactoryBuilder;
 import com.leshiguang.arch.kunkka.client.config.cluster.ZkClusterConfigManager;
 import com.leshiguang.arch.kunkka.client.configure.IConfigCallback;
-import com.leshiguang.arch.kunkka.client.configure.IConfigureClient;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.DefaultConfigureClientFactory;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;

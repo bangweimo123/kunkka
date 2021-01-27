@@ -32,6 +32,16 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
         this.hotOps = hotOperations;
     }
 
+    /**
+     * value对象直接使用set同步方法，快，高效
+     *
+     * @return
+     */
+    @Override
+    protected Boolean canExpire() {
+        return false;
+    }
+
     /*
      * (non-Javadoc)
      * @see org.springframework.data.redis.core.BoundValueOperations#get()
@@ -184,9 +194,13 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
     @Override
     public void set(V value) {
         new MonitorCommand(MonitorMethod.create("set").setExpireable(), getCategoryConfig()).execute(getKey(), () -> {
-            ops.set(getKey(), value);
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
+            }
+            if (getCategoryConfig().getDurationSeconds() > 0) {
+                ops.set(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
+            } else {
+                ops.set(getKey(), value);
             }
         });
     }
@@ -201,7 +215,11 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
-            return ops.setIfAbsent(getKey(), value);
+            if (getCategoryConfig().getDurationSeconds() > 0) {
+                return ops.setIfAbsent(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
+            } else {
+                return ops.setIfAbsent(getKey(), value);
+            }
         });
     }
 
@@ -233,7 +251,11 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
-            return ops.setIfPresent(getKey(), value);
+            if (getCategoryConfig().getDurationSeconds() > 0) {
+                return ops.setIfPresent(getKey(), value, getCategoryConfig().getDurationSeconds(), TimeUnit.SECONDS);
+            } else {
+                return ops.setIfPresent(getKey(), value);
+            }
         });
     }
 

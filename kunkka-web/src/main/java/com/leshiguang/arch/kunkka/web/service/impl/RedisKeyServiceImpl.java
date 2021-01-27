@@ -66,7 +66,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
             }
             try {
                 if (null == scanReq.getPageSize()) {
-                    scanReq.setPageSize(5000l);
+                    scanReq.setPageSize(30l);
                 }
                 result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
             } catch (KunkkaUnsupportMethodException ksme) {
