@@ -7,6 +7,7 @@ import com.leshiguang.arch.kunkka.client.KunkkaClient;
 import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.TenantStoreKey;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
+import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;
 import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.web.domain.base.KunkkaPaging;
@@ -25,10 +26,7 @@ import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,8 +63,8 @@ public class RedisKeyServiceImpl implements RedisKeyService {
     }
 
     @Override
-    public List<String> scan(CategoryScanReq scanReq) throws KunkkaException {
-        List<String> result = null;
+    public Collection<String> scan(CategoryScanReq scanReq) throws KunkkaException {
+        Collection<String> result = null;
         if (StringUtils.isBlank(scanReq.getCategory())) {
             result = categoryService.loadOnlineCategorys(scanReq.getClusterName());
         } else {
@@ -90,6 +88,8 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                     scanReq.setPageSize(5000l);
                 }
                 result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
+            } catch (KunkkaUnsupportMethodException ksme) {
+                result = kunkkaClient.keys(pattern.toString());
             } catch (Exception e) {
                 LOGGER.warn("scan error for clusterName:{},region:{},category:{}", scanReq.getClusterName(), scanReq.getRegion(), scanReq.getCategory());
                 LOGGER.error("error", e);

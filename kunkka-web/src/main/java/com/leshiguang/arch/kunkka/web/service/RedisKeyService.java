@@ -6,6 +6,7 @@ import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVSaveReq;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryScanReq;
 import com.leshiguang.arch.kunkka.web.domain.rediskey.RedisKeyValueVO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface RedisKeyService {
     /**
      * 扫描,如果没有带category,则获取clusterName下所有的category,如果带了category获取category下所有的key
      */
-    List<String> scan(CategoryScanReq scanReq) throws KunkkaException;
+    Collection<String> scan(CategoryScanReq scanReq) throws KunkkaException;
 
     RedisKeyValueVO kvGet(CategoryKVReq kvReq) throws KunkkaException;
 

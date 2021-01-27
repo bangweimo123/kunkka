@@ -9,7 +9,7 @@ import com.leshiguang.arch.kunkka.common.exception.ErrorCode;
  */
 public enum ClientErrorCode implements ErrorCode {
     AUTH_ERROR(502, "权限错误"),
-    CONFIG_ERROR(503, "配置项错误:[%]"),
+    CONFIG_ERROR(503, "配置项错误:[%s]"),
     TIMEOUT_ERROR(701, "超时错误"),
     UNSUPPORT_METHOD_ERROR(703, "不支持的方法类型"),
     UNVALID_KEY_ERROR(705, "不合法的storekey"),

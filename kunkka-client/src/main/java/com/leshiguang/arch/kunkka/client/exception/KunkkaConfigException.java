@@ -25,4 +25,8 @@ public class KunkkaConfigException extends KunkkaException {
     public KunkkaConfigException(String message) {
         super(ClientErrorCode.CONFIG_ERROR, message);
     }
+
+    public KunkkaConfigException(String message, Throwable cause) {
+        super(cause, ClientErrorCode.CONFIG_ERROR, message);
+    }
 }

@@ -46,6 +46,11 @@ public class KunkkaException extends RuntimeException {
         this.errorCode = defaultErroCode;
     }
 
+    public KunkkaException(Throwable cause, ErrorCode errorCode, String... params) {
+        super(String.format(errorCode.getMsg(), params), cause);
+        this.errorCode = errorCode;
+    }
+
     public KunkkaException() {
         super(defaultErroCode.getMsg());
         this.errorCode = defaultErroCode;

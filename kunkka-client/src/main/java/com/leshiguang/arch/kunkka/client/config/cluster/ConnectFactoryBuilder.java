@@ -77,7 +77,7 @@ public class ConnectFactoryBuilder {
 
     private JedisClientConfiguration processJedisClientConfiguration() {
         JedisClientConfiguration.JedisClientConfigurationBuilder builder = JedisClientConfiguration.builder();
-        builder.clientName(AppUtil.appName());
+//        builder.clientName(AppUtil.appName());
         if (null != cluster.getConnectParams()) {
             builder.connectTimeout(Duration.ofMillis(cluster.getConnectParams().getConnectTimeout()));
             builder.readTimeout(Duration.ofMillis(cluster.getConnectParams().getReadTimeout()));
@@ -93,7 +93,7 @@ public class ConnectFactoryBuilder {
 
     private LettuceClientConfiguration processLettuceClientConfiguration() {
         LettuceClientConfiguration.LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder();
-        builder.clientName(AppUtil.appName());
+//        builder.clientName(AppUtil.appName());
         if (null != cluster.getConnectParams()) {
             builder.commandTimeout(Duration.ofMillis(cluster.getConnectParams().getConnectTimeout()));
         }
@@ -140,7 +140,7 @@ public class ConnectFactoryBuilder {
                 try {
                     ((RedissonConnectionFactory) redisConnectionFactory).afterPropertiesSet();
                 } catch (Exception e) {
-                    throw new KunkkaConfigException("redissonConnectFactory init error");
+                    throw new KunkkaConfigException("redissonConnectFactory init error", e);
                 }
                 break;
         }

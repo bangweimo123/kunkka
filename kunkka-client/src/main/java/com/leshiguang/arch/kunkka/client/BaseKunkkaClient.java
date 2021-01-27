@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -18,6 +19,8 @@ public interface BaseKunkkaClient<V extends Serializable> {
      * @return
      */
     Boolean delete(String key);
+
+    Set<String> keys(String pattern);
 
     List<String> scan(String pattern, Long count);
 

@@ -45,7 +45,7 @@ public class RedisSentinelConfigurationBuilder extends AbstractRedissionConfigBu
                 serversConfig.addSentinelAddress(processAddress(slaveNode));
             }
         }
-        serversConfig.setClientName(AppUtil.appName());
+//        serversConfig.setClientName(AppUtil.appName());
         if (null != cluster.getConnectParams()) {
             processClusterConnectParams(serversConfig, cluster.getConnectParams());
         }

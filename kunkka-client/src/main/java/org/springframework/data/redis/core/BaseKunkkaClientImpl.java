@@ -8,14 +8,17 @@ import com.leshiguang.arch.kunkka.client.config.cluster.ConnectFactoryBuilder;
 import com.leshiguang.arch.kunkka.client.config.cluster.ZkClusterConfigManager;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.DefaultConfigureClientFactory;
+import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;
 import com.leshiguang.arch.kunkka.client.lifecycle.Lifecycle;
 import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -48,15 +51,24 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
     }
 
     @Override
+    public Set<String> keys(String pattern) {
+        return stringRedisTemplate.keys(pattern);
+    }
+
+    @Override
     public List<String> scan(String pattern, Long count) {
-        ScanOptions scanOptions = ScanOptions.scanOptions().count(count).match(pattern).build();
-        Cursor<byte[]> rawKeys = stringRedisTemplate.execute(connection -> connection.scan(scanOptions), true);
         List<String> keys = new ArrayList<>();
-        while (rawKeys.hasNext()) {
-            byte[] rawKey = rawKeys.next();
-            keys.add((String) stringRedisTemplate.getKeySerializer().deserialize(rawKey));
+        try {
+            ScanOptions scanOptions = ScanOptions.scanOptions().count(count).match(pattern).build();
+            Cursor<byte[]> rawKeys = stringRedisTemplate.execute(connection -> connection.scan(scanOptions), true);
+            while (rawKeys.hasNext()) {
+                byte[] rawKey = rawKeys.next();
+                keys.add((String) stringRedisTemplate.getKeySerializer().deserialize(rawKey));
+            }
+            return keys;
+        } catch (Exception e) {
+            throw new KunkkaUnsupportMethodException(e);
         }
-        return keys;
     }
 
     @Override

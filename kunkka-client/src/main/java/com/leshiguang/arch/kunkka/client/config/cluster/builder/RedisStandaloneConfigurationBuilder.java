@@ -35,7 +35,7 @@ public class RedisStandaloneConfigurationBuilder extends AbstractRedissionConfig
             serverConfig.setPassword(cluster.getPassword());
         }
         serverConfig.setAddress(processAddress(cluster.getMasterNode()));
-        serverConfig.setClientName(AppUtil.appName());
+//        serverConfig.setClientName(AppUtil.appName());
         serverConfig.setConnectionMinimumIdleSize(cluster.getConnectParams().getMinIdle());
         serverConfig.setConnectionPoolSize(cluster.getConnectParams().getMaxTotal());
         serverConfig.setConnectTimeout(cluster.getConnectParams().getConnectTimeout().intValue());
