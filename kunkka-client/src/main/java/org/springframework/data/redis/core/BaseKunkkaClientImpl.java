@@ -6,12 +6,13 @@ import com.leshiguang.arch.kunkka.client.config.ZkCategoryConfigManager;
 import com.leshiguang.arch.kunkka.client.config.cluster.ClusterConfigManager;
 import com.leshiguang.arch.kunkka.client.config.cluster.ConnectFactoryBuilder;
 import com.leshiguang.arch.kunkka.client.config.cluster.ZkClusterConfigManager;
+import com.leshiguang.arch.kunkka.client.configure.IConfigCallback;
+import com.leshiguang.arch.kunkka.client.configure.IConfigureClient;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.DefaultConfigureClientFactory;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;
 import com.leshiguang.arch.kunkka.client.lifecycle.Lifecycle;
 import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -35,6 +36,8 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
     protected RedisConnectionFactory connectionFactory;
 
     protected ConfigureClientFactory configureClientFactory;
+
+    protected IConfigCallback clusterChangedCallback;
 
     protected String clusterName;
 
@@ -114,6 +117,9 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
         this.configureClientFactory = configureClientFactory;
     }
 
+    public void setClusterChangedCallback(IConfigCallback clusterChangedCallback) {
+        this.clusterChangedCallback = clusterChangedCallback;
+    }
 
     @Override
     public void start() {
@@ -128,6 +134,9 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
         connectionFactory = ConnectFactoryBuilder.build(clusterBO);
         categoryConfigManager = new ZkCategoryConfigManager(clusterName, region, configureClientFactory);
         stringRedisTemplate = new RedisTemplate<>();
+        if (null != clusterChangedCallback) {
+            configureClientFactory.getInstance(region).clusterWatch(clusterName, clusterChangedCallback);
+        }
         stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
         stringRedisTemplate.setConnectionFactory(connectionFactory);
         stringRedisTemplate.afterPropertiesSet();

@@ -10,6 +10,7 @@ import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFact
 import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;
 import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
+import com.leshiguang.arch.kunkka.web.client.adapter.KunkkaClientHolder;
 import com.leshiguang.arch.kunkka.web.domain.base.KunkkaPaging;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVReq;
 import com.leshiguang.arch.kunkka.web.domain.category.CategoryKVSaveReq;
@@ -40,27 +41,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
     @Resource
     private CategoryService categoryService;
     @Resource
-    private ConfigureClientFactory kunkkaWebConfigureClientFactory;
-    private Map<String, KunkkaClient> clientMap = new ConcurrentHashMap<String, KunkkaClient>();
-
-    private KunkkaClient getClientByClusterName(String clusterName, String region) {
-        String key = clusterName + "_" + region;
-        if (!clientMap.containsKey(key)) {
-            synchronized (this) {
-                if (!clientMap.containsKey(key)) {
-                    try {
-                        DefaultKunkkaClient kunkkaClient = new DefaultKunkkaClient(clusterName, region);
-                        kunkkaClient.setConfigureClientFactory(kunkkaWebConfigureClientFactory);
-                        kunkkaClient.start();
-                        clientMap.put(key, kunkkaClient);
-                    } catch (Exception e) {
-                        LOGGER.error("exception for create KunkkaClient", e);
-                    }
-                }
-            }
-        }
-        return clientMap.get(key);
-    }
+    private KunkkaClientHolder kunkkaClientHolder;
 
     @Override
     public Collection<String> scan(CategoryScanReq scanReq) throws KunkkaException {
@@ -68,7 +49,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
         if (StringUtils.isBlank(scanReq.getCategory())) {
             result = categoryService.loadOnlineCategorys(scanReq.getClusterName());
         } else {
-            KunkkaClient kunkkaClient = getClientByClusterName(scanReq.getClusterName(), scanReq.getRegion());
+            KunkkaClient kunkkaClient = kunkkaClientHolder.getClientByClusterName(scanReq.getClusterName(), scanReq.getRegion());
             if (null == kunkkaClient) {
                 throw new KunkkaException(ServerErrorCode.KUNKKA_CLIENT_NOT_FOUND_ERROR);
             }
@@ -102,7 +83,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
 
     @Override
     public RedisKeyValueVO kvGet(CategoryKVReq kvReq) {
-        KunkkaClient kunkkaClient = getClientByClusterName(kvReq.getClusterName(), kvReq.getRegion());
+        KunkkaClient kunkkaClient = kunkkaClientHolder.getClientByClusterName(kvReq.getClusterName(), kvReq.getRegion());
         if (null == kunkkaClient) {
             throw new KunkkaException(ServerErrorCode.KUNKKA_CLIENT_NOT_FOUND_ERROR);
         }
@@ -181,7 +162,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
 
     @Override
     public Boolean kvSave(CategoryKVSaveReq kvSaveReq) {
-        KunkkaClient kunkkaClient = getClientByClusterName(kvSaveReq.getClusterName(), kvSaveReq.getRegion());
+        KunkkaClient kunkkaClient = kunkkaClientHolder.getClientByClusterName(kvSaveReq.getClusterName(), kvSaveReq.getRegion());
         if (null == kunkkaClient) {
             throw new KunkkaException(ServerErrorCode.KUNKKA_CLIENT_NOT_FOUND_ERROR);
         }
@@ -237,7 +218,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
 
     @Override
     public Boolean kvDelete(CategoryKVReq kvReq) {
-        KunkkaClient kunkkaClient = getClientByClusterName(kvReq.getClusterName(), kvReq.getRegion());
+        KunkkaClient kunkkaClient = kunkkaClientHolder.getClientByClusterName(kvReq.getClusterName(), kvReq.getRegion());
         return kunkkaClient.delete(kvReq.getKey());
     }
 }

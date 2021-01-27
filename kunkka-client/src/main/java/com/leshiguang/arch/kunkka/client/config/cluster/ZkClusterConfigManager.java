@@ -1,5 +1,6 @@
 package com.leshiguang.arch.kunkka.client.config.cluster;
 
+import com.leshiguang.arch.kunkka.client.configure.IConfigCallback;
 import com.leshiguang.arch.kunkka.client.configure.IConfigureClient;
 import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
 import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
@@ -25,6 +26,18 @@ public class ZkClusterConfigManager implements ClusterConfigManager {
                 if (!localStoreClusterConfigMap.containsKey(key)) {
                     IConfigureClient configureClient = configureClientFactory.getInstance(region);
                     ClusterBO cluster = configureClient.getCluster(clusterName);
+                    configureClient.clusterWatch(clusterName, new IConfigCallback<ClusterBO>() {
+
+                        @Override
+                        public void changed(ClusterBO newData) {
+                            localStoreClusterConfigMap.put(new HolderKey(newData.getClusterName(), region), newData);
+                        }
+
+                        @Override
+                        public void deleted() {
+                            localStoreClusterConfigMap.remove(new HolderKey(clusterName, region));
+                        }
+                    });
                     localStoreClusterConfigMap.put(key, cluster);
                 }
             }
