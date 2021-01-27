@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @Date 2021-01-12 11:37
  * @Description
  */
-public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonitorOperations implements BoundKeyOperations<K> {
+public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonitorOperations<K> implements BoundKeyOperations<K> {
     private K key;
     private CategoryConfig categoryConfig;
     private final RedisOperations<K, ?> ops;
@@ -59,8 +59,14 @@ public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonito
      * @param unit
      * @return
      */
+    @Override
     protected Boolean expireInner(long timeout, TimeUnit unit) {
         return ops.expire(key, timeout, unit);
+    }
+
+    @Override
+    protected Boolean canExpire() {
+        return ops.hasKey(key) && ops.getExpire(key) < 0;
     }
 
     @Override

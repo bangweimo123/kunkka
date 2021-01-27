@@ -58,7 +58,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
      */
     @Override
     public V getAndSet(V value) {
-        return new MonitorCommand(MonitorMethod.create("getAndSet"), getCategoryConfig()).execute(getKey(), () -> {
+        return new MonitorCommand(MonitorMethod.create("getAndSet").setExpireable(), getCategoryConfig()).execute(getKey(), () -> {
             if (getCategoryConfig().getHot()) {
                 return hotOps.getAndSet(getKey(), value);
             } else {
@@ -183,7 +183,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
      */
     @Override
     public void set(V value) {
-        new MonitorCommand(MonitorMethod.create("set"), getCategoryConfig()).execute(getKey(), () -> {
+        new MonitorCommand(MonitorMethod.create("set").setExpireable(), getCategoryConfig()).execute(getKey(), () -> {
             ops.set(getKey(), value);
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
@@ -197,7 +197,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
      */
     @Override
     public Boolean setIfAbsent(V value) {
-        return new MonitorCommand(MonitorMethod.create("setIfAbsent"), getCategoryConfig()).execute(getKey(), () -> {
+        return new MonitorCommand(MonitorMethod.create("setIfAbsent").setExpireable(), getCategoryConfig()).execute(getKey(), () -> {
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
@@ -214,7 +214,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
         if (!getCategoryConfig().getDurationChangeabled()) {
             throw new KunkkaChangeDurationException();
         }
-        return new MonitorCommand(MonitorMethod.create("setIfAbsent"), getCategoryConfig()).execute(getKey(), () -> {
+        return new MonitorCommand(MonitorMethod.create("setIfAbsent").setExpireable(), getCategoryConfig()).execute(getKey(), () -> {
             if (getCategoryConfig().getHot()) {
                 hotOps.set(getKey(), value);
             }
@@ -261,7 +261,7 @@ public class KunkkaBoundValueOperations<K extends StoreKey, V extends Serializab
      */
     @Override
     public void set(V value, long offset) {
-        new MonitorCommand(MonitorMethod.create("set"), getCategoryConfig()).execute(getKey(), () ->
+        new MonitorCommand(MonitorMethod.create("set").setExpireable(), getCategoryConfig()).execute(getKey(), () ->
                 ops.set(getKey(), value, offset)
         );
     }

@@ -33,7 +33,7 @@ public class KunkkaBoundSetOperations<K extends StoreKey, V> extends KunkkaBound
      */
     @Override
     public Long add(V... values) {
-        return new MonitorCommand(MonitorMethod.create("add").setBatch(values.length), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), values));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable().setBatch(values.length), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), values));
     }
 
     /*

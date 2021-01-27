@@ -8,6 +8,8 @@ import com.leshiguang.arch.kunkka.client.serialize.StoreKeyEhcacheSerializer;
 import com.leshiguang.arch.kunkka.client.serialize.StoreKeyRedisSerializer;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.scaffold.common.utils.RegionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @Description
  */
 public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Serializable> extends BaseKunkkaClientImpl<V> implements KunkkaClient<K, V> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractKunkkaClientImpl.class);
     private RedisTemplate<K, V> redisTemplate;
 
     private EhcacheValueOperations<K, V> ehcacheValueOperations;
@@ -40,9 +43,6 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
         public T execute(K key, IMC<T> imc) throws KunkkaException {
             CategoryConfig categoryConfig = processCategoryConfig(key);
             T opt = imc.execute(categoryConfig);
-            if (opt.getExpire() <= 0 && categoryConfig.getDurationSeconds() > 0) {
-                opt.expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
-            }
             return opt;
         }
     }

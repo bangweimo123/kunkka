@@ -66,7 +66,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long leftPush(V value) {
-        return new MonitorCommand(MonitorMethod.create("leftPush"), getCategoryConfig()).execute(getKey(), () -> ops.leftPush(getKey(), value));
+        return new MonitorCommand(MonitorMethod.create("leftPush").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.leftPush(getKey(), value));
     }
 
     /*
@@ -75,7 +75,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long leftPushAll(V... values) {
-        return new MonitorCommand(MonitorMethod.create("leftPushAll"), getCategoryConfig()).execute(getKey(), () -> ops.leftPushAll(getKey(), values));
+        return new MonitorCommand(MonitorMethod.create("leftPushAll").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.leftPushAll(getKey(), values));
     }
 
     /*
@@ -84,7 +84,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long leftPushIfPresent(V value) {
-        return new MonitorCommand(MonitorMethod.create("leftPushIfPresent"), getCategoryConfig()).execute(getKey(), () -> ops.leftPushIfPresent(getKey(), value));
+        return new MonitorCommand(MonitorMethod.create("leftPushIfPresent").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.leftPushIfPresent(getKey(), value));
     }
 
     /*
@@ -93,7 +93,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long leftPush(V pivot, V value) {
-        return new MonitorCommand(MonitorMethod.create("leftPush"), getCategoryConfig()).execute(getKey(), () -> ops.leftPush(getKey(), pivot, value));
+        return new MonitorCommand(MonitorMethod.create("leftPush").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.leftPush(getKey(), pivot, value));
     }
 
     /*
@@ -147,7 +147,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long rightPushIfPresent(V value) {
-        return new MonitorCommand(MonitorMethod.create("rightPushIfPresent"), getCategoryConfig()).execute(getKey(), () -> ops.rightPushIfPresent(getKey(), value));
+        return new MonitorCommand(MonitorMethod.create("rightPushIfPresent").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.rightPushIfPresent(getKey(), value));
     }
 
     /*
@@ -156,7 +156,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long rightPush(V value) {
-        return new MonitorCommand(MonitorMethod.create("rightPush"), getCategoryConfig()).execute(getKey(), () -> ops.rightPush(getKey(), value));
+        return new MonitorCommand(MonitorMethod.create("rightPush").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.rightPush(getKey(), value));
     }
 
     /*
@@ -165,7 +165,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long rightPushAll(V... values) {
-        return new MonitorCommand(MonitorMethod.create("rightPushAll"), getCategoryConfig()).execute(getKey(), () -> ops.rightPushAll(getKey(), values));
+        return new MonitorCommand(MonitorMethod.create("rightPushAll").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.rightPushAll(getKey(), values));
     }
 
     /*
@@ -174,7 +174,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long rightPush(V pivot, V value) {
-        return new MonitorCommand(MonitorMethod.create("rightPush"), getCategoryConfig()).execute(getKey(), () -> ops.rightPush(getKey(), pivot, value));
+        return new MonitorCommand(MonitorMethod.create("rightPush").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.rightPush(getKey(), pivot, value));
     }
 
     /*
@@ -192,7 +192,7 @@ public class KunkkaBoundListOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public void set(long index, V value) {
-        new MonitorCommand(MonitorMethod.create("set"), getCategoryConfig()).execute(getKey(), () -> ops.set(getKey(), index, value));
+        new MonitorCommand(MonitorMethod.create("set").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.set(getKey(), index, value));
     }
 
     /*

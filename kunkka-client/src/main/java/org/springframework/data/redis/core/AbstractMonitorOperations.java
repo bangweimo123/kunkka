@@ -4,8 +4,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.config.CategoryConfig;
-import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaTimeoutException;
+import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeoutException;
  * @Date 2021-01-12 11:39
  * @Description
  */
-public abstract class AbstractMonitorOperations {
+public abstract class AbstractMonitorOperations<K extends StoreKey> {
 
     protected interface IMC<T> {
         T execute();
@@ -25,6 +25,11 @@ public abstract class AbstractMonitorOperations {
     protected interface IMCVoid {
         void execute();
     }
+
+    protected abstract Boolean canExpire();
+
+    protected abstract Boolean expireInner(long timeout, TimeUnit timeUnit);
+
 
     protected class MonitorCommand {
         private MonitorMethod method;
@@ -36,12 +41,16 @@ public abstract class AbstractMonitorOperations {
             this.categoryConfig = categoryConfig;
         }
 
-        public void execute(StoreKey storeKey, IMCVoid imcVoid) throws KunkkaException {
+        public void execute(K key, IMCVoid imcVoid) throws KunkkaException {
             Transaction t = null;
             try {
                 t = Cat.newTransaction("Kunkka." + categoryConfig.getcType(), categoryConfig.getCategory() + ":" + method.getName());
-                processTransaction(t, method, storeKey);
+                processTransaction(t, method, key);
                 imcVoid.execute();
+                //当key存在, expire为空 category的expire存在的时候，设置expire
+                if (categoryConfig.getDurationSeconds() > 0 && method.isCanExpireable() && canExpire()) {
+                    expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                }
                 t.setSuccessStatus();
             } catch (Throwable e) {
                 KunkkaException exception = handleException(e);
@@ -56,12 +65,16 @@ public abstract class AbstractMonitorOperations {
             }
         }
 
-        public <T> T execute(StoreKey storeKey, IMC<T> imc) throws KunkkaException {
+        public <T> T execute(K key, IMC<T> imc) throws KunkkaException {
             Transaction t = null;
             try {
                 t = Cat.newTransaction("Kunkka." + categoryConfig.getcType(), categoryConfig.getCategory() + ":" + method.getName());
-                processTransaction(t, method, storeKey);
+                processTransaction(t, method, key);
                 T result = imc.execute();
+                //当key存在, expire为空 category的expire存在的时候，设置expire
+                if (categoryConfig.getDurationSeconds() > 0 && method.isCanExpireable() && canExpire()) {
+                    expireInner(categoryConfig.getDurationSeconds(), TimeUnit.SECONDS);
+                }
                 t.setSuccessStatus();
                 return result;
             } catch (Throwable e) {
@@ -117,6 +130,8 @@ public abstract class AbstractMonitorOperations {
 
         private Integer batchCount = 1;
 
+        private boolean canExpireable = false;
+
         private MonitorMethod(String name) {
             this.name = name;
         }
@@ -135,6 +150,12 @@ public abstract class AbstractMonitorOperations {
         public MonitorMethod setExpire(Date date) {
             this.expired = true;
             this.expire = (date.getTime() - new Date().getTime()) / 1000;
+            return this;
+        }
+
+
+        public MonitorMethod setExpireable() {
+            this.canExpireable = true;
             return this;
         }
 
@@ -167,6 +188,10 @@ public abstract class AbstractMonitorOperations {
 
         public Boolean isMultiable() {
             return null != batchCount && batchCount > 1;
+        }
+
+        public boolean isCanExpireable() {
+            return canExpireable;
         }
 
         public Integer getBatchCount() {

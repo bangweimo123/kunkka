@@ -36,7 +36,7 @@ public class KunkkaBoundGeoOperations<K extends StoreKey, M extends Serializable
      */
     @Override
     public Long add(Point point, M member) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), point, member));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), point, member));
     }
 
     /*
@@ -45,7 +45,7 @@ public class KunkkaBoundGeoOperations<K extends StoreKey, M extends Serializable
      */
     @Override
     public Long add(RedisGeoCommands.GeoLocation<M> location) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), location));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), location));
     }
 
     /*
@@ -54,7 +54,7 @@ public class KunkkaBoundGeoOperations<K extends StoreKey, M extends Serializable
      */
     @Override
     public Long add(Map<M, Point> memberCoordinateMap) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), memberCoordinateMap));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), memberCoordinateMap));
     }
 
     /*
@@ -63,7 +63,7 @@ public class KunkkaBoundGeoOperations<K extends StoreKey, M extends Serializable
      */
     @Override
     public Long add(Iterable<RedisGeoCommands.GeoLocation<M>> locations) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), locations));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), locations));
     }
 
     /*

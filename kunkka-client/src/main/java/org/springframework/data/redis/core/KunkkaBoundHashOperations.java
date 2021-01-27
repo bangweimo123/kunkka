@@ -126,7 +126,7 @@ public class KunkkaBoundHashOperations<K extends StoreKey, HK, HV> extends Kunkk
      */
     @Override
     public void putAll(Map<? extends HK, ? extends HV> m) {
-        new MonitorCommand(MonitorMethod.create("putAll").setBatch(m.size()), getCategoryConfig()).execute(getKey(), () -> ops.putAll(getKey(), m));
+        new MonitorCommand(MonitorMethod.create("putAll").setExpireable().setBatch(m.size()), getCategoryConfig()).execute(getKey(), () -> ops.putAll(getKey(), m));
     }
 
     /*
@@ -135,7 +135,7 @@ public class KunkkaBoundHashOperations<K extends StoreKey, HK, HV> extends Kunkk
      */
     @Override
     public void put(HK key, HV value) {
-        new MonitorCommand(MonitorMethod.create("put"), getCategoryConfig()).execute(getKey(), () -> ops.put(getKey(), key, value));
+        new MonitorCommand(MonitorMethod.create("put").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.put(getKey(), key, value));
     }
 
     /*
@@ -144,7 +144,7 @@ public class KunkkaBoundHashOperations<K extends StoreKey, HK, HV> extends Kunkk
      */
     @Override
     public Boolean putIfAbsent(HK key, HV value) {
-        return new MonitorCommand(MonitorMethod.create("putIfAbsent"), getCategoryConfig()).execute(getKey(), () -> ops.putIfAbsent(getKey(), key, value));
+        return new MonitorCommand(MonitorMethod.create("putIfAbsent").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.putIfAbsent(getKey(), key, value));
     }
 
     /*

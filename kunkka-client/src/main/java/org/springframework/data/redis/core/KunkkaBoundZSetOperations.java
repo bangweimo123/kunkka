@@ -35,7 +35,7 @@ public class KunkkaBoundZSetOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Boolean add(V value, double score) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), value, score));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), value, score));
     }
 
     /*
@@ -44,7 +44,7 @@ public class KunkkaBoundZSetOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public Long add(Set<ZSetOperations.TypedTuple<V>> tuples) {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), tuples));
+        return new MonitorCommand(MonitorMethod.create("add").setExpireable(), getCategoryConfig()).execute(getKey(), () -> ops.add(getKey(), tuples));
     }
 
     /*
