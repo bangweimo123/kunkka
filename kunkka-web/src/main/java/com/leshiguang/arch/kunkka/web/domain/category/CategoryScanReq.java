@@ -24,4 +24,8 @@ public class CategoryScanReq implements Serializable {
     private Integer tenantId;
 
     private Long pageSize;
+    /**
+     * 是否使用scan操作
+     */
+    private Boolean scanEabled=Boolean.TRUE;
 }

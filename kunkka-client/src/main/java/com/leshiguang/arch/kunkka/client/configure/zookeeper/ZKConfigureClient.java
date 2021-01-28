@@ -198,9 +198,9 @@ public class ZKConfigureClient implements IConfigureClient {
         @Override
         public void handleDataChange(String s, Object o) throws Exception {
             String zkData = (String) o;
-            CategoryBO categoryBO = JSON.parseObject(zkData, new TypeReference<CategoryBO>() {
+            ClusterBO clusterBO = JSON.parseObject(zkData, new TypeReference<ClusterBO>() {
             });
-            configCallback.changed(categoryBO);
+            configCallback.changed(clusterBO);
         }
 
         @Override

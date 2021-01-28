@@ -15,10 +15,7 @@ import com.leshiguang.arch.kunkka.db.mapper.gen.ClusterAuthMappingMapper;
 import com.leshiguang.arch.kunkka.db.mapper.gen.ClusterConnectMappingMapper;
 import com.leshiguang.arch.kunkka.db.mapper.gen.ClusterMapper;
 import com.leshiguang.arch.kunkka.db.mapper.gen.ClusterRegionMappingMapper;
-import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterAuthVO;
-import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterConnectVO;
-import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterQueryReq;
-import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterVO;
+import com.leshiguang.arch.kunkka.web.domain.cluster.*;
 import com.leshiguang.arch.kunkka.web.exception.ServerErrorCode;
 import com.leshiguang.arch.kunkka.web.operate.log.OperateLogBuilder;
 import com.leshiguang.arch.kunkka.web.service.CategoryService;
@@ -283,7 +280,9 @@ public class ClusterServiceImpl implements ClusterService {
         operationClusterConnect.setSlaveNodes(StringUtils.join(clusterConnect.getSlaveNodes(), ","));
         operationClusterConnect.setPasswordMode(clusterConnect.getPasswordMode());
         operationClusterConnect.setPassword(clusterConnect.getPassword());
-
+        if (null != clusterConnect.getConnectParams()) {
+            operationClusterConnect.setConnectParams(JSON.toJSONString(clusterConnect.getConnectParams()));
+        }
         if (null == existClusterConnect) {
             int insertCount = clusterConnectMappingMapper.insertSelective(operationClusterConnect);
             changeStatus(clusterConnect.getClusterName(), StatusEnum.READY.getCode(), Arrays.asList(StatusEnum.CREATED.getCode(), StatusEnum.READY.getCode()));
@@ -315,8 +314,13 @@ public class ClusterServiceImpl implements ClusterService {
             clusterConnect.setDb(clusterConnectMapping.getDb());
             clusterConnect.setMasterNode(clusterConnectMapping.getMasterNode());
             clusterConnect.setSlaveNodes(Arrays.asList(StringUtils.split(clusterConnectMapping.getSlaveNodes(), ",")));
-            clusterConnect.setPasswordMode(clusterConnect.getPasswordMode());
-            clusterConnect.setPassword(clusterConnect.getPassword());
+            clusterConnect.setPasswordMode(clusterConnectMapping.getPasswordMode());
+            clusterConnect.setPassword(clusterConnectMapping.getPassword());
+            if (StringUtils.isNotBlank(clusterConnectMapping.getConnectParams())) {
+                ClusterConnectParamsVO connectParams = JSON.parseObject(clusterConnectMapping.getConnectParams(), new TypeReference<ClusterConnectParamsVO>() {
+                });
+                clusterConnect.setConnectParams(connectParams);
+            }
             return clusterConnect;
         } else {
             return null;

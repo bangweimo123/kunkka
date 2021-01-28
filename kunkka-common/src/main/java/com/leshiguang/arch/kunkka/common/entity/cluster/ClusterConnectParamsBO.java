@@ -33,4 +33,12 @@ public class ClusterConnectParamsBO implements Serializable {
      * 连接超时时间
      */
     private Long connectTimeout = 10000l;
+    /**
+     * 是否支持scan
+     */
+    private Boolean supportScan = Boolean.TRUE;
+    /**
+     * 是否支持设置client
+     */
+    private Boolean supportClient = Boolean.TRUE;
 }

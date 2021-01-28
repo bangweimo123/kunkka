@@ -2,12 +2,9 @@ package com.leshiguang.arch.kunkka.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.leshiguang.arch.kunkka.client.DefaultKunkkaClient;
 import com.leshiguang.arch.kunkka.client.KunkkaClient;
 import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.TenantStoreKey;
-import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFactory;
-import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportMethodException;
 import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.web.client.adapter.KunkkaClientHolder;
@@ -28,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -55,28 +51,34 @@ public class RedisKeyServiceImpl implements RedisKeyService {
             }
             StringBuffer pattern = new StringBuffer();
             pattern.append(scanReq.getCategory());
-            pattern.append("\\.");
-            if (StringUtils.isNotBlank(scanReq.getParamFormat())) {
-                pattern.append(scanReq.getParamFormat());
+            if (scanReq.getScanEabled()) {
+                pattern.append("\\.");
+                if (StringUtils.isNotBlank(scanReq.getParamFormat())) {
+                    pattern.append(scanReq.getParamFormat());
+                }
+                pattern.append("*");
+            } else {
+                pattern.append(".");
+                if (StringUtils.isNotBlank(scanReq.getParamFormat())) {
+                    pattern.append(scanReq.getParamFormat());
+                }
             }
-            pattern.append("*");
             if (null != scanReq.getTenantId() && scanReq.getTenantId() > 0) {
                 pattern.append("@t");
                 pattern.append(scanReq.getTenantId());
             }
-            try {
-                if (null == scanReq.getPageSize()) {
-                    scanReq.setPageSize(30l);
-                }
-                result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
-            } catch (KunkkaUnsupportMethodException ksme) {
-                result = kunkkaClient.keys(pattern.toString());
-            } catch (Exception e) {
-                LOGGER.warn("scan error for clusterName:{},region:{},category:{}", scanReq.getClusterName(), scanReq.getRegion(), scanReq.getCategory());
-                LOGGER.error("error", e);
-                throw new KunkkaException(ServerErrorCode.SYSTEM_ERROR);
+            if (null == scanReq.getPageSize()) {
+                scanReq.setPageSize(5000l);
             }
-
+            if (scanReq.getScanEabled()) {
+                result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
+            } else {
+                if(kunkkaClient.hasKey(pattern.toString())){
+                    result = Arrays.asList(pattern.toString());
+                }else{
+                    throw new KunkkaException(ServerErrorCode.NOT_EXIST_KEY_FOR_SCAN);
+                }
+            }
         }
         return result;
     }

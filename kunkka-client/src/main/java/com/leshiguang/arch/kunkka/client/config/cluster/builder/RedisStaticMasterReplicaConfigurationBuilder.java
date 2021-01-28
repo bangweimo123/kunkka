@@ -2,7 +2,6 @@ package com.leshiguang.arch.kunkka.client.config.cluster.builder;
 
 import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
 import com.leshiguang.arch.kunkka.common.entity.connect.ConnectBO;
-import com.leshiguang.scaffold.common.utils.AppUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.config.Config;
@@ -44,7 +43,6 @@ public class RedisStaticMasterReplicaConfigurationBuilder extends AbstractRediss
                 serversConfig.addNodeAddress(processAddress(slaveNode));
             }
         }
-//        serversConfig.setClientName(AppUtil.appName());
         if (null != cluster.getConnectParams()) {
             processClusterConnectParams(serversConfig, cluster.getConnectParams());
         }

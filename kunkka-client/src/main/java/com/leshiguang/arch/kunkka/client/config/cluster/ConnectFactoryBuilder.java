@@ -77,8 +77,10 @@ public class ConnectFactoryBuilder {
 
     private JedisClientConfiguration processJedisClientConfiguration() {
         JedisClientConfiguration.JedisClientConfigurationBuilder builder = JedisClientConfiguration.builder();
-//        builder.clientName(AppUtil.appName());
         if (null != cluster.getConnectParams()) {
+            if (cluster.getConnectParams().getSupportClient()) {
+                builder.clientName(AppUtil.appName());
+            }
             builder.connectTimeout(Duration.ofMillis(cluster.getConnectParams().getConnectTimeout()));
             builder.readTimeout(Duration.ofMillis(cluster.getConnectParams().getReadTimeout()));
         }
@@ -93,8 +95,11 @@ public class ConnectFactoryBuilder {
 
     private LettuceClientConfiguration processLettuceClientConfiguration() {
         LettuceClientConfiguration.LettuceClientConfigurationBuilder builder = LettuceClientConfiguration.builder();
-//        builder.clientName(AppUtil.appName());
+
         if (null != cluster.getConnectParams()) {
+            if (cluster.getConnectParams().getSupportClient()) {
+                builder.clientName(AppUtil.appName());
+            }
             builder.commandTimeout(Duration.ofMillis(cluster.getConnectParams().getConnectTimeout()));
         }
         GenericObjectPoolConfig genericObjectPoolConfig = genericObjectPoolConfig();

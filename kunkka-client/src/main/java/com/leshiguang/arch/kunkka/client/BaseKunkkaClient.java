@@ -20,6 +20,13 @@ public interface BaseKunkkaClient<V extends Serializable> {
      */
     Boolean delete(String key);
 
+    /**
+     * 是否存在key
+     * @param key
+     * @return
+     */
+    Boolean hasKey(String key);
+
     Set<String> keys(String pattern);
 
     List<String> scan(String pattern, Long count);

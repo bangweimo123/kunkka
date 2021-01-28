@@ -1,6 +1,5 @@
 package com.leshiguang.arch.kunkka.web.domain.cluster;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,4 +27,8 @@ public class ClusterConnectVO implements Serializable {
     private Integer passwordMode;
 
     private String password;
+    /**
+     * 连接参数
+     */
+    private ClusterConnectParamsVO connectParams;
 }

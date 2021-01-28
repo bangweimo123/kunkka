@@ -37,6 +37,7 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
     protected ConfigureClientFactory configureClientFactory;
 
     protected IConfigCallback clusterChangedCallback;
+    protected ClusterBO clusterConfig;
 
     protected String clusterName;
 
@@ -53,24 +54,28 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
     }
 
     @Override
+    public Boolean hasKey(String key) {
+        return stringRedisTemplate.hasKey(key);
+    }
+
+    @Override
     public Set<String> keys(String pattern) {
         return stringRedisTemplate.keys(pattern);
     }
 
     @Override
     public List<String> scan(String pattern, Long count) {
-        List<String> keys = new ArrayList<>();
-        try {
-            ScanOptions scanOptions = ScanOptions.scanOptions().count(count).match(pattern).build();
-            Cursor<byte[]> rawKeys = stringRedisTemplate.execute(connection -> connection.scan(scanOptions), true);
-            while (rawKeys.hasNext()) {
-                byte[] rawKey = rawKeys.next();
-                keys.add((String) stringRedisTemplate.getKeySerializer().deserialize(rawKey));
-            }
-            return keys;
-        } catch (Exception e) {
-            throw new KunkkaUnsupportMethodException(e);
+        if (null != clusterConfig.getConnectParams() && !clusterConfig.getConnectParams().getSupportScan()) {
+            throw new KunkkaUnsupportMethodException();
         }
+        List<String> keys = new ArrayList<>();
+        ScanOptions scanOptions = ScanOptions.scanOptions().count(count).match(pattern).build();
+        Cursor<byte[]> rawKeys = stringRedisTemplate.execute(connection -> connection.scan(scanOptions), true);
+        while (rawKeys.hasNext()) {
+            byte[] rawKey = rawKeys.next();
+            keys.add((String) stringRedisTemplate.getKeySerializer().deserialize(rawKey));
+        }
+        return keys;
     }
 
     @Override
@@ -129,8 +134,8 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
         if (null == clusterConfigManager) {
             clusterConfigManager = new ZkClusterConfigManager();
         }
-        ClusterBO clusterBO = clusterConfigManager.getClusterConfig(clusterName, region, configureClientFactory);
-        connectionFactory = ConnectFactoryBuilder.build(clusterBO);
+        clusterConfig = clusterConfigManager.getClusterConfig(clusterName, region, configureClientFactory);
+        connectionFactory = ConnectFactoryBuilder.build(clusterConfig);
         categoryConfigManager = new ZkCategoryConfigManager(clusterName, region, configureClientFactory);
         stringRedisTemplate = new RedisTemplate<>();
         if (null != clusterChangedCallback) {
