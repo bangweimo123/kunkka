@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author bangwei.mo[bangwei.mo@lifesense.com]
@@ -85,6 +84,11 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
     @Override
     public BoundZSetOperations<K, V> boundZSetOps(K key) {
         return new BoundOperationsCommand<KunkkaBoundZSetOperations>().execute(key, (categoryConfig) -> new KunkkaBoundZSetOperations(categoryConfig, key, redisTemplate));
+    }
+
+    @Override
+    public BoundBitMapOperations<K> boundBitMapOps(K key) {
+        return new BoundOperationsCommand<KunkkaBoundBitMapOperations>().execute(key, (categoryConfig) -> new KunkkaBoundBitMapOperations(categoryConfig, key, redisTemplate));
     }
 
     @Override
