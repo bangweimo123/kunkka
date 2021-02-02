@@ -262,6 +262,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Boolean publish(String clusterName, String categoryName, String region, String operator) throws KunkkaException {
+        CategoryCondition condition = new CategoryCondition();
+        condition.createCriteria().andClusterNameEqualTo(clusterName).andCategoryEqualTo(categoryName).andCStatusEqualTo(StatusEnum.ONLINE.getCode());
+        Category category = categoryMapper.selectOneByCondition(condition);
+        if (null == category) {
+            throw new KunkkaException(ServerErrorCode.CATEGORY_NOT_EXISTS);
+        }
+        CategoryBO toZkCategory = TRS.PO2BO(category);
+        IConfigureClient zookeeperClient = kunkkaWebConfigureClientFactory.getInstance(region);
+        boolean publishCategoryResult = zookeeperClient.setCategory(toZkCategory.getClusterName(), toZkCategory);
+        OperateLogBuilder.onlineOpt().of(OperateLogBuilder.RelationType.CATEGORY, category.getId()).with(operator).content("发布特定区域:" + region).log();
+        return publishCategoryResult;
+    }
+
+    @Override
     public Boolean offline(Integer categoryId, String operator) throws KunkkaException {
         Category category = categoryMapper.selectById(categoryId);
         if (null == category) {

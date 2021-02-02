@@ -33,6 +33,11 @@ public class ClusterController extends ApiController {
         return ResultDataBuilder.success(clusterService.save(cluster, userInfoService.fetchLoginUser().getUserId()));
     }
 
+    @PostMapping("onlineSave")
+    public ResultData onlineSave(@RequestBody ClusterVO cluster) {
+        return ResultDataBuilder.success(clusterService.onlineSave(cluster, userInfoService.fetchLoginUser().getUserId()));
+    }
+
     @PostMapping("saveConnect")
     public ResultData saveClusterConnect(@RequestBody ClusterConnectVO clusterConnect) {
         return ResultDataBuilder.success(clusterService.saveConnect(clusterConnect, userInfoService.fetchLoginUser().getUserId()));
@@ -77,7 +82,13 @@ public class ClusterController extends ApiController {
 
     @GetMapping("publish")
     public ResultData publish(@RequestParam String clusterName) {
-        return ResultDataBuilder.success(clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId()));
+        return ResultDataBuilder.success(clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId(), false));
+    }
+
+
+    @GetMapping("rePublish")
+    public ResultData rePublish(@RequestParam String clusterName) {
+        return ResultDataBuilder.success(clusterService.publish(clusterName, userInfoService.fetchLoginUser().getUserId(), true));
     }
 
     @GetMapping("offline")

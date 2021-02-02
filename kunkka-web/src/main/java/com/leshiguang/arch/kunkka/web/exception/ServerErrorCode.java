@@ -21,12 +21,13 @@ public enum ServerErrorCode implements ErrorCode {
     CLUSTER_ONLINE_CAN_NOT_EDIT_ERROR(606, "集群已经发布，禁止修改"),
     CLUSTER_HAS_OFFLINE_ERROR(601, "集群已下线"),
     CLUSTER_MAST_BE_READY(604, "集群未就绪"),
+    CLUSTER_ONLINE_STATUS_CAN_EDIT(612, "线上修改只允许上线的集群"),
     CLUSTER_PUBLISH_ERROR(605, "集群发布失败,集群:[%s],区域:[%s]"),
     CLUSTER_PUBLISH_ERROR_HAS_NO_CONFIG_REGION_CONNECT(610, "集群发布失败，区域:[%s]下不存在连接配置!"),
     CLUSTER_OFFLINE_ERROR_HAS_ONLINE_CATEGORY(606, "集群下线失败,存在在线category:[%s],请先下线对应category!"),
     UN_SUPPORT_CONVERT_ERROR(607, "不支持的转换类型"),
     CONNECT_PING_ERROR(901, "连接测试失败!IP:[%S],Port:[%s]"),
-    NOT_EXIST_KEY_FOR_SCAN(905,"不存在对应的key");
+    NOT_EXIST_KEY_FOR_SCAN(905, "不存在对应的key");
 
     ServerErrorCode(int code, String msg) {
         this.code = code;

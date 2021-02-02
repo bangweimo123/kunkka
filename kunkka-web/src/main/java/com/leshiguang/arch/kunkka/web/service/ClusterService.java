@@ -1,10 +1,10 @@
 package com.leshiguang.arch.kunkka.web.service;
 
+import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterAuthVO;
 import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterConnectVO;
 import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterQueryReq;
 import com.leshiguang.arch.kunkka.web.domain.cluster.ClusterVO;
-import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -40,6 +40,14 @@ public interface ClusterService {
      * @return
      */
     Boolean save(ClusterVO cluster, String operator) throws KunkkaException;
+
+    /**
+     * @param cluster
+     * @param operator
+     * @return
+     * @throws KunkkaException
+     */
+    Boolean onlineSave(ClusterVO cluster, String operator) throws KunkkaException;
 
     /**
      * 保存集群连接
@@ -116,7 +124,7 @@ public interface ClusterService {
      * @param operator
      * @return
      */
-    Boolean publish(String clusterName, String operator) throws KunkkaException;
+    Boolean publish(String clusterName, String operator,Boolean isRePublish) throws KunkkaException;
 
     /**
      * 下线集群

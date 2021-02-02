@@ -65,6 +65,17 @@ public interface CategoryService {
     Boolean publish(Integer categoryId, String operator) throws KunkkaException;
 
     /**
+     * 发布特定区域下的category
+     * @param clusterName
+     * @param categoryName
+     * @param region
+     * @param operator
+     * @return
+     * @throws KunkkaException
+     */
+    Boolean publish(String clusterName,String categoryName,String region,String operator) throws KunkkaException;
+
+    /**
      * 下线
      *
      * @return

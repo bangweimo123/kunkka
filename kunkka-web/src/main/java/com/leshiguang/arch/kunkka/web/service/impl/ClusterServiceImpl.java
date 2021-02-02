@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ClusterServiceImpl implements ClusterService {
+
     @Resource
     private ClusterMapper clusterMapper;
     @Resource
@@ -222,12 +223,30 @@ public class ClusterServiceImpl implements ClusterService {
         }
     }
 
-    private Boolean saveRegionMapping(ClusterVO cluster) {
+    @Override
+    public Boolean onlineSave(ClusterVO cluster, String operator) throws KunkkaException {
         ClusterCondition condition = buildCondition(cluster.getClusterName());
         Cluster existCluster = clusterMapper.selectOneByCondition(condition);
-        if (existCluster.getcStatus().equals(StatusEnum.ONLINE.getCode())) {
-            throw new KunkkaException(ServerErrorCode.CLUSTER_ONLINE_CAN_NOT_EDIT_ERROR);
+        if (null == existCluster) {
+            throw new KunkkaException(ServerErrorCode.CLUSTER_NOT_EXISTS);
         }
+        if (!existCluster.getcStatus().equals(StatusEnum.ONLINE.getCode())) {
+            throw new KunkkaException(ServerErrorCode.CLUSTER_ONLINE_STATUS_CAN_EDIT);
+        }
+        this.saveRegionMapping(cluster);
+        Cluster operationCluster = new Cluster();
+        if (CollectionUtils.isNotEmpty(cluster.getOwnerList())) {
+            operationCluster.setOwnerList(StringUtils.join(cluster.getOwnerList(), ","));
+        }
+        if (CollectionUtils.isNotEmpty(cluster.getMemberList())) {
+            operationCluster.setMemberList(StringUtils.join(cluster.getMemberList(), ","));
+        }
+        int updateCount = clusterMapper.updateByIdSelective(operationCluster);
+        OperateLogBuilder.modifyOpt().of(OperateLogBuilder.RelationType.CLUSTER, cluster.getClusterName()).with(operator).content("已上线修改owner.member,region").log();
+        return updateCount > 0;
+    }
+
+    private Boolean saveRegionMapping(ClusterVO cluster) {
         ClusterRegionMappingCondition regionMappingCondition = new ClusterRegionMappingCondition();
         regionMappingCondition.createCriteria().andClusterNameEqualTo(cluster.getClusterName());
         List<ClusterRegionMapping> allList = clusterRegionMappingMapper.selectByCondition(regionMappingCondition);
@@ -264,11 +283,6 @@ public class ClusterServiceImpl implements ClusterService {
 
     @Override
     public Boolean saveConnect(ClusterConnectVO clusterConnect, String operator) throws KunkkaException {
-        ClusterCondition condition = buildCondition(clusterConnect.getClusterName());
-        Cluster existCluster = clusterMapper.selectOneByCondition(condition);
-        if (existCluster.getcStatus().equals(StatusEnum.ONLINE.getCode())) {
-            throw new KunkkaException(ServerErrorCode.CLUSTER_ONLINE_CAN_NOT_EDIT_ERROR);
-        }
         ClusterConnectMappingCondition connectMappingCondition = new ClusterConnectMappingCondition();
         connectMappingCondition.createCriteria().andRegionEqualTo(clusterConnect.getRegion()).andClusterNameEqualTo(clusterConnect.getClusterName());
         ClusterConnectMapping existClusterConnect = clusterConnectMappingMapper.selectOneByCondition(connectMappingCondition);
@@ -386,14 +400,20 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     @Override
-    public Boolean publish(String clusterName, String operator) throws KunkkaException {
+    public Boolean publish(String clusterName, String operator, Boolean isRePublish) throws KunkkaException {
         ClusterCondition condition = buildCondition(clusterName);
         Cluster existCluster = clusterMapper.selectOneByCondition(condition);
         if (null == existCluster) {
             throw new KunkkaException(ServerErrorCode.CLUSTER_NOT_EXISTS);
         }
-        if (existCluster.getcStatus() != StatusEnum.READY.getCode()) {
-            throw new KunkkaException(ServerErrorCode.CLUSTER_MAST_BE_READY);
+        if (isRePublish) {
+            if (existCluster.getcStatus() != StatusEnum.ONLINE.getCode()) {
+                throw new KunkkaException(ServerErrorCode.CLUSTER_ONLINE_STATUS_CAN_EDIT);
+            }
+        } else {
+            if (existCluster.getcStatus() != StatusEnum.READY.getCode()) {
+                throw new KunkkaException(ServerErrorCode.CLUSTER_MAST_BE_READY);
+            }
         }
         ClusterConnectMappingCondition clusterConnectMappingCondition = new ClusterConnectMappingCondition();
         clusterConnectMappingCondition.createCriteria().andClusterNameEqualTo(clusterName);
@@ -450,8 +470,20 @@ public class ClusterServiceImpl implements ClusterService {
             if (!publishClusterResult) {
                 throw new KunkkaException(ServerErrorCode.CLUSTER_MAST_BE_READY, clusterName, region);
             }
+            //重新发布特定区域下的category
+            List<String> categorys = categoryService.loadOnlineCategorys(clusterName);
+            if (CollectionUtils.isNotEmpty(categorys)) {
+                for (String category : categorys) {
+                    if (null == zookeeperClient.getCategory(clusterName, category)) {
+                        categoryService.publish(clusterName, category, region, operator);
+                    }
+                }
+            }
         }
-        boolean publishStatus = changeStatus(clusterName, StatusEnum.ONLINE.getCode(), Arrays.asList(StatusEnum.READY.getCode()));
+        boolean publishStatus = true;
+        if (!isRePublish) {
+            publishStatus = changeStatus(clusterName, StatusEnum.ONLINE.getCode(), Arrays.asList(StatusEnum.READY.getCode()));
+        }
         OperateLogBuilder.onlineOpt().of(OperateLogBuilder.RelationType.CLUSTER, clusterName).with(operator).content("发布").log();
         return publishStatus;
     }
