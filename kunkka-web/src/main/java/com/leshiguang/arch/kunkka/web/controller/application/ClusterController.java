@@ -103,6 +103,6 @@ public class ClusterController extends ApiController {
 
     @GetMapping("reset")
     public ResultData reset(@RequestParam String clusterName) {
-        return ResultDataBuilder.success(clusterName, userInfoService.fetchLoginUser().getUserId());
+        return ResultDataBuilder.success(clusterService.reset(clusterName, userInfoService.fetchLoginUser().getUserId()));
     }
 }
