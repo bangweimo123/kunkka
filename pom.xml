@@ -7,7 +7,7 @@
     <groupId>com.leshiguang.arch.kunkka</groupId>
     <artifactId>kunkka-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <modules>
         <module>kunkka-demo</module>
         <module>kunkka-web</module>
@@ -63,17 +63,6 @@
                 <groupId>tk.mybatis</groupId>
                 <artifactId>mapper-spring-boot-starter</artifactId>
                 <version>2.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-spring-boot-starter</artifactId>
-                <version>2.7.7</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-dependencies-zookeeper</artifactId>
-                <type>pom</type>
-                <version>2.7.7</version>
             </dependency>
 
             <!-- kunkka相关依赖 -->
