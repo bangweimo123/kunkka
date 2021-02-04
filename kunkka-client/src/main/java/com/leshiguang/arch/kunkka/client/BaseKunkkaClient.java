@@ -22,6 +22,7 @@ public interface BaseKunkkaClient<V extends Serializable> {
 
     /**
      * 是否存在key
+     *
      * @param key
      * @return
      */
@@ -38,6 +39,8 @@ public interface BaseKunkkaClient<V extends Serializable> {
     <HK, HV> BoundHashOperations<String, HK, HV> boundHashOps(String finalKey);
 
     BoundSetOperations<String, V> boundSetOps(String finalKey);
+
+    BoundBitMapOperations<String> boundBitMapOps(String finalKey);
 //
 //    <HK, HV> BoundStreamOperations<String, HK, HV> boundStreamOps(String finalKey);
 

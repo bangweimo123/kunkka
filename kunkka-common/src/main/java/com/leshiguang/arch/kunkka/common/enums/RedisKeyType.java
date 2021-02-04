@@ -6,24 +6,31 @@ package com.leshiguang.arch.kunkka.common.enums;
  * @Description
  */
 public enum RedisKeyType {
-    string(1, "string"),
+    string(1, "string", "string"),
 
-    list(2, "list"),
+    list(2, "list", "list"),
 
-    set(3, "set"),
+    set(3, "set", "set"),
 
-    hash(4, "hash"),
+    hash(4, "hash", "hash"),
 
-    zset(5, "zset");
+    zset(5, "zset", "zset"),
 
-    RedisKeyType(Integer code, String desc) {
+    geo(6, "geo", "zset"),
+
+    bitmap(7, "bitmap", "string");
+
+    RedisKeyType(Integer code, String vType, String dataType) {
         this.code = code;
-        this.desc = desc;
+        this.vType = vType;
+        this.dataType = dataType;
     }
 
     private Integer code;
 
-    private String desc;
+    private String vType;
+
+    private String dataType;
 
     public Integer getCode() {
         return code;
@@ -33,17 +40,25 @@ public enum RedisKeyType {
         this.code = code;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getvType() {
+        return vType;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setvType(String vType) {
+        this.vType = vType;
     }
 
-    public static RedisKeyType parse(String desc) {
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public static RedisKeyType parse(String vType) {
         for (RedisKeyType data : RedisKeyType.values()) {
-            if (data.desc.equalsIgnoreCase(desc)) {
+            if (data.vType.equalsIgnoreCase(vType)) {
                 return data;
             }
         }

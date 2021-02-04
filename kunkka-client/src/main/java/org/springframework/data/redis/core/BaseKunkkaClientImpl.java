@@ -98,6 +98,11 @@ public class BaseKunkkaClientImpl<V extends Serializable> implements BaseKunkkaC
         return new DefaultBoundSetOperations<>(finalKey, stringRedisTemplate);
     }
 
+    @Override
+    public BoundBitMapOperations<String> boundBitMapOps(String finalKey) {
+        return new DefaultBoundBitMapOperations<>(finalKey, stringRedisTemplate);
+    }
+
 //    @Override
 //    public <HK, HV> BoundStreamOperations<String, HK, HV> boundStreamOps(String finalKey) {
 //        return new DefaultBoundStreamOperations<>(finalKey, stringRedisTemplate);

@@ -4,6 +4,7 @@ import com.leshiguang.arch.kunkka.client.StoreKey;
 import com.leshiguang.arch.kunkka.client.config.CategoryConfig;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaChangeDurationException;
 import com.leshiguang.arch.kunkka.client.exception.KunkkaUnsupportTypeException;
+import com.leshiguang.arch.kunkka.common.enums.RedisKeyType;
 import org.springframework.data.redis.connection.DataType;
 
 import java.util.Date;
@@ -21,7 +22,10 @@ public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonito
 
     KunkkaBoundKeyOperations(CategoryConfig categoryConfig, K key, RedisOperations<K, ?> operations) {
         this.categoryConfig = categoryConfig;
-        if (!categoryConfig.getcType().equalsIgnoreCase(getType().toString())) {
+
+        String cType = categoryConfig.getcType();
+        RedisKeyType redisKeyType = RedisKeyType.parse(cType);
+        if (!redisKeyType.getDataType().equalsIgnoreCase(getType().toString())) {
             throw new KunkkaUnsupportTypeException();
         }
         this.key = key;
@@ -44,7 +48,9 @@ public class KunkkaBoundKeyOperations<K extends StoreKey> extends AbstractMonito
 
     @Override
     public DataType getType() {
-        return DataType.fromCode(categoryConfig.getcType());
+        String cType = categoryConfig.getcType();
+        RedisKeyType redisKeyType = RedisKeyType.parse(cType);
+        return DataType.fromCode(redisKeyType.getDataType());
     }
 
     /*

@@ -1,6 +1,7 @@
 package com.leshiguang.arch.kunkka.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.leshiguang.arch.kunkka.client.KunkkaClient;
 import com.leshiguang.arch.kunkka.client.StoreKey;
@@ -20,6 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +75,9 @@ public class RedisKeyServiceImpl implements RedisKeyService {
             if (scanReq.getScanEabled()) {
                 result = kunkkaClient.scan(pattern.toString(), scanReq.getPageSize());
             } else {
-                if(kunkkaClient.hasKey(pattern.toString())){
+                if (kunkkaClient.hasKey(pattern.toString())) {
                     result = Arrays.asList(pattern.toString());
-                }else{
+                } else {
                     throw new KunkkaException(ServerErrorCode.NOT_EXIST_KEY_FOR_SCAN);
                 }
             }
@@ -141,6 +143,7 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                     valueVO.setRemainTimeToLive(boundHashOperations.getExpire());
                     break;
                 case zset:
+                case geo:
                     BoundZSetOperations boundZSetOperations = kunkkaClient.boundZSetOps(kvReq.getKey());
                     if (null == kvReq.getPaging()) {
                         KunkkaPaging paging = new KunkkaPaging();
@@ -153,6 +156,26 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                     Set<ZSetOperations.TypedTuple> mZSet = boundZSetOperations.rangeWithScores((pageIndex - 1) * pageSize, pageIndex * pageSize);
                     valueVO.setData(JSON.toJSONString(mZSet));
                     valueVO.setRemainTimeToLive(boundZSetOperations.getExpire());
+                    break;
+                case bitmap:
+                    BoundBitMapOperations boundBitMapOperations = kunkkaClient.boundBitMapOps(kvReq.getKey());
+                    if (null == kvReq.getPaging()) {
+                        KunkkaPaging paging = new KunkkaPaging();
+                        paging.setPageIndex(1);
+                        paging.setPageSize(10);
+                        kvReq.setPaging(paging);
+                    }
+                    Map<Long, Boolean> mBitMap = boundBitMapOperations.getBits(Long.valueOf((kvReq.getPaging().getPageIndex() - 1) * kvReq.getPaging().getPageSize()), Long.valueOf(kvReq.getPaging().getPageIndex() * kvReq.getPaging().getPageSize()));
+                    boundBitMapOperations.bitCount();
+                    JSONArray json = new JSONArray();
+                    for (Map.Entry<Long, Boolean> d : mBitMap.entrySet()) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("offset", d.getKey());
+                        obj.put("value", d.getValue());
+                        json.add(obj);
+                    }
+                    valueVO.setData(json);
+                    valueVO.setRemainTimeToLive(boundBitMapOperations.getExpire());
                     break;
             }
         } catch (Exception e) {
@@ -208,11 +231,23 @@ public class RedisKeyServiceImpl implements RedisKeyService {
                 BoundZSetOperations boundZSetOperations = kunkkaClient.boundZSetOps(storeKey);
                 boundZSetOperations.add(typedTupleSet);
                 break;
+            case geo:
+                MGeoValueBO mGeo = JSON.toJavaObject(data, MGeoValueBO.class);
+                List<RedisGeoCommands.GeoLocation> locationList = mGeo.parse();
+                BoundGeoOperations boundGeoOperations = kunkkaClient.boundGeoOps(storeKey);
+                boundGeoOperations.add(locationList);
+                break;
             case hash:
                 MHashValueBO mHash = JSON.toJavaObject(data, MHashValueBO.class);
                 BoundHashOperations boundHashOperations = kunkkaClient.boundHashOps(storeKey);
                 Map hashMap = mHash.parse();
                 boundHashOperations.putAll(hashMap);
+                break;
+            case bitmap:
+                MBitMapValueBO mBitMap = JSON.toJavaObject(data, MBitMapValueBO.class);
+                BoundBitMapOperations boundBitMapOperations = kunkkaClient.boundBitMapOps(storeKey);
+                Map<Long, Boolean> bistMap = mBitMap.parse();
+                boundBitMapOperations.setBits(bistMap);
                 break;
         }
         return true;

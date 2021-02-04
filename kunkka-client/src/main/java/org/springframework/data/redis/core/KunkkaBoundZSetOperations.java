@@ -314,7 +314,7 @@ public class KunkkaBoundZSetOperations<K extends StoreKey, V extends Serializabl
      */
     @Override
     public DataType getType() {
-        return new MonitorCommand(MonitorMethod.create("add"), getCategoryConfig()).execute(getKey(), () -> DataType.ZSET);
+        return DataType.ZSET;
     }
 
     /*
