@@ -5,13 +5,12 @@
     <parent>
         <groupId>com.leshiguang.arch.kunkka</groupId>
         <artifactId>kunkka-parent</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kunkka-client</artifactId>
     <name>kunkka-client</name>
-    <version>0.0.3</version>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>

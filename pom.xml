@@ -7,7 +7,7 @@
     <groupId>com.leshiguang.arch.kunkka</groupId>
     <artifactId>kunkka-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <modules>
         <module>kunkka-demo</module>
         <module>kunkka-web</module>
