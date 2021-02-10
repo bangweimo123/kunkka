@@ -51,6 +51,17 @@ public abstract class AbstractKunkkaClientImpl<K extends StoreKey, V extends Ser
         return categoryConfig;
     }
 
+
+    @Override
+    public Boolean delete(K key) {
+        return redisTemplate.delete(key);
+    }
+
+    @Override
+    public Boolean hasKey(K key) {
+        return redisTemplate.hasKey(key);
+    }
+
     @Override
     public BoundListOperations<K, V> boundListOps(K key) {
         return new BoundOperationsCommand<KunkkaBoundListOperations>().execute(key, (categoryConfig) -> new KunkkaBoundListOperations(categoryConfig, key, redisTemplate));

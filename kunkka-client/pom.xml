@@ -11,6 +11,7 @@
 
     <artifactId>kunkka-client</artifactId>
     <name>kunkka-client</name>
+    <version>0.0.3</version>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>

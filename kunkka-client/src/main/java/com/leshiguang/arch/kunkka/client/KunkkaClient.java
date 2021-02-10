@@ -11,6 +11,21 @@ import java.io.Serializable;
  */
 public interface KunkkaClient<K extends StoreKey, V extends Serializable> extends BaseKunkkaClient<V> {
     /**
+     * 删除 key
+     *
+     * @param key
+     * @return
+     */
+    Boolean delete(K key);
+
+    /**
+     * 是否存在key
+     *
+     * @param key
+     * @return
+     */
+    Boolean hasKey(K key);
+    /**
      * list操作
      * @param key
      * @return
