@@ -85,12 +85,8 @@ kunkka.version=0.0.2-SNAPSHOT
 因为使用apollo作为zk配置项的依赖,所以需要依赖apollo
 ```xml
 <apollo:config/>
-<apollo:config namespaces="lx-arch.redissonx" order="1"/>    
 <bean id="chaosKunkkaClient" class="com.leshiguang.arch.kunkka.client.spring.KunkkaClientFactory">
   <constructor-arg name="clusterName" value="chaos"/>
-</bean>
-<bean id="deviceKunkkaClient" class="com.leshiguang.arch.kunkka.client.spring.KunkkaClientFactory">
-  <constructor-arg name="clusterName" value="device"/>
 </bean>
 ```
 ### 4.1.3 springboot注入
