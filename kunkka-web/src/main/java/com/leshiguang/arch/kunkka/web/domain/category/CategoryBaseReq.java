@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-21 11:40
  * @Description
  */

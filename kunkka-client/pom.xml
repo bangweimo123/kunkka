@@ -52,10 +52,6 @@
             <artifactId>kunkka-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.leshiguang.scaffold</groupId>
-            <artifactId>scaffold-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
             <version>5.3.5.RELEASE</version>

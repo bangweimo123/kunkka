@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-12 11:37
  * @Description
  */

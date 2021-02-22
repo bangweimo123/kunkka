@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-12 11:39
  * @Description
  */

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-03-17 20:17
  * @Modify
  */

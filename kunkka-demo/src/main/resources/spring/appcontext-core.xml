@@ -17,7 +17,4 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <context:annotation-config/>
-    <bean id="redissonxClient" class="com.leshiguang.arch.redissonx.spring.RedissonxBeanFactory">
-        <property name="clusterName" value="sports-test"></property>
-    </bean>
 </beans>

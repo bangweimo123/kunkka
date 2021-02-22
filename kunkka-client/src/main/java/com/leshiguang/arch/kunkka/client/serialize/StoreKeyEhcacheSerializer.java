@@ -6,7 +6,7 @@ import com.leshiguang.arch.kunkka.client.config.CategoryConfigManager;
 import org.springframework.data.redis.serializer.SerializationException;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-12 20:31
  * @Description
  */

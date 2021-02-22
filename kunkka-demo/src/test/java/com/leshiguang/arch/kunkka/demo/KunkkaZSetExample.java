@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import java.util.Set;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-27 13:35
  * @Description
  */

@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.AbstractKunkkaClientImpl;
 import java.io.Serializable;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-26 16:43
  * @Description
  */

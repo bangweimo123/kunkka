@@ -7,7 +7,7 @@ import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.leshiguang.arch.kunkka.client.configure.IConfigCallback;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-22 17:16
  * @Description
  */

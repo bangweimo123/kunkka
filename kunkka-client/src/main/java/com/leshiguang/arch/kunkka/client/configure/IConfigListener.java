@@ -1,7 +1,7 @@
 package com.leshiguang.arch.kunkka.client.configure;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-22 17:05
  * @Description
  */

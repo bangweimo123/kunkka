@@ -3,7 +3,7 @@ package com.leshiguang.arch.kunkka.web.domain.rediskey;
 import java.io.Serializable;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-20 18:53
  * @Description
  */

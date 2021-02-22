@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-14 20:28
  * @Description
  */

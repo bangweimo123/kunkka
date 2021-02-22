@@ -1,7 +1,7 @@
 package com.leshiguang.arch.kunkka.common.exception;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-11 14:30
  * @Description
  */

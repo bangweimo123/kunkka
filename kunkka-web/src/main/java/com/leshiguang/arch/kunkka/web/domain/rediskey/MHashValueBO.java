@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-20 19:07
  * @Description
  */

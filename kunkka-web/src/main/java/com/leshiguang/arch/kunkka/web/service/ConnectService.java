@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-04-15 14:14
  * @Modify
  */

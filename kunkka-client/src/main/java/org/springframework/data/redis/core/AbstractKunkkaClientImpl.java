@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-07 16:35
  * @Description
  */

@@ -1,7 +1,7 @@
 package com.leshiguang.arch.kunkka.web.service.enums;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-14 17:00
  * @Description
  */

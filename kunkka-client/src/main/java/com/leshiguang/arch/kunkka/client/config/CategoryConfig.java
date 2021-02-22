@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-03-13 12:22
  * @Modify
  */

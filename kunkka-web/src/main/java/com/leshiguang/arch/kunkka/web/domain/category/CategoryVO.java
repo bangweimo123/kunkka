@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-03-24 11:49
  * @Modify
  */

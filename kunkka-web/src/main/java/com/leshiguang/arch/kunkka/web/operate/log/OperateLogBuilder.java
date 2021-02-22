@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-22 10:42
  * @Description
  */

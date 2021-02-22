@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.BoundGeoOperations;
 import javax.annotation.Resource;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-27 14:12
  * @Description
  */

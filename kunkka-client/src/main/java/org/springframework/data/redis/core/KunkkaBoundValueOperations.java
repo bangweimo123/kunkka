@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-21 13:58
  * @Description
  */

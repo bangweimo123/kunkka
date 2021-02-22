@@ -3,7 +3,7 @@ package com.leshiguang.arch.kunkka.client.exception;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-27 12:55
  * @Description
  */

@@ -7,7 +7,7 @@ import org.redisson.config.BaseMasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-26 20:26
  * @Description
  */

@@ -5,7 +5,7 @@ import com.leshiguang.arch.kunkka.client.exception.KunkkaConfigException;
 import com.leshiguang.scaffold.common.utils.RegionUtil;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-25 17:05
  * @Description 只获取当前区域的配置
  */

@@ -4,7 +4,7 @@ import com.leshiguang.arch.kunkka.client.configure.zookeeper.ConfigureClientFact
 import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-13 10:47
  * @Description
  */

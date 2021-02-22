@@ -6,7 +6,7 @@ import com.leshiguang.arch.kunkka.common.entity.cluster.ClusterBO;
 import com.leshiguang.arch.kunkka.common.exception.KunkkaException;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-03-20 14:28
  * @Modify
  */

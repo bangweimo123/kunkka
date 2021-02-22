@@ -13,7 +13,7 @@ import com.leshiguang.arch.kunkka.web.domain.connect.ConnectVO;
 import java.util.List;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2020-09-02 20:28
  * @Description
  */

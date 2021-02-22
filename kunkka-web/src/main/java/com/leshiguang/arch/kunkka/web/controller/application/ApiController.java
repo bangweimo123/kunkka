@@ -4,7 +4,7 @@ import com.leshiguang.arch.kunkka.web.domain.base.KunkkaPaging;
 import org.springframework.data.domain.PageRequest;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-14 11:47
  * @Description
  */

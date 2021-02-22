@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.BoundValueOperations;
 import javax.annotation.Resource;
 
 /**
- * @Author bangwei.mo[bangwei.mo@lifesense.com]
+ * @Author bangwei.mo
  * @Date 2021-01-26 17:36
  * @Description
  */
