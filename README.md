@@ -6,8 +6,6 @@
 针对这样的情况,做了指定优化
 需要在集群详情->实例管理中把连接参数的支持scan和支持client逻辑关掉
 这样在详情中会展现不支持scan,就会禁止scan逻辑,只允许输入特定的参数做完全匹配
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/265873/1611821128175-26f36a75-6f10-45e0-9e86-d270d8c3ed3b.png#align=left&display=inline&height=594&margin=%5Bobject%20Object%5D&name=image.png&originHeight=594&originWidth=1315&size=113084&status=done&style=none&width=1315)
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/265873/1611821184003-5c1925d6-efdc-40ad-b99f-c1f46b54334e.png#align=left&display=inline&height=716&margin=%5Bobject%20Object%5D&name=image.png&originHeight=716&originWidth=1324&size=119222&status=done&style=none&width=1324)
 # 一.项目介绍
 Kunkka是基于Spring-redis做的Redis缓存管理平台
 API基于spring-redis的标准api构建,使用方便
@@ -15,17 +13,14 @@ API基于spring-redis的标准api构建,使用方便
 
 
 # 二.项目地址
-beta:[https://beta-kunkka.leshiguang.net/](https://beta-kunkka.leshiguang.net/)
-prod:[https://kunkka.leshiguang.net/](https://kunkka.leshiguang.net/)
+//待补充
 
 
 # 三.后台操作指南
 ## 3.1 实例管理
 ### 3.1.1 实例列表
 通过区域/地址等维护删选,可以查看操作日志和监控信息
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/265873/1611718980375-1e081ea5-954b-45a2-b680-892f454786c3.png#align=left&display=inline&height=722&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1444&originWidth=2834&size=529646&status=done&style=none&width=1417)
 ### 3.1.2 新增实例
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/265873/1611719043764-68d886ad-0d2f-48e2-8bbb-5b44373bab34.png#align=left&display=inline&height=325&margin=%5Bobject%20Object%5D&name=image.png&originHeight=650&originWidth=1428&size=112790&status=done&style=none&width=714)
 ## 3.2 集群管理
 ### 3.2.1 集群列表
 集群相当于一个ref,管理了不同区域的不同连接,可以通过绑定租户/应用来做权限控制
